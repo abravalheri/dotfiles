@@ -3,8 +3,12 @@ set -e
 
 # configuration
 dotfiles_path=$(readlink -f .)
-backup_dir="${XDG_CONFIG_HOME:-"$HOME/.config"}/dotfiles.bkp"
+config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
+backup_dir="$config_home/dotfiles.bkp"
 oh_my_zsh_path="$dotfiles_path/+oh-my-zsh"
+git_conf_extra_dir="$HOME/.config/git"
+# I've chosen do not use $config_home, because git cannot do advanced expansion
+# in gitconfig files
 
 # restore previous state
 for f in $dotfiles_path/\.*(.); do
@@ -31,8 +35,47 @@ for f in $dotfiles_path/\.*(.); do
   fi
 done
 
-source ~/.zshrc
-rm -Rf "$oh_my_zsh_path"
-chsh -s /bin/bash
-env bash
-source ~/.bashrc
+# git extra configurations
+mkdir -p $git_conf_extra_dir
+
+echo "Would you like to remove git user config? (y/n)"
+read answer
+
+case $answer in
+  [yY]*)
+    if [ -f "$git_conf_extra_dir/author.conf" ]; then
+      rm "$git_conf_extra_dir/author.conf"
+    fi
+    ;;
+  *);;
+esac
+
+# install oh-my-zsh
+echo "Would you like to uninstall Oh-My-ZSH? (y/n)"
+read answer
+
+case $answer in
+  [yY]*)
+    if [ -d "$oh_my_zsh_path" ]; then
+      rm -Rf "$oh_my_zsh_path"
+    fi
+    ;;
+  *);;
+esac
+
+
+# default shell
+echo "Would you like to change your default shell to BASH? (y/n)"
+read answer
+
+case $answer in
+  [yY]*)
+    chsh -s /bin/bash
+    env bash
+    source ~/.bashrc
+    ;;
+  *);;
+esac
+
+
+echo "\nDotfiles uninstalled.\n"

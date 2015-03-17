@@ -7,7 +7,7 @@ config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 backup_dir="$config_home/dotfiles.bkp"
 oh_my_zsh_path="$dotfiles_path/+oh-my-zsh"
 git_conf_extra_dir="$HOME/.config/git"
-# I choose do not use $config_home, because git cannot do advanced expansion
+# I've chosen do not use $config_home, because git cannot do advanced expansion
 # in gitconfig files
 
 # ensure backup dir exist
@@ -42,20 +42,49 @@ done
 # git extra configurations
 mkdir -p $git_conf_extra_dir
 
-echo "Please provide an user name for git:"
-read git_user_name
-echo "Please provide an user email for git:"
-read git_user_email
+echo "Would you like to setup git user config? (y/n)"
+read answer
 
-echo "[user]\n"\
-"  name = \"$git_user_name\"\n"\
-"  email = $git_user_email\n" > "$git_conf_extra_dir/author.conf"
+case $answer in
+  [yY]*)
+    echo "Please provide an user name for git:"
+    read git_user_name
+    echo "Please provide an user email for git:"
+    read git_user_email
+
+    echo "[user]\n"\
+    "  name = \"$git_user_name\"\n"\
+    "  email = $git_user_email\n" > "$git_conf_extra_dir/author.conf"
+    ;;
+  *) echo "Please edit file $git_conf_extra_dir/author.conf";;
+esac
 
 # install oh-my-zsh
-if [ ! -d "$link_path" ]; then
-  git clone git://github.com/robbyrussell/oh-my-zsh.git $oh_my_zsh_path
+echo "Would you like to install Oh-My-ZSH? (y/n)"
+read answer
 
-  chsh -s /bin/zsh
-  env zsh
-  source ~/.zshrc
-fi
+case $answer in
+  [yY]*)
+    if [ ! -d "$link_path" ]; then
+      git clone git://github.com/robbyrussell/oh-my-zsh.git $oh_my_zsh_path
+    fi
+    ;;
+  *);;
+esac
+
+
+# default shell
+echo "Would you like to change your default shell to ZSH? (y/n)"
+read answer
+
+case $answer in
+  [yY]*)
+    chsh -s /bin/zsh
+    env zsh
+    source ~/.zshrc
+    ;;
+  *);;
+esac
+
+
+echo "\nDotfiles installed.\n"
