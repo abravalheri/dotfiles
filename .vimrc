@@ -17,26 +17,31 @@ call vundle#begin()
 call vundle#begin('~/dotfiles/+vim/bundle')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'Lokaltog/vim-easymotion'
 Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'tomtom/tlib_vim'
-
+Plugin 'Shougo/unite.vim'
+Plugin 'Shougo/vimfiler.vim'
 Plugin 'bats.vim'
-"Plugin 'bling/vim-airline'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'garbas/vim-snipmate'
 Plugin 'git://git.wincent.com/command-t.git'
+Plugin 'gmarik/Vundle.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'honza/vim-snippets'
 Plugin 'kchmck/vim-coffee-script'
 Plugin 'kien/ctrlp.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'mhinz/vim-signify'
+Plugin 'mileszs/ack.vim'
+Plugin 'myint/syntastic-extras'
 Plugin 'plasticboy/vim-markdown'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'rust-lang/rust.vim'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
-Plugin 'Shougo/unite.vim'
+Plugin 'sjl/gundo.vim'
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'tomtom/tlib_vim'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
@@ -46,12 +51,10 @@ Plugin 'tpope/vim-sleuth'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-vinegar'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'mileszs/ack.vim'
 
-"let g:airline_theme = 'murmur' "'simple'
-"let g:airline_powerline_fonts = 1
+" Status line
+Plugin 'itchyny/lightline.vim'
+"Plugin 'maciakl/vim-neatstatus.git' " good alternative
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
