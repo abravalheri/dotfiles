@@ -74,3 +74,5 @@ alias tmux="tmux -2"
 # export PATH="$HOME/.rbenv/bin:$PATH"
 # export RBENV_ROOT="$(rbenv root -)"
 # eval "$(rbenv init -)"
+
+sshagent() { eval ssh-agent $SHELL }
