@@ -7,6 +7,7 @@ config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 backup_dir="$config_home/dotfiles.bkp"
 oh_my_zsh_path="$dotfiles_path/+oh-my-zsh"
 git_conf_extra_dir="$HOME/.config/git"
+vundle_path="$dotfiles_path/+vim/bundle/Vundle.vim"
 # I've chosen do not use $config_home, because git cannot do advanced expansion
 # in gitconfig files
 
@@ -50,7 +51,7 @@ case $answer in
   *);;
 esac
 
-# install oh-my-zsh
+# uninstall oh-my-zsh
 echo "Would you like to uninstall Oh-My-ZSH? (y/n)"
 read answer
 
@@ -63,6 +64,18 @@ case $answer in
   *);;
 esac
 
+# uninstall vundle
+echo "Would you like to uninstall Vundle? (y/n)"
+read answer
+
+case $answer in
+  [yY]*)
+    if [ -d "$vundle_path" ]; then
+      rm -Rf "$vundle_path"
+    fi
+    ;;
+  *);;
+esac
 
 # default shell
 echo "Would you like to change your default shell to BASH? (y/n)"

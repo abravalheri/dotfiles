@@ -11,10 +11,10 @@ set nocompatible              " be iMproved, required
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
+set rtp+=~/dotfiles/+vim/bundle/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-"call vundle#begin('~/some/path/here')
+call vundle#begin('~/dotfiles/+vim/bundle')
 
 " let Vundle manage Vundle, required
 Plugin 'gmarik/Vundle.vim'
@@ -22,7 +22,7 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'tomtom/tlib_vim'
 
 Plugin 'bats.vim'
-Plugin 'bling/vim-airline'
+"Plugin 'bling/vim-airline'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'garbas/vim-snipmate'
 Plugin 'git://git.wincent.com/command-t.git'
@@ -37,7 +37,6 @@ Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'scrooloose/syntastic'
 Plugin 'Shougo/unite.vim'
-Plugin 'SirVer/ultisnips'
 Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-rails'
@@ -51,8 +50,8 @@ Plugin 'terryma/vim-multiple-cursors'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'mileszs/ack.vim'
 
-let g:airline_theme = 'murmur' "'simple'
-let g:airline_powerline_fonts = 1
+"let g:airline_theme = 'murmur' "'simple'
+"let g:airline_powerline_fonts = 1
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -154,4 +153,3 @@ set t_Co=256
 syntax on
 colorscheme Monokai "ir_black
 set bs=2
-
