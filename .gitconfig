@@ -1,0 +1,63 @@
+[core]
+	editor = vim
+	filemode = false
+[color]
+	ui = true
+[credential]
+	helper = cache --timeout=7200
+[mergetool]
+	keeptemporaries = false
+	keepbackups = false
+	prompt = false
+	trustexitcode = false
+[push]
+	default = simple
+[diff]
+	renames = copies
+	algorithm = patience
+[branch]
+	autosetupmerge = true
+[rerere]
+	enabled = true
+[include]
+	path=~/.config/git/author.conf
+[alias]
+	untracked = ls-files --others --exclude-standard
+	add-untracked = !git add $(git ls-files -o --exclude-standard)
+	remove-untracked = clean -df
+	last = log -1 --stat
+	cp = cherry-pick
+	co = checkout
+	cl = clone
+	ci = commit
+	st = status -sb
+	br = branch
+	unstage = reset HEAD --
+	dc = diff --cached
+	lg0 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+	lg = !"git lg1"
+	lol = log --graph --decorate --pretty=oneline --abbrev-commit
+	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
+	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         %C(black)[%cr]%C(reset)  %x09%C(black)%an: %s %C(reset)'
+	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+	stree = !bash -c '"                                                                             \
+		        while IFS=+ read -r hash time branch message; do                                            \
+		            timelength=$(echo \"$time\" | sed -r \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
+		            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
+		            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"\";          \
+		        done < <(git logx && echo);"'
+	vtree = !bash -c '"                                                                             \
+		        while IFS=+ read -r hash time branch message; do                                            \
+		            timelength=$(echo \"$time\" | sed -r \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
+		            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
+		            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"$message\";  \
+		        done < <(git logx && echo);"'
+	ls = ls-file
+	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+	ign  = ls-files -o -i --exclude-standard # Show files ignored by git
+	puff = pull --ff-only
+	fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
+	wdiff = diff --color-words
+	graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
