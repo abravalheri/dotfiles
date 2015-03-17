@@ -22,6 +22,7 @@ Plugin 'MarcWeber/vim-addon-mw-utils'
 Plugin 'Shougo/unite.vim'
 Plugin 'Shougo/vimfiler.vim'
 Plugin 'bats.vim'
+Plugin 'edkolev/tmuxline.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'garbas/vim-snipmate'
 Plugin 'git://git.wincent.com/command-t.git'
@@ -156,3 +157,6 @@ set t_Co=256
 syntax on
 colorscheme Monokai "ir_black
 set bs=2
+
+" tmuxline
+let g:tmuxline_powerline_separators = 0
