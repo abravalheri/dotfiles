@@ -36,11 +36,7 @@ COMPLETION_WAITING_DOTS="true"
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
 
-# Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
-# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
-# Example format: plugins=(rails git textmate ruby lighthouse)
-# Add wisely, as too many plugins slow down shell startup.
-plugins=(git python pip)
+source $DOTFILES/zsh/plugins.zsh
 
 source $ZSH/oh-my-zsh.sh
 
@@ -59,21 +55,6 @@ export EDITOR='vim'
 # export ARCHFLAGS="-arch x86_64"
 
 # ssh
-# export SSH_KEY_PATH="~/.ssh/dsa_id"
+export SSH_KEY_PATH="~/.ssh/id_rsa"
 
-# Set personal aliases, overriding those provided by oh-my-zsh libs,
-# plugins, and themes. Aliases can be placed here, though oh-my-zsh
-# users are encouraged to define aliases within the ZSH_CUSTOM folder.
-# For a full list of active aliases, run `alias`.
-#
-# Example aliases
-alias zshconfig="vim ~/.zshrc"
-alias ohmyzsh="vim ~/.oh-my-zsh"
-alias clipboard='xclip -sel clip'
-alias tmux="tmux -2"
-
-# export PATH="$HOME/.rbenv/bin:$PATH"
-# export RBENV_ROOT="$(rbenv root -)"
-# eval "$(rbenv init -)"
-
-sshagent() { eval ssh-agent $SHELL }
+source $DOTFILES/zsh/extras.zsh
