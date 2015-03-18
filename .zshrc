@@ -6,7 +6,7 @@ export ZSH=$DOTFILES/+oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="af-magic"
+ZSH_THEME="sunaku" #muse
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
