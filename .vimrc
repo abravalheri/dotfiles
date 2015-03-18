@@ -158,5 +158,4 @@ syntax on
 colorscheme Monokai "ir_black
 set bs=2
 
-" tmuxline
-let g:tmuxline_powerline_separators = 0
+source $DOTFILES/extras.vim
