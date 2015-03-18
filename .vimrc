@@ -1,4 +1,6 @@
-" CONFIG TAKEN FROM: /usr/share/vim/vim74/vimrc_example.vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic configuration
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " When started as "evim", evim.vim will already have done these settings.
 if v:progname =~? "evim"
@@ -10,67 +12,14 @@ endif
 set nocompatible              " be iMproved, required
 filetype off                  " required
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/dotfiles/+vim/bundle/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-call vundle#begin('~/dotfiles/+vim/bundle')
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Plugins
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+source $DOTFILES/vim/plugins.vim
 
-" let Vundle manage Vundle, required
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/vimfiler.vim'
-Plugin 'bats.vim'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'garbas/vim-snipmate'
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'gmarik/Vundle.vim'
-Plugin 'godlygeek/tabular'
-Plugin 'honza/vim-snippets'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'kien/ctrlp.vim'
-Plugin 'majutsushi/tagbar'
-Plugin 'mhinz/vim-signify'
-Plugin 'mileszs/ack.vim'
-Plugin 'myint/syntastic-extras'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'rust-lang/rust.vim'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'sjl/gundo.vim'
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'tomtom/tlib_vim'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-sleuth'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-vinegar'
-Plugin 'vim-ruby/vim-ruby'
-
-" Status line
-Plugin 'itchyny/lightline.vim'
-"Plugin 'maciakl/vim-neatstatus.git' " good alternative
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" non-Plugin stuff after this line
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
@@ -78,13 +27,13 @@ set backspace=indent,eol,start
 if has("vms")
   set nobackup    " do not keep a backup file, use versions instead
 else
-  set backup    " keep a backup file (restore to previous version)
+  set backup      " keep a backup file (restore to previous version)
   set undofile    " keep an undo file (undo changes after closing)
 endif
-set history=50    " keep 50 lines of command line history
-"set ruler   " show the cursor position all the time
-set showcmd   " display incomplete commands
-set incsearch   " do incremental searching
+set history=5000  " keep 5000 lines of command line history
+set ruler         " show the cursor position all the time
+set showcmd       " display incomplete commands
+set incsearch     " do incremental searching
 set number
 
 " For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
@@ -158,4 +107,7 @@ syntax on
 colorscheme Monokai "ir_black
 set bs=2
 
-source $DOTFILES/extras.vim
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Extras
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+source $DOTFILES/vim/extras.vim
