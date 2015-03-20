@@ -3,4 +3,4 @@
 # # Example format: plugins=(rails git textmate ruby lighthouse)
 # # Add wisely, as too many plugins slow down shell startup.
 #
-plugins=(git rbenv ruby rails python pip)
+plugins=(gitfast git-flow git-extras rbenv ruby rails rake-fast python pip node)
