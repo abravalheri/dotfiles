@@ -49,3 +49,10 @@
 
 # Force use of the specified line end style
 --lineend=linux
+
+# et the minimal indent that is added when a header is built of multiple lines.
+# 0 - no minimal indent. The lines will be aligned with the paren on the preceding line.
+--min-conditional-indent=0
+
+# Set the  maximum of # spaces to indent a continuation line
+--max-instatement-indent=2
