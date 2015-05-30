@@ -54,7 +54,7 @@
 		            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
 		            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"$message\";  \
 		        done < <(git logx && echo);"'
-	ls = ls-file
+	ls = ls-files
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
 	ign  = ls-files -o -i --exclude-standard # Show files ignored by git
 	puff = pull --ff-only
