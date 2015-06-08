@@ -10,10 +10,10 @@ Just use `git` and the installation script:
 cd ~
 git clone https://github.com/abravalheri/dotfiles
 cd dotfiles
-./install.sh
+zsh install.sh
 ```
 
 This script will symlink the dotfiles, clone the required repositories
 (vundle, oh-my-zsh), ask you about your name and email and many other things
 
-Please make sure to have `git`, `ruby`, `tmux`, `vim` and `astyle` installed before running this.
+Please make sure to have `zsh`, `git`, `ruby`, `tmux`, `vim` and `astyle` installed before running this.
