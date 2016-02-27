@@ -1,6 +1,8 @@
 [core]
 	editor = vim
 	filemode = false
+	autocrlf = input
+	eol = lf
 [color]
 	ui = true
 [credential]
