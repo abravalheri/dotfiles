@@ -57,7 +57,12 @@ case $answer in
     "  name = \"$git_user_name\"\n"\
     "  email = $git_user_email\n" > "$git_conf_extra_dir/author.conf"
     ;;
-  *) echo "Please edit file $git_conf_extra_dir/author.conf";;
+  *)
+    echo "[user]\n"\
+    "  name = \"(none)\"\n"\
+    "  email = \"not@an.email.com\"\n" > "$git_conf_extra_dir/author.conf"
+    echo "Please edit file $git_conf_extra_dir/author.conf"
+    ;;
 esac
 
 # install oh-my-zsh
