@@ -104,7 +104,8 @@ endif
 " SYNTAX HIGHLIGHTING:
 set t_Co=256
 syntax on
-colorscheme Monokai "ir_black
+let g:rehash256=1
+colorscheme molokai "ir_black
 set bs=2
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

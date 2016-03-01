@@ -21,8 +21,8 @@
 	autosetupmerge = true
 [rerere]
 	enabled = true
-[include]
-	path=~/.config/git/author.conf
+#[include]
+#	path=~/.config/git/author.conf
 [alias]
 	untracked = ls-files --others --exclude-standard
 	add-untracked = !git add $(git ls-files -o --exclude-standard)
@@ -42,8 +42,8 @@
 	lg = !"git lg1"
 	lol = log --graph --decorate --pretty=oneline --abbrev-commit
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
-	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         %C(black)[%cr]%C(reset)  %x09%C(black)%an: %s %C(reset)'
-	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+%C(dim black)(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %C(bold black)%an%C(reset)%C(black): %s%C(reset)'
+	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
+	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %an%C(reset): %s%C(reset)'
 	stree = !bash -c '"                                                                             \
 		        while IFS=+ read -r hash time branch message; do                                            \
 		            timelength=$(echo \"$time\" | sed -r \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
@@ -63,3 +63,6 @@
 	fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
 	wdiff = diff --color-words
 	graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
+[user]
+	name = (none)
+	email = my@email.com
