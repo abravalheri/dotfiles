@@ -41,7 +41,7 @@ source $DOTFILES/zsh/plugins.zsh
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-export PATH="$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$(ruby -e 'print Gem.user_dir')/bin:/usr/games:/usr/local/games"
+export PATH="/opt/texbin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$(ruby -e 'print Gem.user_dir')/bin:/usr/games:/usr/local/games"
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -58,3 +58,6 @@ export EDITOR='vim'
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 
 source $DOTFILES/zsh/extras.zsh
+
+# added by travis gem
+[ -f /home/vagrant/.travis/travis.sh ] && source /home/vagrant/.travis/travis.sh

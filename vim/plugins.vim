@@ -11,22 +11,36 @@ call vundle#begin()
 call vundle#begin('~/dotfiles/+vim/bundle')
 
 " let Vundle manage Vundle, required
+Plugin 'gmarik/Vundle.vim'
+
+" vim-scripts
 Plugin 'Align'
-Plugin 'ap/vim-css-color'
 Plugin 'bats.vim'
+Plugin 'gsl.vim'
+Plugin 'YankRing.vim'
+
+" Github
+Plugin 'aklt/plantuml-syntax'
+Plugin 'ap/vim-css-color'
 Plugin 'benmills/vimux'
 Plugin 'bronson/vim-trailing-whitespace'
+Plugin 'cespare/vim-toml'
+Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'editorconfig/editorconfig-vim'
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'flazz/vim-colorschemes'
 Plugin 'garbas/vim-snipmate'
-Plugin 'git://git.wincent.com/command-t.git'
-Plugin 'gmarik/Vundle.vim'
 Plugin 'godlygeek/tabular'
 Plugin 'gregsexton/gitv'
 Plugin 'groenewege/vim-less'
+Plugin 'hdima/python-syntax'
 Plugin 'honza/vim-snippets'
+Plugin 'isruslan/vim-es6'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'jmcantrell/vim-virtualenv'
+Plugin 'junegunn/vim-easy-align'
 Plugin 'kchmck/vim-coffee-script'
-Plugin 'kien/ctrlp.vim'
 Plugin 'Lokaltog/vim-easymotion'
 Plugin 'majutsushi/tagbar'
 Plugin 'MarcWeber/vim-addon-mw-utils'
@@ -35,15 +49,16 @@ Plugin 'mhinz/vim-signify'
 Plugin 'mileszs/ack.vim'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'myint/syntastic-extras'
+Plugin 'nathanalderson/yang.vim'
 Plugin 'othree/html5.vim'
 Plugin 'pangloss/vim-javascript'
 Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
 Plugin 'rust-lang/rust.vim'
 Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/syntastic'
-Plugin 'vim-scripts/SearchComplete'
-Plugin 'Shougo/unite.vim'
-Plugin 'Shougo/vimfiler.vim'
+Plugin 'scrooloose/vim-slumlord'
+Plugin 'shougo/neocomplete.vim'
 Plugin 'sjl/gundo.vim'
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'thinca/vim-quickrun'
@@ -60,12 +75,20 @@ Plugin 'tpope/vim-sleuth'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-vinegar'
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'YankRing.vim'
+Plugin 'vim-scripts/SearchComplete'
+Plugin 'xuhdev/syntax-dosini.vim'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'Yggdroot/indentLine'
 
 " Status line
 Plugin 'itchyny/lightline.vim'
 "Plugin 'maciakl/vim-neatstatus.git' " good alternative
+
+" Non-github
+Plugin 'git://git.wincent.com/command-t.git'
+
+" My own
+Plugin 'abravalheri/ribosome.vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
