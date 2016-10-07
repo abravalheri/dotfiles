@@ -58,6 +58,3 @@ export EDITOR='vim'
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 
 source $DOTFILES/zsh/extras.zsh
-
-# added by travis gem
-[ -f /home/vagrant/.travis/travis.sh ] && source /home/vagrant/.travis/travis.sh
