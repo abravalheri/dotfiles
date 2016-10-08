@@ -6,7 +6,7 @@ dotfiles_path=$(readlink -f .)
 config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 backup_dir="$config_home/dotfiles.bkp"
 oh_my_zsh_path="$dotfiles_path/+oh-my-zsh"
-vundle_path="$dotfiles_path/+vim/bundle/Vundle.vim"
+vundle_path="$dotfiles_path/+vim/plugins/Vundle.vim"
 git_conf_extra_dir="$HOME/.config/git"
 # I've chosen do not use $config_home, because git cannot do advanced expansion
 # in gitconfig files
@@ -85,7 +85,7 @@ read answer
 case $answer in
   [yY]*)
     if [ ! -d "$vundle_path" ]; then
-      git clone https://github.com/gmarik/Vundle.vim.git $vundle_path
+      git clone https://github.com/VundleVim/Vundle.vim.git $vundle_path
       vim +PluginInstall +qall
     fi
     ;;

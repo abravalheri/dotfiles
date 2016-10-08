@@ -7,7 +7,7 @@ config_home=${XDG_CONFIG_HOME:-"$HOME/.config"}
 backup_dir="$config_home/dotfiles.bkp"
 oh_my_zsh_path="$dotfiles_path/+oh-my-zsh"
 git_conf_extra_dir="$HOME/.config/git"
-vundle_path="$dotfiles_path/+vim/bundle/Vundle.vim"
+vundle_path="$dotfiles_path/+vim/plugins/Vundle.vim"
 # I've chosen do not use $config_home, because git cannot do advanced expansion
 # in gitconfig files
 

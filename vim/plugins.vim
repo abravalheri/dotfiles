@@ -1,94 +1,121 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins using Vundle
 """""""""""""""""""""""""""""""""""""""""""""""""
-" please see http://github.com/gmarik/Vundle.vim
+" please see http://github.com/VundleVim/Vundle.vim
 " for more information
 
+filetype off                  " required
+
 " set the runtime path to include Vundle and initialize
-set rtp+=~/dotfiles/+vim/bundle/Vundle.vim
+set runtimepath+=$DOTFILES/+vim/plugins/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-call vundle#begin('~/dotfiles/+vim/bundle')
+call vundle#begin($DOTFILES . '/+vim/plugins')
 
 " let Vundle manage Vundle, required
-Plugin 'gmarik/Vundle.vim'
+Plugin 'VundleVim/Vundle.vim'
 
-" vim-scripts
-Plugin 'Align'
-Plugin 'bats.vim'
-Plugin 'gsl.vim'
-Plugin 'YankRing.vim'
-
-" Github
-Plugin 'aklt/plantuml-syntax'
-Plugin 'ap/vim-css-color'
-Plugin 'benmills/vimux'
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'cespare/vim-toml'
-Plugin 'ctrlpvim/ctrlp.vim'
-Plugin 'davidhalter/jedi-vim'
+"" Consistency
 Plugin 'editorconfig/editorconfig-vim'
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'flazz/vim-colorschemes'
-Plugin 'garbas/vim-snipmate'
-Plugin 'godlygeek/tabular'
-Plugin 'gregsexton/gitv'
-Plugin 'groenewege/vim-less'
-Plugin 'hdima/python-syntax'
-Plugin 'honza/vim-snippets'
-Plugin 'isruslan/vim-es6'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'jmcantrell/vim-virtualenv'
-Plugin 'junegunn/vim-easy-align'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'Lokaltog/vim-easymotion'
-Plugin 'majutsushi/tagbar'
-Plugin 'MarcWeber/vim-addon-mw-utils'
-Plugin 'mattn/emmet-vim'
+
+" Enhancements
+Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'mhinz/vim-signify'
+" diff signs at left margin
 Plugin 'mileszs/ack.vim'
-Plugin 'mustache/vim-mustache-handlebars'
-Plugin 'myint/syntastic-extras'
-Plugin 'nathanalderson/yang.vim'
-Plugin 'othree/html5.vim'
-Plugin 'pangloss/vim-javascript'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'rust-lang/rust.vim'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/nerdtree'
-Plugin 'scrooloose/syntastic'
-Plugin 'scrooloose/vim-slumlord'
-Plugin 'shougo/neocomplete.vim'
 Plugin 'sjl/gundo.vim'
+" visualize vim undo tree
 Plugin 'terryma/vim-multiple-cursors'
-Plugin 'thinca/vim-quickrun'
-Plugin 'tomtom/tlib_vim'
-Plugin 'tpope/vim-commentary'
+Plugin 'Yggdroot/indentLine'
+" alternative: nathanaelkane/vim-indent-guides
+Plugin 'tomtom/tcomment_vim'
+" alternative: Plugin 'scrooloose/nerdcommenter'
+
+Plugin 'scrooloose/syntastic'
+Plugin 'myint/syntastic-extras'
+
+Plugin 'Shougo/neocomplete.vim'
+Plugin 'Shougo/neosnippet'
+Plugin 'Shougo/neosnippet-snippets'
+
+Plugin 'tpope/vim-markdown'
+Plugin 'tpope/vim-sensible'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-surround'
+
+"" Alignment
+Plugin 'junegunn/vim-easy-align'
+
+"" File Navigation
+Plugin 'scrooloose/nerdtree'
+Plugin 'Xuyuanp/nerdtree-git-plugin'
+Plugin 'jistr/vim-nerdtree-tabs'
+Plugin 'wincent/command-t'
+" alternative: Plugin 'ctrlpvim/ctrlp.vim'
+
+"" Git
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-git'
-Plugin 'tpope/vim-haml'
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-sleuth'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-vinegar'
+Plugin 'gregsexton/gitv'
+
+"" Tmux
+Plugin 'edkolev/tmuxline.vim'
+Plugin 'tpope/vim-tbone'
+Plugin 'benmills/vimux'
+
+"" Python
+Plugin 'hdima/python-syntax'
+Plugin 'davidhalter/jedi-vim'
+Plugin 'jmcantrell/vim-virtualenv'
+
+"" Ruby
 Plugin 'vim-ruby/vim-ruby'
-Plugin 'vim-scripts/SearchComplete'
-Plugin 'xuhdev/syntax-dosini.vim'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'Yggdroot/indentLine'
+Plugin 'tpope/vim-rake'
+Plugin 'tpope/vim-rails'
 
-" Status line
-Plugin 'itchyny/lightline.vim'
-"Plugin 'maciakl/vim-neatstatus.git' " good alternative
+"" Web
+Plugin 'ap/vim-css-color'
+Plugin 'gko/vim-coloresque'
+Plugin 'tpope/vim-haml'
+" SCSS, SASS and HAML syntax
+Plugin 'groenewege/vim-less'
+Plugin 'othree/html5.vim'
+Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
+Plugin 'pangloss/vim-javascript'
+Plugin 'isruslan/vim-es6'
+Plugin 'kchmck/vim-coffee-script'
 
-" Non-github
-Plugin 'git://git.wincent.com/command-t.git'
-
-" My own
+"" Other Languages / Synaxes
 Plugin 'abravalheri/ribosome.vim'
+Plugin 'aklt/plantuml-syntax'
+" Plugin 'scrooloose/vim-slumlord'  " previews for plantuml
+Plugin 'cespare/vim-toml'
+Plugin 'mustache/vim-mustache-handlebars'
+Plugin 'nathanalderson/yang.vim'
+Plugin 'rust-lang/rust.vim'
+Plugin 'xuhdev/syntax-dosini.vim'
+Plugin 'ekalinin/Dockerfile.vim'
+Plugin 'vim-scripts/bats.vim'
+Plugin 'vim-scripts/gsl.vim'
+
+"" Appearance
+Plugin 'flazz/vim-colorschemes'
+Plugin 'itchyny/lightline.vim'
+" alternative: Plugin 'maciakl/vim-neatstatus.git'
+
+""" For future consideration
+" Plugin 'Lokaltog/vim-easymotion'
+" Plugin 'godlygeek/tabular'
+" Plugin 'vim-scripts/Align'
+" Plugin 'majutsushi/tagbar'
+" Plugin 'vim-scripts/SearchComplete'
+" Plugin 'tpope/vim-sleuth'
+" Plugin 'tpope/vim-abolish'
+" Plugin 'thinca/vim-quickrun'
+" Plugin 'ervandew/supertab'
+" Plugin 'tommcdo/vim-exchange'
+" Plugin 'tpope/vim-unimpaired'
+" Plugin 'itchyny/lightline-powerful'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required

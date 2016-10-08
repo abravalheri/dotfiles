@@ -1,114 +1,83 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Basic configuration
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NOTICE: Vim reads .vim/vimrc when .vimrc does not exist
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" This file only make basic configuration for VIM and redirect to other files
 
-" When started as "evim", evim.vim will already have done these settings.
-if v:progname =~? "evim"
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Basic configuration
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+" When started as 'evim', evim.vim will already have done these settings.
+if v:progname =~? 'evim'
   finish
 endif
 
 " Use Vim settings, rather than Vi settings (much better!).
 " This must be first, because it changes other options as a side effect.
 set nocompatible              " be iMproved, required
-filetype off                  " required
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Plugins
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-source $DOTFILES/vim/plugins.vim
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" non-Plugin stuff after this line
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" XDG Environment For VIM
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+" Effort to make vim more XDG-basedir compatible
+" (partially taken from https://gist.github.com/kaleb/3885679)
+"
+" References
+" ----------
+"
+" - http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html#variables
+" - http://tlvince.com/vim-respect-xdg
+"
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-if has("vms")
-  set nobackup    " do not keep a backup file, use versions instead
-else
-  set backup      " keep a backup file (restore to previous version)
-  set undofile    " keep an undo file (undo changes after closing)
-endif
-set history=5000  " keep 5000 lines of command line history
-set ruler         " show the cursor position all the time
-set showcmd       " display incomplete commands
-set incsearch     " do incremental searching
-set number
-
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
-" let &guioptions = substitute(&guioptions, "t", "", "g")
-
-" Don't use Ex mode, use Q for formatting
-map Q gq
-
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
-
-" In many terminal emulators the mouse works just fine, thus enable it.
-if has('mouse')
-  set mouse=a
+if empty($XDG_CACHE_HOME)
+  let $XDG_CACHE_HOME = $HOME . '/.cache'
 endif
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-  syntax on
-  set hlsearch
+if empty($XDG_CONFIG_HOME)
+  let $XDG_CONFIG_HOME = $HOME . '/.config'
 endif
 
-" Only do this part when compiled with support for autocommands.
-if has("autocmd")
-
-  " Enable file type detection.
-  " Use the default filetype settings, so that mail gets 'tw' set to 72,
-  " 'cindent' is on in C files, etc.
-  " Also load indent files, to automatically do language-dependent indenting.
-  filetype plugin indent on
-
-  " Put these in an autocmd group, so that we can delete them easily.
-  augroup vimrcEx
-  au!
-
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line("$") |
-    \   exe "normal! g`\"" |
-    \ endif
-
-  augroup END
-
-else
-
-  set autoindent    " always set autoindenting on
-
-endif " has("autocmd")
-
-" Convenient command to see the difference between the current buffer and the
-" file it was loaded from, thus the changes you made.
-" Only define it when not defined already.
-if !exists(":DiffOrig")
-  command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
-      \ | wincmd p | diffthis
+if !isdirectory($XDG_CACHE_HOME . '/vim/swap')
+  call mkdir($XDG_CACHE_HOME . '/vim/swap', 'p')
 endif
 
+if !isdirectory($XDG_CACHE_HOME . '/vim/backup')
+  call mkdir($XDG_CACHE_HOME . '/vim/backup', 'p')
+endif
 
-" SYNTAX HIGHLIGHTING:
-set t_Co=256
-syntax on
-let g:rehash256=1
-colorscheme molokai "ir_black
-set bs=2
+" see :help persistent-undo
+if !isdirectory($XDG_CACHE_HOME . '/vim/undo')
+  call mkdir($XDG_CACHE_HOME . '/vim/undo', 'p')
+endif
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Extras
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-source $DOTFILES/vim/extras.vim
+set directory=$XDG_CACHE_HOME/vim/swap,~/,/tmp
+set backupdir=$XDG_CACHE_HOME/vim/backup,~/,/tmp
+set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
+set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
+
+set runtimepath-=~/.vim
+set runtimepath^=$XDG_CONFIG_HOME/vim
+set runtimepath-=~/.vim/after
+set runtimepath+=$XDG_CONFIG_HOME/vim/after
+
+
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Configuration itself
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+"" For XDG the following lines would be enough:
+if !empty(glob($XDG_CONFIG_HOME . '/vim/vimrc'))
+  source $XDG_CONFIG_HOME/vim/vimrc
+endif
+
+"" but for dotfiles purposes:
+if empty($DOTFILES)
+  let $DOTFILES = $HOME . '/dotfiles'
+endif
+
+if !empty(glob($DOTFILES . '/vim/main.vim'))
+  source $DOTFILES/vim/main.vim
+endif
