@@ -6,7 +6,7 @@ export ZSH=$DOTFILES/+oh-my-zsh
 # Look in ~/.oh-my-zsh/themes/
 # Optionally, if you set this to "random", it'll load a random theme each
 # time that oh-my-zsh is loaded.
-ZSH_THEME="sunaku" #muse
+ZSH_THEME="custom" #terminalparty #sunaku #muse
 
 # Uncomment the following line to use case-sensitive completion.
 # CASE_SENSITIVE="true"
@@ -34,7 +34,7 @@ COMPLETION_WAITING_DOTS="true"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-# ZSH_CUSTOM=/path/to/new-custom-folder
+ZSH_CUSTOM=$DOTFILES/zsh
 
 source $DOTFILES/zsh/plugins.zsh
 
@@ -57,4 +57,10 @@ export EDITOR='vim'
 # ssh
 export SSH_KEY_PATH="~/.ssh/id_rsa"
 
+source $DOTFILES/zsh/style.zsh
+
 source $DOTFILES/zsh/extras.zsh
+
+if [ -f $DOTFILES/zsh/+local.zsh ]; then
+  source $DOTFILES/zsh/+local.zsh
+fi

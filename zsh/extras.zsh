@@ -18,7 +18,3 @@ fi
 if [ -f $HOME/.travis/travis.sh ]; then
   source $HOME/.travis/travis.sh
 fi
-
-if [ -f $DOTFILES/zsh/+extras.zsh ]; then
-  source $DOTFILES/zsh/+extras.zsh
-fi

@@ -78,6 +78,6 @@ if empty($DOTFILES)
   let $DOTFILES = $HOME . '/dotfiles'
 endif
 
-if !empty(glob($DOTFILES . '/vim/main.vim'))
-  source $DOTFILES/vim/main.vim
+if !empty(glob($DOTFILES . '/vim/config.vim'))
+  source $DOTFILES/vim/config.vim
 endif

@@ -34,23 +34,38 @@ set history=5000  " keep 5000 lines of command line history
 set ruler         " show the cursor position all the time
 set showcmd       " display incomplete commands
 
-" numbering
+set diffopt+=iwhite,vertical "Ignore changes in amount of white space
+
+" set cursorline    " visual feedbak for cursor position
+" set cursorcolumn
+set visualbell
+
+" line numbering in hybrid mode for easier motions
 set number
-set relativenumber  " hybrid mode
+set relativenumber
 
 " panels open in a more natural way...
 set splitbelow
 set splitright
 
-" SEARCH
+" search
 set incsearch     " do incremental searching
 set ignorecase
 set smartcase     " if the regex has an upper letter, do not ignore case
+set wrapscan      " circular search through the file
+" if terminal has colors highlighting the last used search pattern.
+if &t_Co > 2 || has('gui_running')
+  set hlsearch
+endif
 
-" For Win32 GUI: remove 't' flag from 'guioptions': no tearoff menu entries
+" command line autocompletion
+set wildmenu
+set wildmode=longest,full
+
+" for Win32 GUI - remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, 't', '', 'g')
 
-" In many terminal emulators the mouse works just fine, thus enable it.
+" in many terminal emulators the mouse works just fine, thus enable it.
 if has('mouse')
   set mouse=a
 endif
@@ -59,39 +74,18 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Key Bindings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Don't use Ex mode, use Q for formatting
-map Q gq
+source $DOTFILES/vim/keybindings.vim
 
-" CTRL-U in insert mode deletes a lot.  Use CTRL-G u to first break undo,
-" so that you can undo CTRL-U after inserting a line break.
-inoremap <C-U> <C-G>u<C-U>
 
-nnoremap <F2> :set invpaste paste?<CR> " Toggle auto-indenting for code paste
-set pastetoggle=<F2>
-set showmode
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Style
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+source $DOTFILES/vim/style.vim
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Enhancements
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-" SYNTAX HIGHLIGHTING:
-if match($TERM, '256') >=  0
-  set t_Co=256
-  let g:rehash256=1
-  colorscheme molokai
-  set backspace=2
-else
-  colorscheme ir_black
-endif
-
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has('gui_running')
-  syntax on
-  set hlsearch
-endif
-
 " Only do this part when compiled with support for autocommands.
 if has('autocmd')
   " Use the default filetype settings, so that mail gets 'tw' set to 72,
@@ -138,6 +132,12 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Extras
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if !empty(glob(expand('$DOTFILES/vim/extras.vim')))
-  source $DOTFILES/vim/extras.vim
+source $DOTFILES/vim/extras.vim
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Local
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if !empty(glob(expand('$DOTFILES/vim/+local.vim')))
+  source $DOTFILES/vim/+local.vim
 endif

@@ -15,10 +15,10 @@ call vundle#begin($DOTFILES . '/+vim/plugins')
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'
 
-"" Consistency
+"" Consistency:
 Plugin 'editorconfig/editorconfig-vim'
 
-" Enhancements
+" Enhancements:
 Plugin 'bronson/vim-trailing-whitespace'
 Plugin 'mhinz/vim-signify'
 " diff signs at left margin
@@ -43,37 +43,36 @@ Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
 
-"" Alignment
+"" Alignment:
 Plugin 'junegunn/vim-easy-align'
 
-"" File Navigation
+"" File Navigation:
 Plugin 'scrooloose/nerdtree'
 Plugin 'Xuyuanp/nerdtree-git-plugin'
 Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'wincent/command-t'
-" alternative: Plugin 'ctrlpvim/ctrlp.vim'
+Plugin 'ctrlpvim/ctrlp.vim'
 
-"" Git
+"" Git:
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-git'
 Plugin 'gregsexton/gitv'
 
-"" Tmux
+"" Tmux:
 Plugin 'edkolev/tmuxline.vim'
 Plugin 'tpope/vim-tbone'
 Plugin 'benmills/vimux'
 
-"" Python
+"" Python:
 Plugin 'hdima/python-syntax'
 Plugin 'davidhalter/jedi-vim'
 Plugin 'jmcantrell/vim-virtualenv'
 
-"" Ruby
+"" Ruby:
 Plugin 'vim-ruby/vim-ruby'
 Plugin 'tpope/vim-rake'
 Plugin 'tpope/vim-rails'
 
-"" Web
+"" Web:
 Plugin 'ap/vim-css-color'
 Plugin 'gko/vim-coloresque'
 Plugin 'tpope/vim-haml'
@@ -85,7 +84,7 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'isruslan/vim-es6'
 Plugin 'kchmck/vim-coffee-script'
 
-"" Other Languages / Synaxes
+"" Other Syntaxes:
 Plugin 'abravalheri/ribosome.vim'
 Plugin 'aklt/plantuml-syntax'
 " Plugin 'scrooloose/vim-slumlord'  " previews for plantuml
@@ -98,7 +97,7 @@ Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'vim-scripts/bats.vim'
 Plugin 'vim-scripts/gsl.vim'
 
-"" Appearance
+"" Style:
 Plugin 'flazz/vim-colorschemes'
 Plugin 'itchyny/lightline.vim'
 " alternative: Plugin 'maciakl/vim-neatstatus.git'
