@@ -12,3 +12,10 @@ cd "${BASEDIR}"
 git submodule update --init --recursive "${DOTBOT_DIR}"
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+
+if [ -n "${SHELL##*zsh*}" ]; then
+  echo "To use ZSH as default shell please do:\n"
+  echo "chsh -s /bin/zsh"
+  echo "env zsh"
+  echo "source ~/.zshrc"
+fi

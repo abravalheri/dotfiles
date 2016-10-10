@@ -12,7 +12,7 @@ mkdir -p ~/.config
 cd ~/.config
 git clone https://github.com/abravalheri/dotfiles
 cd dotfiles
-zsh install
+zsh ./install
 ```
 
 This script will symlink the dotfiles and clone the required repositories
