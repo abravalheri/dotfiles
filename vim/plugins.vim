@@ -7,10 +7,10 @@
 filetype off                  " required
 
 " set the runtime path to include Vundle and initialize
-set runtimepath+=$DOTFILES/+vim/plugins/Vundle.vim
+set runtimepath+=$DOTFILES/vim/+plugins/Vundle.vim
 call vundle#begin()
 " alternatively, pass a path where Vundle should install plugins
-call vundle#begin($DOTFILES . '/+vim/plugins')
+call vundle#begin($DOTFILES . '/vim/+plugins')
 
 " let Vundle manage Vundle, required
 Plugin 'VundleVim/Vundle.vim'

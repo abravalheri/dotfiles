@@ -40,8 +40,8 @@ setw -g aggressive-resize on
 setw -g mode-keys vi
 
 # Open windows/panels in the current dir
-bind '"' split-window -c "#{pane_current_path}"
-bind % split-window -h -c "#{pane_current_path}"
+bind '"' split-window -h -c "#{pane_current_path}"
+bind % split-window -v -c "#{pane_current_path}"
 bind c new-window -c "#{pane_current_path}"
 
 # source .tmux.conf as suggested in `man tmux`

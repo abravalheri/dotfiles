@@ -7,4 +7,4 @@ endif
 " http://tex.stackexchange.com/questions/96741/vim-latex-suite-unwanted-in-editor-math-symbol-conversion
 let g:tex_conceal = ""
 
-source /home/vagrant/dotfiles/vim/tmuxline-templates/barebone.vim
+source $DOTFILES/vim/tmuxline-templates/barebone.vim

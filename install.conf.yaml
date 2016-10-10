@@ -1,0 +1,12 @@
+- clean: ['~', '~/.config', 'vim/+plugins']
+- link:
+    # Install dotfiles
+    ~/.zshrc: zsh/zshrc
+    ~/.tmux.conf: tmux/conf.tmux
+    ~/.vimrc: vim/vimrc
+    ~/.astylerc: astylerc
+    # Interdependency
+    vim/+plugins/Vundle.vim: vim/Vundle.vim
+- shell:
+    # call Vundle
+    - vim -c "set shortmess=at" +PluginInstall +qa!

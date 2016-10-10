@@ -75,7 +75,7 @@ endif
 
 "" but for dotfiles purposes:
 if empty($DOTFILES)
-  let $DOTFILES = $HOME . '/dotfiles'
+  let $DOTFILES = $XDG_CONFIG_HOME . '/dotfiles'
 endif
 
 if !empty(glob($DOTFILES . '/vim/config.vim'))

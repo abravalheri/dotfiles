@@ -1,6 +1,19 @@
+# Path setup
+if command -v ruby &>/dev/null; then
+  gems_dir="$(ruby -e 'print Gem.user_dir')"
+  # http://stackoverflow.com/questions/229551/string-contains-in-bash
+  [ -n "${PATH##*$gems_dir*}" ] && PATH="$gems_dir:$PATH"
+fi
+
+if [ -f "$HOME/.local/bin" ] && [ -n "${PATH##*$HOME/.local/bin*}" ]; then
+  PATH="$HOME/.local/bin:$PATH"
+fi
+
+export PATH
+
 # Path to your oh-my-zsh installation.
-export DOTFILES=$HOME/dotfiles
-export ZSH=$DOTFILES/+oh-my-zsh
+export DOTFILES=$HOME/.config/dotfiles
+export ZSH=$DOTFILES/zsh/oh-my-zsh
 
 # Set name of the theme to load.
 # Look in ~/.oh-my-zsh/themes/
@@ -34,14 +47,13 @@ COMPLETION_WAITING_DOTS="true"
 # HIST_STAMPS="mm/dd/yyyy"
 
 # Would you like to use another custom folder than $ZSH/custom?
-ZSH_CUSTOM=$DOTFILES/zsh
+ZSH_CUSTOM=$DOTFILES/zsh/custom
 
 source $DOTFILES/zsh/plugins.zsh
 
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
-export PATH="/opt/texbin:$HOME/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:$(ruby -e 'print Gem.user_dir')/bin:/usr/games:/usr/local/games"
 
 # export MANPATH="/usr/local/man:$MANPATH"
 
@@ -63,4 +75,9 @@ source $DOTFILES/zsh/extras.zsh
 
 if [ -f $DOTFILES/zsh/+local.zsh ]; then
   source $DOTFILES/zsh/+local.zsh
+fi
+
+# Cleanup duplicates in path (rbenv and pyenv do not care)
+if command -v awk &>/dev/null; then
+  export PATH=$(printf %s "$PATH" | awk -v RS=: -v ORS=: '!arr[$0]++')
 fi
