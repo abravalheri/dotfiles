@@ -10,7 +10,7 @@ Clone the repo to `~/.config/dotfiles` and run the installation script:
 ```bash
 mkdir -p ~/.config
 cd ~/.config
-git clone https://github.com/abravalheri/dotfiles
+git clone --recursive https://github.com/abravalheri/dotfiles
 cd dotfiles
 zsh ./install
 ```

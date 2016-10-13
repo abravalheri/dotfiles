@@ -9,13 +9,15 @@ DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASEDIR}"
-git submodule update --init --recursive "${DOTBOT_DIR}"
+git submodule update --init --recursive  #"${DOTBOT_DIR}"
+
+mkdir -p ${BASEDIR}/vim/+plugins
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
 if [ -n "${SHELL##*zsh*}" ]; then
   echo "To use ZSH as default shell please do:\n"
-  echo "chsh -s /bin/zsh"
+  echo "chsh -s $(which zsh)"
   echo "env zsh"
   echo "source ~/.zshrc"
 fi
