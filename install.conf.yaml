@@ -4,6 +4,7 @@
     ~/.zshrc: zsh/zshrc
     ~/.tmux.conf: tmux/conf.tmux
     ~/.vimrc: vim/vimrc
+    ~/.gitconfig: git/gitconfig
     ~/.astylerc: astylerc
     # Interdependency
     vim/+plugins/Vundle.vim: vim/Vundle.vim
