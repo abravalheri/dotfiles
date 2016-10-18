@@ -23,6 +23,9 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editor settings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set title         " change the terminal's title
+set showmode
+
 if has('vms')
   set nobackup    " do not keep a backup file, use versions instead
 else
@@ -30,9 +33,10 @@ else
   set undofile    " keep an undo file (undo changes after closing)
 endif
 
-set history=5000  " keep 5000 lines of command line history
-set ruler         " show the cursor position all the time
-set showcmd       " display incomplete commands
+set history=5000    " keep 5000 lines of command line history
+set undolevels=1000 " use several levels of undo
+set ruler           " show the cursor position all the time
+set showcmd         " display incomplete commands
 
 set diffopt+=iwhite,vertical "Ignore changes in amount of white space
 
@@ -61,6 +65,17 @@ endif
 " command line autocompletion
 set wildmenu
 set wildmode=longest,full
+set wildignore=*.swp,*.bak,*.pyc,*.class,*.o,*.a
+
+" keep buffers alive, even if inactive
+" (http://nvie.com/posts/how-i-boosted-my-vim/#change-vim-behaviour)
+set hidden
+
+set list
+set listchars=tab:>.,trail:.,extends:>,precedes:<,nbsp:.
+
+" activate omni autocomplete
+set omnifunc=syntaxcomplete#Complete
 
 " for Win32 GUI - remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, 't', '', 'g')

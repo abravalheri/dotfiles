@@ -50,6 +50,7 @@ bind R source-file "$HOME/.tmux.conf" \; display "tmux reloaded!"
 ## --- Extras ---
 
 # style
+set-option -g status-position bottom
 source-file "$DOTFILES/tmux/style/barebone.tmux"
 
 # integrated clipboard
