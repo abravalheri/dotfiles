@@ -55,7 +55,9 @@ endif
 
 set directory=$XDG_CACHE_HOME/vim/swap,~/,/tmp
 set backupdir=$XDG_CACHE_HOME/vim/backup,~/,/tmp
-set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
+if has('persistent_undo')
+  set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
+endif
 set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
 
 set runtimepath-=~/.vim

@@ -60,7 +60,13 @@ noremap! <pagedown> <nop>
 " Plugin Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" NEOSNIPPET:
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+if version >= 703
+  " NEOSNIPPET:
+  imap <C-k> <Plug>(neosnippet_expand_or_jump)
+  smap <C-k> <Plug>(neosnippet_expand_or_jump)
+  xmap <C-k> <Plug>(neosnippet_expand_target)
+else
+  imap <C-k> <Plug>snipMateNextOrTrigger
+  smap <C-k> <Plug>snipMateNextOrTrigger
+  xmap <C-k> <Plug>snipMateNextOrTrigger
+endif

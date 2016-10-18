@@ -34,14 +34,23 @@ Plugin 'tomtom/tcomment_vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'myint/syntastic-extras'
 
-Plugin 'Shougo/neocomplete.vim'
-Plugin 'Shougo/neosnippet'
-Plugin 'Shougo/neosnippet-snippets'
-
 Plugin 'tpope/vim-markdown'
 Plugin 'tpope/vim-sensible'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-surround'
+
+"" Autocompletion:
+if version >= 703
+  Plugin 'Shougo/neocomplete.vim'
+  Plugin 'Shougo/neosnippet'
+  Plugin 'Shougo/neosnippet-snippets'
+else
+  Plugin 'ervandew/supertab'
+  Plugin 'MarcWeber/vim-addon-mw-utils'
+  Plugin 'tomtom/tlib_vim'
+  Plugin 'garbas/vim-snipmate'
+  Plugin 'honza/vim-snippets'
+endif
 
 "" Alignment:
 Plugin 'junegunn/vim-easy-align'

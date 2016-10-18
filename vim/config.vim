@@ -30,7 +30,9 @@ if has('vms')
   set nobackup    " do not keep a backup file, use versions instead
 else
   set backup      " keep a backup file (restore to previous version)
-  set undofile    " keep an undo file (undo changes after closing)
+  if has('persistent_undo')
+    set undofile    " keep an undo file (undo changes after closing)
+  endif
 endif
 
 set history=5000    " keep 5000 lines of command line history
@@ -46,7 +48,9 @@ set visualbell
 
 " line numbering in hybrid mode for easier motions
 set number
-set relativenumber
+if exists('+relativenumber')
+  set relativenumber
+endif
 
 " panels open in a more natural way...
 set splitbelow
