@@ -56,6 +56,13 @@ noremap! <right> <nop>
 noremap! <pageup> <nop>
 noremap! <pagedown> <nop>
 
+" vim-surround
+if has("autocmd")
+  autocmd FileType ruby,yaml let b:surround_45 = "<% \r %>"
+  autocmd FileType ruby,yaml let b:surround_61 = "<%= \r %>"
+endif
+
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
