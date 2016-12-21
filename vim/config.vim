@@ -10,6 +10,9 @@ set expandtab
 " allow backspacing over everything in insert mode
 set backspace=indent,eol,start
 
+" default wrapping
+set textwidth=79
+set colorcolumn=+1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins

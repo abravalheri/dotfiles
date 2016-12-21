@@ -96,7 +96,7 @@ Plugin 'kchmck/vim-coffee-script'
 "" Other Syntaxes:
 Plugin 'abravalheri/ribosome.vim'
 Plugin 'aklt/plantuml-syntax'
-" Plugin 'scrooloose/vim-slumlord'  " previews for plantuml
+Plugin 'scrooloose/vim-slumlord'  " previews for plantuml
 Plugin 'cespare/vim-toml'
 Plugin 'mustache/vim-mustache-handlebars'
 Plugin 'nathanalderson/yang.vim'
@@ -105,6 +105,7 @@ Plugin 'xuhdev/syntax-dosini.vim'
 Plugin 'ekalinin/Dockerfile.vim'
 Plugin 'vim-scripts/bats.vim'
 Plugin 'vim-scripts/gsl.vim'
+Plugin 'jvirtanen/vim-octave'
 
 "" Style:
 Plugin 'flazz/vim-colorschemes'

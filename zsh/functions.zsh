@@ -54,3 +54,7 @@ show-color-table() {
 
   echo -e "\n"
 }
+
+restart-network() {
+  sudo ifdown eth0 && sudo ifup eth0
+}

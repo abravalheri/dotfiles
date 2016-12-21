@@ -1,6 +1,9 @@
+set spell
+
 if has("autocmd")
   autocmd BufNewFile,BufRead *.gsl set filetype=gsl
   autocmd BufNewFile,BufRead {*.pylintrc,pylintrc} set filetype=toml
+  autocmd BufNewFile,BufRead *.rst setlocal shiftwidth=4 tabstop=4 colorcolumn=80
 endif
 
 " hide markers from snippets (neosnippet)
