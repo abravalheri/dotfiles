@@ -1,13 +1,17 @@
-- clean: ['~', '~/.config', 'vim/+plugins']
+- defaults:
+    link:
+      create: true
+      relink: true
+- clean: ['~', '~/.config', 'vim', 'vim/+plugins']
 - link:
     # Install dotfiles
-    ~/.zshrc: zsh/zshrc
-    ~/.tmux.conf: tmux/conf.tmux
-    ~/.vimrc: vim/vimrc
-    ~/.gitconfig: git/gitconfig
-    ~/.astylerc: astylerc
-    # Interdependency
-    vim/+plugins/Vundle.vim: vim/Vundle.vim
+    ~/.zshrc: zsh/init.zsh
+    ~/.tmux.conf: tmux/init.tmux
+    ~/.config/git: git
+    # neovim + vim compatibility
+    ~/.vim: vim
+    ~/.config/nvim: vim
+    vim/vimrc: vim/init.vim
 - shell:
-    # call Vundle
-    - vim -c "set shortmess=at" +PluginInstall +qa!
+    - ["curl -kL https://raw.github.com/junegunn/vim-plug/master/plug.vim > vim/autoload/plug.vim",
+      Install vim-plug]

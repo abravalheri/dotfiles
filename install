@@ -9,11 +9,12 @@ DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 cd "${BASEDIR}"
+echo "Update submodules ..."
 git submodule update --init --recursive  #"${DOTBOT_DIR}"
 
-mkdir -p ${BASEDIR}/vim/+plugins
-
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+function command_exists {
+  command -v "$1" >/dev/null 2>&1
+}
 
 if [ -n "${SHELL##*zsh*}" ]; then
   echo "To use ZSH as default shell please do:\n"
@@ -21,3 +22,22 @@ if [ -n "${SHELL##*zsh*}" ]; then
   echo "env zsh"
   echo "source ~/.zshrc"
 fi
+
+deps=(zsh thefuck xclip awk)
+echo "Make sure to have the following commands availble: ${deps[@]}, vim or neovim."
+for cmd in $deps; do
+  if ! command_exists $cmd; then
+    echo "Command $cmd not found."
+  fi
+done
+if ! command_exists vim && ! command_exists nvim; then
+  echo "Neither vim, nor neovim were found."
+fi
+echo "If working with neovim, also install python-neovim and python2-neovim (or python3-neovim) modules. See https://github.com/neovim/neovim/wiki/Installing-Neovim."
+
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+
+echo ""
+echo "Please, manually install vim plugins:"
+echo "vim -c \"set shortmess=at\" +PlugInstall +qa!"
+echo ""

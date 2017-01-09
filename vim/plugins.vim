@@ -1,141 +1,122 @@
 """""""""""""""""""""""""""""""""""""""""""""""""
-" Plugins using Vundle
+" Plugs using vim-plug
 """""""""""""""""""""""""""""""""""""""""""""""""
-" please see http://github.com/VundleVim/Vundle.vim
+" please see https://github.com/junegunn/vim-plug
 " for more information
 
-filetype off                  " required
-
-" set the runtime path to include Vundle and initialize
-set runtimepath+=$DOTFILES/vim/+plugins/Vundle.vim
-call vundle#begin()
-" alternatively, pass a path where Vundle should install plugins
-call vundle#begin($DOTFILES . '/vim/+plugins')
-
-" let Vundle manage Vundle, required
-Plugin 'VundleVim/Vundle.vim'
+call plug#begin($DOTFILES . '/vim/+plugins')
 
 "" Consistency:
-Plugin 'editorconfig/editorconfig-vim'
+Plug 'editorconfig/editorconfig-vim'
 
 " Enhancements:
-Plugin 'bronson/vim-trailing-whitespace'
-Plugin 'mhinz/vim-signify'
+Plug 'bronson/vim-trailing-whitespace'
+Plug 'matchit.zip'
+Plug 'airblade/vim-gitgutter'
 " diff signs at left margin
-Plugin 'mileszs/ack.vim'
-Plugin 'sjl/gundo.vim'
+Plug 'mileszs/ack.vim'
+Plug 'sjl/gundo.vim'
 " visualize vim undo tree
-Plugin 'terryma/vim-multiple-cursors'
-Plugin 'Yggdroot/indentLine'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'Yggdroot/indentLine'
 " alternative: nathanaelkane/vim-indent-guides
-Plugin 'tomtom/tcomment_vim'
-" alternative: Plugin 'scrooloose/nerdcommenter'
+Plug 'tomtom/tcomment_vim'
+" alternative: Plug 'scrooloose/nerdcommenter'
 
-Plugin 'scrooloose/syntastic'
-Plugin 'myint/syntastic-extras'
+Plug 'scrooloose/syntastic'
+Plug 'myint/syntastic-extras'
 
-Plugin 'tpope/vim-markdown'
-Plugin 'tpope/vim-sensible'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-surround'
+Plug 'tpope/vim-markdown'
+Plug 'tpope/vim-sensible'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
 
 "" Autocompletion:
 if version >= 703
-  Plugin 'Shougo/neocomplete.vim'
-  Plugin 'Shougo/neosnippet'
-  Plugin 'Shougo/neosnippet-snippets'
+  Plug 'Shougo/neocomplete.vim'
+  Plug 'Shougo/neosnippet'
+  Plug 'Shougo/neosnippet-snippets'
 else
-  Plugin 'ervandew/supertab'
-  Plugin 'MarcWeber/vim-addon-mw-utils'
-  Plugin 'tomtom/tlib_vim'
-  Plugin 'garbas/vim-snipmate'
-  Plugin 'honza/vim-snippets'
+  Plug 'ervandew/supertab'
+  Plug 'MarcWeber/vim-addon-mw-utils'
+  Plug 'tomtom/tlib_vim'
+  Plug 'garbas/vim-snipmate'
+  Plug 'honza/vim-snippets'
 endif
 
 "" Alignment:
-Plugin 'junegunn/vim-easy-align'
+Plug 'junegunn/vim-easy-align'
 
 "" File Navigation:
-Plugin 'scrooloose/nerdtree'
-Plugin 'Xuyuanp/nerdtree-git-plugin'
-Plugin 'jistr/vim-nerdtree-tabs'
-Plugin 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
+Plug 'xuyuanp/nerdtree-git-plugin', {'on': 'NERDTreeToggle'}
+Plug 'jistr/vim-nerdtree-tabs', {'on': 'NERDTreeToggle'}
+Plug 'ctrlpvim/ctrlp.vim'
 
 "" Git:
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-git'
-Plugin 'gregsexton/gitv'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-git'
+Plug 'gregsexton/gitv'
 
 "" Tmux:
-Plugin 'edkolev/tmuxline.vim'
-Plugin 'tpope/vim-tbone'
-Plugin 'benmills/vimux'
+Plug 'edkolev/tmuxline.vim'
+Plug 'tpope/vim-tbone'
+Plug 'benmills/vimux'
 
 "" Python:
-Plugin 'hdima/python-syntax'
-Plugin 'davidhalter/jedi-vim'
-Plugin 'jmcantrell/vim-virtualenv'
+Plug 'hdima/python-syntax', {'for': 'python'}
+Plug 'davidhalter/jedi-vim', {'for': 'python'}
+Plug 'jmcantrell/vim-virtualenv', {'for': 'python'}
 
 "" Ruby:
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rake'
-Plugin 'tpope/vim-rails'
+Plug 'vim-ruby/vim-ruby', {'for': 'ruby'}
+Plug 'tpope/vim-rake', {'for': 'ruby'}
+Plug 'tpope/vim-rails', {'for': 'ruby'}
 
 "" Web:
-Plugin 'ap/vim-css-color'
-Plugin 'gko/vim-coloresque'
-Plugin 'tpope/vim-haml'
+Plug 'ap/vim-css-color'
+Plug 'gko/vim-coloresque'
+Plug 'tpope/vim-haml'
 " SCSS, SASS and HAML syntax
-Plugin 'groenewege/vim-less'
-Plugin 'othree/html5.vim'
-Plugin 'rstacruz/sparkup', {'rtp': 'vim/'}
-Plugin 'pangloss/vim-javascript'
-Plugin 'isruslan/vim-es6'
-Plugin 'kchmck/vim-coffee-script'
+Plug 'groenewege/vim-less'
+Plug 'othree/html5.vim', {'for': 'html'}
+Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'isruslan/vim-es6', {'for': 'javascript'}
+Plug 'kchmck/vim-coffee-script'
 
 "" Other Syntaxes:
-Plugin 'abravalheri/ribosome.vim'
-Plugin 'aklt/plantuml-syntax'
-Plugin 'scrooloose/vim-slumlord'  " previews for plantuml
-Plugin 'cespare/vim-toml'
-Plugin 'mustache/vim-mustache-handlebars'
-Plugin 'nathanalderson/yang.vim'
-Plugin 'rust-lang/rust.vim'
-Plugin 'xuhdev/syntax-dosini.vim'
-Plugin 'ekalinin/Dockerfile.vim'
-Plugin 'vim-scripts/bats.vim'
-Plugin 'vim-scripts/gsl.vim'
-Plugin 'jvirtanen/vim-octave'
+" Plug 'abravalheri/ribosome.vim'
+Plug 'aklt/plantuml-syntax'
+" Plug 'scrooloose/vim-slumlord'  " previews for plantuml
+" Plug 'cespare/vim-toml'
+Plug 'mustache/vim-mustache-handlebars'
+" Plug 'nathanalderson/yang.vim'
+" Plug 'rust-lang/rust.vim'
+" Plug 'xuhdev/syntax-dosini.vim'
+Plug 'ekalinin/Dockerfile.vim'
+" Plug 'vim-scripts/bats.vim'
+" Plug 'vim-scripts/gsl.vim'
+Plug 'jvirtanen/vim-octave'
 
 "" Style:
-Plugin 'flazz/vim-colorschemes'
-Plugin 'itchyny/lightline.vim'
-" alternative: Plugin 'maciakl/vim-neatstatus.git'
+Plug 'flazz/vim-colorschemes'
+Plug 'itchyny/lightline.vim'
+" alternative: Plug 'maciakl/vim-neatstatus.git'
 
 """ For future consideration
-" Plugin 'Lokaltog/vim-easymotion'
-" Plugin 'godlygeek/tabular'
-" Plugin 'vim-scripts/Align'
-" Plugin 'majutsushi/tagbar'
-" Plugin 'vim-scripts/SearchComplete'
-" Plugin 'tpope/vim-sleuth'
-" Plugin 'tpope/vim-abolish'
-" Plugin 'thinca/vim-quickrun'
-" Plugin 'ervandew/supertab'
-" Plugin 'tommcdo/vim-exchange'
-" Plugin 'tpope/vim-unimpaired'
-" Plugin 'itchyny/lightline-powerful'
+" Plug 'Lokaltog/vim-easymotion'
+" Plug 'godlygeek/tabular'
+" Plug 'vim-scripts/Align'
+" Plug 'majutsushi/tagbar'
+" Plug 'vim-scripts/SearchComplete'
+" Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-abolish'
+" Plug 'thinca/vim-quickrun'
+" Plug 'ervandew/supertab'
+" Plug 'tommcdo/vim-exchange'
+" Plug 'tpope/vim-unimpaired'
+" Plug 'itchyny/lightline-powerful'
 
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
-filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
+" All of your Plugs must be added before the following line
+call plug#end()

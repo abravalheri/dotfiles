@@ -70,11 +70,6 @@ set runtimepath+=$XDG_CONFIG_HOME/vim/after
 " Configuration itself
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"" For XDG the following lines would be enough:
-if !empty(glob($XDG_CONFIG_HOME . '/vim/vimrc'))
-  source $XDG_CONFIG_HOME/vim/vimrc
-endif
-
 "" but for dotfiles purposes:
 if empty($DOTFILES)
   let $DOTFILES = $XDG_CONFIG_HOME . '/dotfiles'

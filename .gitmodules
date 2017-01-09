@@ -1,9 +1,6 @@
+[submodule "zsh/zplug"]
+	path = zsh/zplug
+	url = https://github.com/zplug/zplug.git
 [submodule "dotbot"]
-  path = dotbot
-  url = https://github.com/anishathalye/dotbot
-[submodule "Vundle.vim"]
-  path = vim/Vundle.vim
-  url = https://github.com/VundleVim/Vundle.vim
-[submodule "oh-my-zsh"]
-  path = zsh/oh-my-zsh
-  url = https://github.com/robbyrussell/oh-my-zsh
+	path = dotbot
+	url = https://github.com/anishathalye/dotbot
