@@ -3,7 +3,6 @@
 ###########################
 
 # enable UTF-8 support in status bar
-set -g status-utf8 on
 
 # center the status bar
 set -g status-justify left

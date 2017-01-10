@@ -1,5 +1,8 @@
 command_exists() {
-  command -v "$1" >/dev/null 2>&1
+  # which ignores previous aliases but is not portable
+  # command does not ignore aliases, but is built in
+  # so it's better to try to check first with which and fallback to command
+  which "$1" &>/dev/null || command -v "$1" &>/dev/null
 }
 
 # Path setup
@@ -17,18 +20,25 @@ export PATH
 
 # Path to your oh-my-zsh installation.
 export DOTFILES=$HOME/.config/dotfiles
-export ZPLUG_HOME=$DOTFILES/zsh/zplug
-export ZPLUG_CACHE_DIR=$HOME/.cache/zplug
+export ZSH=$DOTFILES/zsh/oh-my-zsh
 
-source $ZPLUG_HOME/init.zsh
+# Theme
+ZSH_CUSTOM=$DOTFILES/zsh/custom
+ZSH_THEME="custom" #terminalparty #sunaku #muse
+COMPLETION_WAITING_DOTS="true"
+
+# Load oh-my-zsh
 source $DOTFILES/zsh/plugins.zsh
+source $ZSH/oh-my-zsh.sh
 
 # User configuration
 export LANG=en_US.UTF-8
-export EDITOR='nvim'
 
-# ssh
-export SSH_KEY_PATH="~/.ssh/id_rsa"
+if command_exists nvim; then
+  export EDITOR='nvim'
+elif command_existis vim; then
+  export EDITOR='vim'
+fi
 
 source $DOTFILES/zsh/style.zsh
 source $DOTFILES/zsh/extras.zsh

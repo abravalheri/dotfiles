@@ -37,7 +37,13 @@ echo "If working with neovim, also install python-neovim and python2-neovim (or 
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
 
-echo ""
-echo "Please, manually install vim plugins:"
-echo "vim -c \"set shortmess=at\" +PlugInstall +qa!"
-echo ""
+if command_exists nvim; then
+  nvim -c "set shortmess=at" +PlugInstall +qa!
+elif command_exists vim; then
+  vim -c "set shortmess=at" +PlugInstall +qa!
+else
+  echo ""
+  echo "Please, manually install vim plugins:"
+  echo "vim -c \"set shortmess=at\" +PlugInstall +qa!"
+  echo ""
+fi
