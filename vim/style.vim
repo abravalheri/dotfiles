@@ -1,6 +1,6 @@
 " Syntax Highlighting
 try
-  if match($TERM, '256') >=  0
+  if match($TERM, '256') >= 0 || has('gui_running')
     set t_Co=256
     let g:rehash256=1
     colorscheme molokai
