@@ -27,3 +27,6 @@ fi
 if [ -f $HOME/.travis/travis.sh ]; then
   source $HOME/.travis/travis.sh
 fi
+
+# configure z
+export _Z_DATA=$XDG_CONFIG_HOME/.z
