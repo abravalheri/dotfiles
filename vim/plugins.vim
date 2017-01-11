@@ -13,7 +13,6 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'bronson/vim-trailing-whitespace'
 Plug 'matchit.zip'
 Plug 'airblade/vim-gitgutter'
-" diff signs at left margin
 Plug 'mileszs/ack.vim'
 Plug 'sjl/gundo.vim'
 " visualize vim undo tree
@@ -22,6 +21,7 @@ Plug 'Yggdroot/indentLine'
 " alternative: nathanaelkane/vim-indent-guides
 Plug 'tomtom/tcomment_vim'
 " alternative: Plug 'scrooloose/nerdcommenter'
+Plug 'bling/vim-bufferline'
 
 Plug 'scrooloose/syntastic'
 Plug 'myint/syntastic-extras'
