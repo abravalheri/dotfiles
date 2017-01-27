@@ -84,6 +84,7 @@ Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'isruslan/vim-es6', {'for': 'javascript'}
 Plug 'kchmck/vim-coffee-script'
+Plug 'elzr/vim-json'
 
 "" Other Syntaxes:
 " Plug 'abravalheri/ribosome.vim'
@@ -98,6 +99,7 @@ Plug 'ekalinin/Dockerfile.vim'
 " Plug 'vim-scripts/bats.vim'
 " Plug 'vim-scripts/gsl.vim'
 Plug 'jvirtanen/vim-octave'
+Plug 'elixir-lang/vim-elixir'
 
 "" Style:
 Plug 'flazz/vim-colorschemes'

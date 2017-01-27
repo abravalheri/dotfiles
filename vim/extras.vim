@@ -7,10 +7,8 @@ if has("autocmd")
   autocmd FileType octave,matlab set iskeyword-=.
 endif
 
-" hide markers from snippets (neosnippet)
-if has('conceal')
-  set conceallevel=2 concealcursor=niv
-endif
+" Disable fancy concealing of attribute quotes.
+let g:vim_json_syntax_conceal = 0
 
 " avoid latex to be messed up:
 " http://tex.stackexchange.com/questions/96741/vim-latex-suite-unwanted-in-editor-math-symbol-conversion
