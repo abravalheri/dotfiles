@@ -36,7 +36,7 @@ export LANG=en_US.UTF-8
 
 if command_exists nvim; then
   export EDITOR='nvim'
-elif command_existis vim; then
+elif command_exists vim; then
   export EDITOR='vim'
 fi
 
