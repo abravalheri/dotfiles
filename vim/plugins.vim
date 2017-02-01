@@ -83,6 +83,7 @@ Plug 'othree/html5.vim', {'for': 'html'}
 Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
 Plug 'pangloss/vim-javascript', {'for': 'javascript'}
 Plug 'isruslan/vim-es6', {'for': 'javascript'}
+Plug 'mxw/vim-jsx', {'for': 'javascript.jsx'}
 Plug 'kchmck/vim-coffee-script'
 Plug 'elzr/vim-json'
 

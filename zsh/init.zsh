@@ -40,11 +40,13 @@ elif command_exists vim; then
   export EDITOR='vim'
 fi
 
-source $DOTFILES/zsh/style.zsh
-source $DOTFILES/zsh/extras.zsh
+# Allow local configuration to interfere with extras and style
 if [ -f $DOTFILES/zsh/+local.zsh ]; then
   source $DOTFILES/zsh/+local.zsh
 fi
+
+source $DOTFILES/zsh/style.zsh
+source $DOTFILES/zsh/extras.zsh
 
 # Cleanup duplicates in path (rbenv and pyenv do not care)
 if command_exists awk; then
