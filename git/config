@@ -26,6 +26,7 @@
 #[include]
 #	path=~/.config/git/author.conf
 [alias]
+	forget = credential-cache exit
 	untracked = ls-files --others --exclude-standard
 	add-untracked = !git add $(git ls-files -o --exclude-standard)
 	remove-untracked = clean -df
