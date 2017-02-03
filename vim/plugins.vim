@@ -22,6 +22,7 @@ Plug 'Yggdroot/indentLine'
 Plug 'tomtom/tcomment_vim'
 " alternative: Plug 'scrooloose/nerdcommenter'
 Plug 'bling/vim-bufferline'
+Plug 'maksimr/vim-jsbeautify'
 
 Plug 'scrooloose/syntastic'
 Plug 'myint/syntastic-extras'

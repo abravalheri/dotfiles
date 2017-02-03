@@ -4,6 +4,7 @@ if has("autocmd")
   autocmd BufNewFile,BufRead *.gsl set filetype=gsl
   autocmd BufNewFile,BufRead {*.pylintrc,pylintrc} set filetype=toml
   autocmd BufNewFile,BufRead *.rst setlocal shiftwidth=4 tabstop=4 colorcolumn=80
+  autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2 textwidth=79 colorcolumn=+1
   autocmd FileType octave,matlab set iskeyword-=.
 endif
 
