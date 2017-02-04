@@ -7,6 +7,6 @@ if command_exists tmux; then
   # Load tmux if it is not loaded, except is SKIP_TMUX
   # is defined.
   if [ -z $TMUX ] && [ -z ${SKIP_TMUX+x} ]; then
-    tm
+    tmux -2 new-session -A -s main
   fi
 fi
