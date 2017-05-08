@@ -94,7 +94,7 @@ Plug 'aklt/plantuml-syntax'
 " Plug 'scrooloose/vim-slumlord'  " previews for plantuml
 " Plug 'cespare/vim-toml'
 Plug 'mustache/vim-mustache-handlebars'
-" Plug 'nathanalderson/yang.vim'
+Plug 'nathanalderson/yang.vim'
 " Plug 'rust-lang/rust.vim'
 " Plug 'xuhdev/syntax-dosini.vim'
 Plug 'ekalinin/Dockerfile.vim'
