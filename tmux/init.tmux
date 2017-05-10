@@ -58,9 +58,16 @@ bind R source-file "$HOME/.tmux.conf" \; display "tmux reloaded!"
 
 ## --- Extras ---
 
-# style
+# style - chosen by env var / hostname or fallback to default
+run-shell 'tmux setenv -g TMUX_STYLE ${TMUX_STYLE:-$(hostname)}'
+if-shell -b '[ ! -f "$DOTFILES/tmux/style/$TMUX_STYLE.tmux" ]' \
+  'setenv -g TMUX_STYLE "default"'
+
 set-option -g status-position bottom
-source-file "$DOTFILES/tmux/style/barebone.tmux"
+run-shell 'tmux source-file "$DOTFILES/tmux/style/$TMUX_STYLE.tmux"'
+  # ^ No idea why it is necessary to use run-shell, but the
+  #   TMUX_STYLE var is not interpolating
 
 # integrated clipboard
-if-shell "uname | grep -qi Linux && command -v xclip &>/dev/null && [[ -n $DISPLAY ]]" 'source-file "$DOTFILES/tmux/clipboard.tmux"'
+if-shell "uname | grep -qi Linux && command -v xclip &>/dev/null && [[ -n $DISPLAY ]]" \
+  'source-file "$DOTFILES/tmux/clipboard.tmux"'

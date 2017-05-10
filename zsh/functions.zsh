@@ -1,3 +1,7 @@
+zsh-reload () {
+  source $HOME/.zshrc
+}
+
 ssh-init() {
   eval ssh-agent $SHELL
 }
