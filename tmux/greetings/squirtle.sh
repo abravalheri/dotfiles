@@ -22,6 +22,7 @@ initializeANSI() {
 initializeANSI
 
 cat << EOF
+
        ${Bf}████████                  ████████
      ${Bf}██${bf}${ON}██████${OFF}██${Bf}████            ██${bf}${ON}████████${OFF}${Bf}██
    ${Bf}██${bf}${ON}████████████${OFF}██${Bf}████      ████${bf}${ON}██████${OFF}████${Bf}██
