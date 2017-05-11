@@ -7,9 +7,8 @@ DOTBOT_DIR="dotbot"
 
 DOTBOT_BIN="bin/dotbot"
 BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-DOTFILES=${DOTFILES:-$BASEDIR}
 
-cd "${DOTFILES}"
+cd "${BASEDIR}"
 echo "Update submodules ..."
 git submodule update --init --recursive  #"${DOTBOT_DIR}"
 
@@ -31,20 +30,14 @@ for cmd in $deps; do
     echo "Command $cmd not found."
   fi
 done
+
 if ! command_exists vim && ! command_exists nvim; then
   echo "Neither vim, nor neovim were found."
 fi
-echo "If working with neovim, also install python-neovim and python2-neovim (or python3-neovim) modules. See https://github.com/neovim/neovim/wiki/Installing-Neovim."
-
-"${DOTFILES}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${DOTFILES}" -c "${CONFIG}" "${@}"
 
 if command_exists nvim; then
-  nvim --headless -c "set shortmess=at" -c "silent PlugInstall" +qa!
-elif command_exists vim; then
-  vim --not-a-term -E -c "set shortmess=at" -c "silent PlugInstall" +qa!  >/dev/null
-else
-  echo ""
-  echo "Please, manually install vim plugins:"
-  echo "vim -c \"set shortmess=at\" +PlugInstall +qa!"
-  echo ""
+  echo "Please install python-neovim and python2-neovim (or python3-neovim) modules."
+  echo "See https://github.com/neovim/neovim/wiki/Installing-Neovim."
 fi
+
+"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"

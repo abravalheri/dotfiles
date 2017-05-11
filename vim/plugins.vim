@@ -4,6 +4,14 @@
 " please see https://github.com/junegunn/vim-plug
 " for more information
 
+" Auto install plugins
+if empty(glob($DOTFILES . '/vim/autoload/plug.vim'))
+  silent !curl -kfLo $DOTFILES/vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Plugin List
 call plug#begin($DOTFILES . '/vim/+plugins')
 
 "" Consistency:
