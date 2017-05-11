@@ -11,7 +11,7 @@ Plug 'editorconfig/editorconfig-vim'
 
 " Enhancements:
 Plug 'bronson/vim-trailing-whitespace'
-Plug 'matchit.zip'
+Plug 'vim-scripts/matchit.zip'
 Plug 'airblade/vim-gitgutter'
 Plug 'mileszs/ack.vim'
 Plug 'sjl/gundo.vim'
