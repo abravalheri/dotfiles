@@ -16,3 +16,6 @@ fi
 
 # configure z
 export _Z_DATA=$XDG_CONFIG_HOME/.z
+if [ ! -f $_Z_DATA ]; then
+  touch $_Z_DATA
+fi
