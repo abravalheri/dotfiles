@@ -2,17 +2,17 @@
     link:
       create: true
       relink: true
-- clean: ['~', '~/.config', 'vim', 'vim/+plugins']
+- clean: ['$HOME', '$HOME/.config', 'vim', 'vim/+plugins']
 - link:
     # Install dotfiles
-    ~/.zshrc: zsh/init.zsh
-    ~/.tmux.conf: tmux/init.tmux
-    ~/.config/git: git
+    $HOME/.zshrc: zsh/init.zsh
+    $HOME/.tmux.conf: tmux/init.tmux
+    $HOME/.config/git: git
     # neovim + vim compatibility
-    ~/.vim: vim
-    ~/.config/nvim: vim
-    ~/.config/vim: vim
-    ~/.vim/vimrc: vim/init.vim
+    $HOME/.vim: vim
+    $HOME/.config/nvim: vim
+    $HOME/.config/vim: vim
+    $HOME/.vim/vimrc: vim/init.vim
 - shell:
     - ["curl -kL https://raw.github.com/junegunn/vim-plug/master/plug.vim > vim/autoload/plug.vim",
       Install vim-plug]
