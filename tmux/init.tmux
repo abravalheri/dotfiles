@@ -60,8 +60,9 @@ bind R source-file "$HOME/.tmux.conf" \; display "tmux reloaded!"
 
 # style - chosen by env var / hostname or fallback to default
 run-shell 'tmux setenv -g TMUX_STYLE ${TMUX_STYLE:-$(hostname)}'
-if-shell -b '[ ! -f "$DOTFILES/tmux/style/$TMUX_STYLE.tmux" ]' \
-  'setenv -g TMUX_STYLE "default"'
+run-shell '[ ! -f "$DOTFILES/tmux/style/$TMUX_STYLE.tmux" ] && tmux setenv -g TMUX_STYLE "default" || true'
+# ^ For some reason if-shell + setenv does not override a var configured with
+#   run-shell +  tmux setenv
 
 set-option -g status-position bottom
 run-shell 'tmux source-file "$DOTFILES/tmux/style/$TMUX_STYLE.tmux"'
