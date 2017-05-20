@@ -1,6 +1,6 @@
 source $DOTFILES/zsh/alias.zsh
 source $DOTFILES/zsh/functions.zsh
-source $DOTFILES/tmux/startup.zsh
+source $DOTFILES/tmux/startup.sh
 
 BREW_ROOT=$HOME/.local/opt/brew
 if [ -d $BREW_ROOT ] && [ -n "${PATH##*$BREW_ROOT/bin*}" ]; then

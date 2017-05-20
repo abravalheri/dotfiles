@@ -56,6 +56,12 @@ noremap! <right> <nop>
 noremap! <pageup> <nop>
 noremap! <pagedown> <nop>
 
+" but ensure some navigability in command mode
+" (Prefer C-f to edit complex command)
+cnoremap <left> <left>
+cnoremap <right> <right>
+
+
 " vim-surround
 if has("autocmd")
   autocmd FileType ruby,yaml let b:surround_45 = "<% \r %>"

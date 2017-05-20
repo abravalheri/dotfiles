@@ -1,4 +1,4 @@
-#/bin/env zsh
+#/bin/env bash
 
 if command_exists tmux; then
   alias tmux='tmux -2'
