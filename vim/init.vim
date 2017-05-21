@@ -2,6 +2,7 @@
 " NOTICE: Vim reads .vim/vimrc when .vimrc does not exist
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " This file only make basic configuration for VIM and redirect to other files
+scriptencoding utf8
 
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

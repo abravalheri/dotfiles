@@ -8,7 +8,10 @@
 if empty(glob($DOTFILES . '/vim/autoload/plug.vim'))
   silent !curl -kfLo $DOTFILES/vim/autoload/plug.vim --create-dirs
     \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup install_vim_plug
+    autocmd!
+    autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+  augroup END
 endif
 
 " Plugin List

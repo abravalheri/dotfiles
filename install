@@ -23,7 +23,7 @@ if [ -n "${SHELL##*zsh*}" ]; then
   echo "source ~/.zshrc"
 fi
 
-deps=(zsh thefuck xclip awk)
+deps=(zsh thefuck xclip awk vint)
 echo "Make sure to have the following commands availble: ${deps[@]}, vim or neovim."
 for cmd in $deps; do
   if ! command_exists $cmd; then
