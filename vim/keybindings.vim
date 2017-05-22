@@ -62,11 +62,6 @@ noremap! <pagedown> <nop>
 cnoremap <left> <left>
 cnoremap <right> <right>
 
-" keep visual mode when indenting (gv select the last selection)
-vnoremap < <gv
-vnoremap > >gv
-
-
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader Mappings for convenience!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -90,6 +85,10 @@ nnoremap <silent> <leader>wq :<c-u>w<bar>bd<cr>
 " cycle through buffers
 nnoremap <silent> <leader><space> :<c-u>bn<cr>
 
+" local list commands are boring and more difficult
+nnoremap <silent> <leader>n :<c-u>lnext<cr>
+nnoremap <silent> <leader>p :<c-u>lprevious<cr>
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -104,7 +103,10 @@ vnoremap <silent> <leader>a :<c-u>EasyAlign
 vnoremap <silent> <leader>e :<c-u>LiveEasyAlign<cr>
 
 " NERDTree
-nnoremap <silent> <leader>n :<c-u>NERDTreeToggle<cr>
+nnoremap <silent> <leader>o :<c-u>NERDTreeToggle<cr>
+
+" Gundo
+nnoremap <silent> <leader>g :<c-u>GundoToggle<cr>
 
 " vim-surround
 if has('autocmd')
@@ -117,8 +119,7 @@ endif
 
 
 " snippets
-if v:version >= 703
-  " NEOSNIPPET:
+if exists('g:neocomplete')
   imap <c-k> <plug>(neosnippet_expand_or_jump)
   smap <c-k> <plug>(neosnippet_expand_or_jump)
   xmap <c-k> <plug>(neosnippet_expand_target)

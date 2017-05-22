@@ -35,16 +35,23 @@ Plug 'tomtom/tcomment_vim'
 Plug 'bling/vim-bufferline'
 Plug 'maksimr/vim-jsbeautify'
 
-Plug 'scrooloose/syntastic'
-Plug 'myint/syntastic-extras'
-
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 
+"" Linters:
+if exists('g:use_syntastic') || v:version < 703
+  let g:use_syntastic = 1
+  Plug 'scrooloose/syntastic'
+  Plug 'myint/syntastic-extras'
+else
+  Plug 'w0rp/ale'
+endif
+
 "" Autocompletion:
-if version >= 703
+if v:version >= 703
+  let g:use_neocomplete = 1
   Plug 'Shougo/neocomplete.vim'
   Plug 'Shougo/neosnippet'
   Plug 'Shougo/neosnippet-snippets'
@@ -109,7 +116,7 @@ Plug 'nathanalderson/yang.vim'
 " Plug 'rust-lang/rust.vim'
 " Plug 'xuhdev/syntax-dosini.vim'
 Plug 'ekalinin/Dockerfile.vim'
-" Plug 'vim-scripts/bats.vim'
+Plug 'vim-scripts/bats.vim'
 " Plug 'vim-scripts/gsl.vim'
 Plug 'jvirtanen/vim-octave'
 Plug 'elixir-lang/vim-elixir'

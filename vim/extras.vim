@@ -4,7 +4,7 @@ if has('autocmd')
   augroup missing_filetypes
     autocmd!
     autocmd BufNewFile,BufRead *.gsl set filetype=gsl
-    autocmd BufNewFile,BufRead {*.pylintrc,pylintrc} set filetype=toml
+    autocmd BufNewFile,BufRead {*.pylintrc,pylintrc,.coafile} set filetype=toml
   augroup END
 
   augroup fix_shiftwidth
@@ -16,11 +16,20 @@ if has('autocmd')
   augroup fix_word_separators
     autocmd!
     autocmd FileType octave,matlab set iskeyword-=.
+    autocmd FileType sh set iskeyword+=$
   augroup END
 endif
 
-" Syntastic Lintes
-let g:syntastic_vim_checkers = ['vint']
+" Lintes:
+if exists('g:use_syntastic')
+  " let g:syntastic_check_on_open = 0 => avoid always checking
+  let g:syntastic_vim_checkers = ['vint']
+  command! Lint SyntasticCheck
+else
+  " let g:ale_lint_on_save = 0 => avoid always checking
+  let g:ale_set_loclist = 1
+  command! Lint ALELint
+endif
 
 " Disable fancy concealing of attribute quotes.
 let g:vim_json_syntax_conceal = 0
