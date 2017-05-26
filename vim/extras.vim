@@ -4,7 +4,7 @@ if has('autocmd')
   augroup missing_filetypes
     autocmd!
     autocmd BufNewFile,BufRead *.gsl set filetype=gsl
-    autocmd BufNewFile,BufRead {*.pylintrc,pylintrc,.coafile} set filetype=toml
+    autocmd BufNewFile,BufRead {*.pylintrc,pylintrc,.coafile} set filetype=cfg
   augroup END
 
   augroup fix_shiftwidth

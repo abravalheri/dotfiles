@@ -25,15 +25,12 @@ Plug 'bronson/vim-trailing-whitespace'
 Plug 'vim-scripts/matchit.zip'
 Plug 'airblade/vim-gitgutter'
 Plug 'mileszs/ack.vim'
-Plug 'sjl/gundo.vim'
-" visualize vim undo tree
+Plug 'sjl/gundo.vim' | " visualize vim undo tree
 Plug 'terryma/vim-multiple-cursors'
-Plug 'Yggdroot/indentLine'
-" alternative: nathanaelkane/vim-indent-guides
-Plug 'tomtom/tcomment_vim'
-" alternative: Plug 'scrooloose/nerdcommenter'
+Plug 'Yggdroot/indentLine' | " alternative: nathanaelkane/vim-indent-guides
+Plug 'tomtom/tcomment_vim' | " alternative: Plug 'scrooloose/nerdcommenter'
 Plug 'bling/vim-bufferline'
-Plug 'maksimr/vim-jsbeautify'
+Plug 'nelstrom/vim-visual-star-search'
 
 Plug 'tpope/vim-markdown'
 Plug 'tpope/vim-sensible'
@@ -95,50 +92,49 @@ Plug 'tpope/vim-rails', {'for': 'ruby'}
 "" Web:
 Plug 'ap/vim-css-color'
 Plug 'gko/vim-coloresque'
-Plug 'tpope/vim-haml'
-" SCSS, SASS and HAML syntax
-Plug 'groenewege/vim-less'
-Plug 'othree/html5.vim', {'for': 'html'}
-Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
-Plug 'pangloss/vim-javascript', {'for': 'javascript'}
-Plug 'isruslan/vim-es6', {'for': 'javascript'}
-Plug 'mxw/vim-jsx', {'for': 'javascript.jsx'}
-Plug 'kchmck/vim-coffee-script'
+Plug 'tpope/vim-haml' | " SCSS, SASS and HAML syntax
 Plug 'elzr/vim-json'
+Plug 'groenewege/vim-less'
+Plug 'isruslan/vim-es6', {'for': 'javascript'}
+Plug 'kchmck/vim-coffee-script'
+Plug 'maksimr/vim-jsbeautify'
+Plug 'mxw/vim-jsx', {'for': 'javascript.jsx'}
+Plug 'othree/html5.vim', {'for': 'html'}
+Plug 'pangloss/vim-javascript', {'for': 'javascript'}
+Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
 
 "" Other Syntaxes:
 " Plug 'abravalheri/ribosome.vim'
-Plug 'aklt/plantuml-syntax'
-" Plug 'scrooloose/vim-slumlord'  " previews for plantuml
 " Plug 'cespare/vim-toml'
+" Plug 'rust-lang/rust.vim'
+" Plug 'scrooloose/vim-slumlord' | " previews for plantuml
+" Plug 'vim-scripts/gsl.vim'
+" Plug 'xuhdev/syntax-dosini.vim'
+Plug 'aklt/plantuml-syntax'
+Plug 'ekalinin/Dockerfile.vim'
+Plug 'elixir-lang/vim-elixir'
+Plug 'jvirtanen/vim-octave'
 Plug 'mustache/vim-mustache-handlebars'
 Plug 'nathanalderson/yang.vim'
-" Plug 'rust-lang/rust.vim'
-" Plug 'xuhdev/syntax-dosini.vim'
-Plug 'ekalinin/Dockerfile.vim'
 Plug 'vim-scripts/bats.vim'
-" Plug 'vim-scripts/gsl.vim'
-Plug 'jvirtanen/vim-octave'
-Plug 'elixir-lang/vim-elixir'
 
 "" Style:
 Plug 'flazz/vim-colorschemes'
-Plug 'itchyny/lightline.vim'
-" alternative: Plug 'maciakl/vim-neatstatus.git'
+Plug 'itchyny/lightline.vim' | " alternative: Plug 'maciakl/vim-neatstatus.git'
 
 """ For future consideration
 " Plug 'Lokaltog/vim-easymotion'
-" Plug 'godlygeek/tabular'
-" Plug 'vim-scripts/Align'
-" Plug 'majutsushi/tagbar'
-" Plug 'vim-scripts/SearchComplete'
-" Plug 'tpope/vim-sleuth'
-" Plug 'tpope/vim-abolish'
-" Plug 'thinca/vim-quickrun'
 " Plug 'ervandew/supertab'
-" Plug 'tommcdo/vim-exchange'
-" Plug 'tpope/vim-unimpaired'
+" Plug 'godlygeek/tabular'
 " Plug 'itchyny/lightline-powerful'
+" Plug 'majutsushi/tagbar'
+" Plug 'thinca/vim-quickrun'
+" Plug 'tommcdo/vim-exchange'
+" Plug 'tpope/vim-abolish'
+" Plug 'tpope/vim-sleuth'
+" Plug 'tpope/vim-unimpaired'
+" Plug 'vim-scripts/Align'
+" Plug 'vim-scripts/SearchComplete'
 
 " All of your Plugs must be added before the following line
 call plug#end()
