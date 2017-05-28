@@ -18,24 +18,30 @@ endif
 call plug#begin($DOTFILES . '/vim/+plugins')
 
 "" Consistency:
-Plug 'editorconfig/editorconfig-vim'
+Plug 'editorconfig/editorconfig-vim'   | " configure vim to use the given project's indentation/whitespace settings
 
 " Enhancements:
-Plug 'bronson/vim-trailing-whitespace'
-Plug 'vim-scripts/matchit.zip'
-Plug 'airblade/vim-gitgutter'
-Plug 'mileszs/ack.vim'
-Plug 'sjl/gundo.vim' | " visualize vim undo tree
-Plug 'terryma/vim-multiple-cursors'
-Plug 'Yggdroot/indentLine' | " alternative: nathanaelkane/vim-indent-guides
-Plug 'tomtom/tcomment_vim' | " alternative: Plug 'scrooloose/nerdcommenter'
-Plug 'bling/vim-bufferline'
-Plug 'nelstrom/vim-visual-star-search'
+Plug 'Yggdroot/indentLine'             | " alternative: nathanaelkane/vim-indent-guides
+Plug 'bling/vim-bufferline'            | " displays a list of buffers on the page bottom
+Plug 'bronson/vim-trailing-whitespace' | " highlight whitespace (use FixWhitespace)
+Plug 'mileszs/ack.vim'                 | " better vimgrep using ack or ag
+Plug 'nelstrom/vim-visual-star-search' | " make * search for the selection in visual mode
+Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
+Plug 'terryma/vim-multiple-cursors'    | " try to emulate sublime multiple cursors (not complete)
+Plug 'vim-scripts/matchit.zip'         | " extended % matching
+Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 
-Plug 'tpope/vim-markdown'
-Plug 'tpope/vim-sensible'
-Plug 'tpope/vim-repeat'
-Plug 'tpope/vim-surround'
+"" SearchFeedback:
+Plug 'osyo-manga/vim-over'             | " highlight feedback for substitute
+Plug 'haya14busa/incsearch.vim'        | " better highlight feedback for search
+
+"" TimPope:
+Plug 'tpope/vim-abolish'               | " add Subvert command and case changes
+Plug 'tpope/vim-commentary'            | " comment out code, alternatives: scrooloose/nerdcommenter, tomtom/tcomment_vim
+Plug 'tpope/vim-dispatch'              | " async dispatch compilers linters and stuff
+Plug 'tpope/vim-repeat'                | " better . command
+Plug 'tpope/vim-surround'              | " manipulate surrounding characters such as quotes and braces
+Plug 'tpope/vim-eunuch'                | " unix helpers for vim (like Move, Rename, Remove, Sudoedit ...)
 
 "" Linters:
 if exists('g:use_syntastic') || v:version < 703
@@ -64,63 +70,65 @@ endif
 Plug 'junegunn/vim-easy-align'
 
 "" File Navigation:
-Plug 'scrooloose/nerdtree', {'on': 'NERDTreeToggle'}
-Plug 'xuyuanp/nerdtree-git-plugin', {'on': 'NERDTreeToggle'}
-Plug 'jistr/vim-nerdtree-tabs', {'on': 'NERDTreeToggle'}
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/nerdtree',            {'on': 'NERDTreeToggle'}
+Plug 'jistr/vim-nerdtree-tabs',        {'on': 'NERDTreeToggle'}
+Plug 'ctrlpvim/ctrlp.vim'              | " fuzzy file finder
 
 "" Git:
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-git'
-Plug 'gregsexton/gitv'
+Plug 'junegunn/gv.vim'                 | " basic git navigation, alternative: gregsexton/gitv
+Plug 'airblade/vim-gitgutter'          | " displays change markers on lines
+Plug 'xuyuanp/nerdtree-git-plugin',    {'on': 'NERDTreeToggle'}
 
 "" Tmux:
-Plug 'edkolev/tmuxline.vim'
-Plug 'tpope/vim-tbone'
-Plug 'benmills/vimux'
+Plug 'edkolev/tmuxline.vim',           {'on': 'Tmuxline'}
+Plug 'tpope/vim-tbone'                 | " Tyank, Tput, Twrite and Tmux
+Plug 'benmills/vimux'                  | " Open tmux mini-panels with VimuxPromptCommand
 
 "" Python:
-Plug 'hdima/python-syntax', {'for': 'python'}
-Plug 'davidhalter/jedi-vim', {'for': 'python'}
-Plug 'jmcantrell/vim-virtualenv', {'for': 'python'}
+Plug 'hdima/python-syntax',            {'for': 'python'}
+Plug 'davidhalter/jedi-vim',           {'for': 'python'}
+Plug 'jmcantrell/vim-virtualenv',      {'for': 'python'}
 
 "" Ruby:
-Plug 'vim-ruby/vim-ruby', {'for': 'ruby'}
-Plug 'tpope/vim-rake', {'for': 'ruby'}
-Plug 'tpope/vim-rails', {'for': 'ruby'}
+Plug 'vim-ruby/vim-ruby',              {'for': 'ruby'}
+Plug 'tpope/vim-rake',                 {'for': 'ruby'}
+Plug 'tpope/vim-rails',                {'for': 'ruby'}
 
 "" Web:
 Plug 'ap/vim-css-color'
 Plug 'gko/vim-coloresque'
-Plug 'tpope/vim-haml' | " SCSS, SASS and HAML syntax
+Plug 'tpope/vim-haml'                  | " SCSS, SASS and HAML syntax
 Plug 'elzr/vim-json'
-Plug 'groenewege/vim-less'
-Plug 'isruslan/vim-es6', {'for': 'javascript'}
-Plug 'kchmck/vim-coffee-script'
-Plug 'maksimr/vim-jsbeautify'
-Plug 'mxw/vim-jsx', {'for': 'javascript.jsx'}
-Plug 'othree/html5.vim', {'for': 'html'}
-Plug 'pangloss/vim-javascript', {'for': 'javascript'}
-Plug 'rstacruz/sparkup', {'rtp': 'vim/',  'for': 'html'}
+Plug 'groenewege/vim-less',            {'for': 'less'}
+Plug 'isruslan/vim-es6',               {'for': 'javascript'}
+Plug 'kchmck/vim-coffee-script',       {'for': 'coffee'}
+Plug 'maksimr/vim-jsbeautify',         {'for': ['javascript', 'javascript.jsx', 'css', 'html']}
+Plug 'mxw/vim-jsx',                    {'for': 'javascript.jsx'}
+Plug 'othree/html5.vim',               {'for': 'html'}
+Plug 'pangloss/vim-javascript',        {'for': 'javascript'}
+Plug 'rstacruz/sparkup',               {'rtp': 'vim/',  'for': 'html'}
 
 "" Other Syntaxes:
 " Plug 'abravalheri/ribosome.vim'
+" Plug 'aklt/plantuml-syntax'
 " Plug 'cespare/vim-toml'
+" Plug 'elixir-lang/vim-elixir'
+" Plug 'jvirtanen/vim-octave'
+" Plug 'mustache/vim-mustache-handlebars'
+" Plug 'nathanalderson/yang.vim'
 " Plug 'rust-lang/rust.vim'
-" Plug 'scrooloose/vim-slumlord' | " previews for plantuml
+" Plug 'scrooloose/vim-slumlord'         | " previews for plantuml
+" Plug 'vim-scripts/bats.vim'
 " Plug 'vim-scripts/gsl.vim'
 " Plug 'xuhdev/syntax-dosini.vim'
-Plug 'aklt/plantuml-syntax'
 Plug 'ekalinin/Dockerfile.vim'
-Plug 'elixir-lang/vim-elixir'
-Plug 'jvirtanen/vim-octave'
-Plug 'mustache/vim-mustache-handlebars'
-Plug 'nathanalderson/yang.vim'
-Plug 'vim-scripts/bats.vim'
+Plug 'tpope/vim-markdown'
 
 "" Style:
 Plug 'flazz/vim-colorschemes'
-Plug 'itchyny/lightline.vim' | " alternative: Plug 'maciakl/vim-neatstatus.git'
+Plug 'itchyny/lightline.vim'           | " alternative: Plug 'maciakl/vim-neatstatus.git'
 
 """ For future consideration
 " Plug 'Lokaltog/vim-easymotion'
@@ -130,7 +138,6 @@ Plug 'itchyny/lightline.vim' | " alternative: Plug 'maciakl/vim-neatstatus.git'
 " Plug 'majutsushi/tagbar'
 " Plug 'thinca/vim-quickrun'
 " Plug 'tommcdo/vim-exchange'
-" Plug 'tpope/vim-abolish'
 " Plug 'tpope/vim-sleuth'
 " Plug 'tpope/vim-unimpaired'
 " Plug 'vim-scripts/Align'

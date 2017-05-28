@@ -62,6 +62,13 @@ noremap! <pagedown> <nop>
 cnoremap <left> <left>
 cnoremap <right> <right>
 
+" execute macros over selected text
+xnoremap @ :<C-u>call ExecuteMacroOverVisualRange()<CR>
+function! ExecuteMacroOverVisualRange()
+  echo "@".getcmdline()
+  execute ":'<,'>normal @".nr2char(getchar())
+endfunction
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Leader Mappings for convenience!
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -78,16 +85,17 @@ noremap  <silent> <leader>so :<c-u>so %<cr>
 " avoid closing the window when working with buffers
 " so let pretend <leader> is :
 nnoremap <silent> <leader>q  :<c-u>bd<cr>
-nnoremap <silent> <leader>w :<c-u>w<cr>
+nnoremap <silent> <leader>w  :<c-u>w<cr>
 nnoremap <silent> <leader>ww :<c-u>w<bar>bd<cr>
 nnoremap <silent> <leader>wq :<c-u>w<bar>bd<cr>
 
 " cycle through buffers
 nnoremap <silent> <leader><space> :<c-u>bn<cr>
+nnoremap <silent> <bar><space>    :<c-u>bp<cr>
 
 " local list commands are boring and more difficult
-nnoremap <silent> <leader>n :<c-u>lnext<cr>
-nnoremap <silent> <leader>p :<c-u>lprevious<cr>
+nnoremap <silent> <leader>n  :<c-u>lnext<cr>
+nnoremap <silent> <bar>n     :<c-u>lprevious<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Mappings
@@ -96,14 +104,16 @@ nnoremap <silent> <leader>p :<c-u>lprevious<cr>
 " let CtrlP search everything and use it to navigate the buffer list
 let g:ctrlp_cmd = 'CtrlPMixed'
 nnoremap <silent> <leader>b :<c-u>CtrlPBuffer<cr>
-nnoremap <silent> <leader>f :<c-u>CtrlPMixed<cr>
+nnoremap <silent> <bar>f    :<c-u>CtrlPMixed<cr>
 
 " easyalign
-vnoremap <silent> <leader>a :<c-u>EasyAlign
-vnoremap <silent> <leader>e :<c-u>LiveEasyAlign<cr>
+nmap ga <plug>(EasyAlign)
+xmap ga <plug>(EasyAlign)
+nmap ge <plug>(LiveEasyAlign)
+xmap ge <plug>(LiveEasyAlign)
 
 " NERDTree
-nnoremap <silent> <leader>o :<c-u>NERDTreeToggle<cr>
+nnoremap <silent> <leader>f :<c-u>NERDTreeToggle<cr>
 
 " Gundo
 nnoremap <silent> <leader>g :<c-u>GundoToggle<cr>
@@ -117,6 +127,10 @@ if has('autocmd')
   augroup END
 endif
 
+" incsearch
+map /  <Plug>(incsearch-forward)
+map ?  <Plug>(incsearch-backward)
+map g/ <Plug>(incsearch-stay)
 
 " snippets
 if exists('g:neocomplete')

@@ -17,27 +17,35 @@ function command_exists {
 }
 
 if [ -n "${SHELL##*zsh*}" ]; then
-  echo "To use ZSH as default shell please do:\n"
-  echo "chsh -s $(which zsh)"
-  echo "env zsh"
-  echo "source ~/.zshrc"
+  echo -e "To use ZSH as default shell please do:\n"
+  echo "  chsh -s $(which zsh)"
+  echo "  env zsh"
+  echo "  source ~/.zshrc"
 fi
 
-deps=(zsh thefuck xclip awk vint)
-echo "Make sure to have the following commands availble: ${deps[@]}, vim or neovim."
-for cmd in $deps; do
-  if ! command_exists $cmd; then
-    echo "Command $cmd not found."
+echo ""
+
+deps=(zsh thefuck xclip awk vint ag)
+echo "Make sure to have the following commands availble: ${deps[*]}, vim or neovim."
+for cmd in "${deps[@]}"; do
+  if ! command_exists "$cmd"; then
+    echo "  - command $cmd not found."
   fi
 done
+echo "Also check the list of linters used by Vim:"
+echo "https://github.com/w0rp/ale"
 
 if ! command_exists vim && ! command_exists nvim; then
   echo "Neither vim, nor neovim were found."
 fi
 
+echo ""
+
 if command_exists nvim; then
   echo "Please install python-neovim and python2-neovim (or python3-neovim) modules."
   echo "See https://github.com/neovim/neovim/wiki/Installing-Neovim."
 fi
+
+echo ""
 
 "${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"

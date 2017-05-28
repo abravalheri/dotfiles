@@ -1,3 +1,4 @@
+scriptencoding utf8
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Configuration before plugins
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -12,7 +13,6 @@ set backspace=indent,eol,start
 
 " default wrapping
 set textwidth=79
-set colorcolumn=+1
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugins
@@ -45,8 +45,8 @@ set showcmd         " display incomplete commands
 
 set diffopt+=iwhite,vertical "Ignore changes in amount of white space
 
-" set cursorline    " visual feedbak for cursor position
 " set cursorcolumn
+set cursorline    " visual feedbak for cursor position
 set visualbell
 
 " line numbering in hybrid mode for easier motions
@@ -68,11 +68,24 @@ set wrapscan      " circular search through the file
 if &t_Co > 2 || has('gui_running')
   set hlsearch
 endif
+" nvim supports incremental searching for substitute
+if has("nvim")
+  set inccommand=split
+end
 
 " command line autocompletion
+set path+=**
 set wildmenu
+set wildignorecase
 set wildmode=longest,full
-set wildignore=*.swp,*.bak,*.pyc,*.class,*.o,*.a
+set wildignore+=*.swp,*.bak,*.pyc,*.class,*.o,*.a
+set wildignore+=**/__pycache__/**
+set wildignore+=**/node_modules/**
+set wildignore+=**/bower_components/**
+set wildignore+=**/dist/**
+set wildignore+=**/coverage/**
+set wildignore+=**/.bundle/**
+set wildignore+=**/.sass-cache/**
 
 " keep buffers alive, even if inactive
 " (http://nvie.com/posts/how-i-boosted-my-vim/#change-vim-behaviour)
@@ -81,8 +94,20 @@ set hidden
 set list
 set listchars=tab:>.,trail:.,extends:>,precedes:<,nbsp:.
 
+" use ellipsis to indicate line is broken in softwrap
+set linebreak
+let &showbreak='↪ … '
+
 " activate omni autocomplete
-set omnifunc=syntaxcomplete#Complete
+if has("autocmd") && exists("+omnifunc")
+  augroup activate_ominifunc
+    au!
+    autocmd Filetype *
+      \ if &omnifunc == "" |
+      \   setlocal omnifunc=syntaxcomplete#Complete |
+      \ endif
+  augroup END
+endif
 
 " for Win32 GUI - remove 't' flag from 'guioptions': no tearoff menu entries
 " let &guioptions = substitute(&guioptions, 't', '', 'g')
@@ -105,25 +130,26 @@ if has('autocmd')
 
   " Put these in an autocmd group, so that we can delete them easily.
   augroup vimrcEx
-  au!
+    au!
 
-  " For all text files set 'textwidth' to 78 characters.
-  autocmd FileType text setlocal textwidth=78
-  if exists('+colorcolumn')
-    autocmd FileType {text,vim} set colorcolumn=+1  " one character after textwidth
-  else  " make it red
-    autocmd FileType {text,vim} au BufWinEnter * let w:m2=matchadd('ErrorMsg', '\%>78v.\+', -1)
-  endif
+    " For all text files set 'textwidth' to 78 characters.
+    autocmd FileType text setlocal textwidth=78
+    " if exists('+colorcolumn')
+    "   autocmd FileType {text,vim} set colorcolumn=+1  " one character after textwidth
+    " endif
+    " make it red
+    autocmd FileType {text,vim}
+      \ au BufWrite,BufWinEnter * let w:m2=matchadd('ErrorMsg', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), -1)
 
-  " When editing a file, always jump to the last known cursor position.
-  " Don't do it when the position is invalid or when inside an event handler
-  " (happens when dropping a file on gvim).
-  " Also don't do it when the mark is in the first line, that is the default
-  " position when opening a file.
-  autocmd BufReadPost *
-    \ if line("'\"") > 1 && line("'\"") <= line('$') |
-    \   exe 'normal! g`"' |
-    \ endif
+    " When editing a file, always jump to the last known cursor position.
+    " Don't do it when the position is invalid or when inside an event handler
+    " (happens when dropping a file on gvim).
+    " Also don't do it when the mark is in the first line, that is the default
+    " position when opening a file.
+    autocmd BufReadPost *
+      \ if line("'\"") > 1 && line("'\"") <= line('$') |
+      \   exe 'normal! g`"' |
+      \ endif
 
   augroup END
 else
