@@ -6,6 +6,11 @@
   whitespace = trailing-space,space-before-tab
 [color]
 	ui = true
+[color "diff-highlight"]
+	oldNormal = red bold
+	oldHighlight = red bold 52
+	newNormal = green bold
+	newHighlight = green bold 22
 [credential]
 	helper = cache --timeout 14400
 [mergetool]
@@ -72,11 +77,3 @@
 	fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
 	wdiff = diff --color-words
 	graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
-[user]
-	name = (none)
-	email = my@email.com
-[color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
