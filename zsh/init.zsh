@@ -15,14 +15,30 @@ command_exists() {
 if command_exists ruby; then
   gems_dir="$(ruby -e 'print Gem.user_dir')"
   # http://stackoverflow.com/questions/229551/string-contains-in-bash
-  [ -n "${PATH##*$gems_dir*}" ] && PATH="$gems_dir:$PATH"
+  [ -n "${PATH##*$gems_dir*}" ] && PATH="$PATH:$gems_dir"
 fi
 
 if [ -d "$HOME/.local/bin" ] && [ -n "${PATH##*$HOME/.local/bin*}" ]; then
-  PATH="$HOME/.local/bin:$PATH"
+  PATH="$PATH:$HOME/.local/bin"
+fi
+
+if [ -d "$HOME/.local/before/bin" ] && [ -n "${PATH##*$HOME/.local/before/bin*}" ]; then
+  PATH="$PATH:$HOME/.local/before/bin"
 fi
 
 export PATH
+
+# Add bash completion for packages installed using stow
+if command_exists bashcompinit; then
+  autoload bashcompinit
+  bashcompinit
+
+  if [ -d "$HOME/.local/etc/bash_completion.d" ]; then
+    for filename in "$HOME/.local/etc/bash_completion.d/"*; do
+      [ -f "$filename" ] && source "$filename";
+    done
+  fi
+fi
 
 # Path to your oh-my-zsh installation.
 export DOTFILES=$HOME/.config/dotfiles
