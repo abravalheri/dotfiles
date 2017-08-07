@@ -30,6 +30,11 @@ Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'terryma/vim-multiple-cursors'    | " try to emulate sublime multiple cursors (not complete)
 Plug 'vim-scripts/matchit.zip'         | " extended % matching
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
+Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
+
+" DiffEhancements:
+Plug 'lambdalisue/vim-unified-diff'    | " automatically uses git diff --histogram to imrpove diffs
+Plug 'lambdalisue/vim-improve-diff'    | " auto diffupdate and auto diffoff
 
 "" SearchFeedback:
 Plug 'osyo-manga/vim-over'             | " highlight feedback for substitute
@@ -108,6 +113,7 @@ Plug 'maksimr/vim-jsbeautify',         {'for': ['javascript', 'javascript.jsx', 
 Plug 'mxw/vim-jsx',                    {'for': 'javascript.jsx'}
 Plug 'othree/html5.vim',               {'for': 'html'}
 Plug 'pangloss/vim-javascript',        {'for': 'javascript'}
+Plug 'leafgarland/typescript-vim'
 Plug 'rstacruz/sparkup',               {'rtp': 'vim/',  'for': 'html'}
 
 "" Other Syntaxes:
@@ -125,6 +131,7 @@ Plug 'rstacruz/sparkup',               {'rtp': 'vim/',  'for': 'html'}
 " Plug 'xuhdev/syntax-dosini.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'tpope/vim-markdown'
+Plug 'bpietravalle/vim-bolt'
 
 "" Style:
 Plug 'flazz/vim-colorschemes'

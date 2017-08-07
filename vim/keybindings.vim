@@ -79,6 +79,8 @@ endfunction
 " quickly edit/reload the vimrc file
 " (from http://nvie.com/posts/how-i-boosted-my-vim/)
 noremap  <silent> <leader>ev :<c-u>e $MYVIMRC<cr>
+noremap  <silent> <leader>ep :<c-u>e $DOTFILES/vim/plugins.vim<cr>
+noremap  <silent> <leader>ek :<c-u>e $DOTFILES/vim/keybindings.vim<cr>
 noremap  <silent> <leader>sv :<c-u>so $MYVIMRC<cr>
 noremap  <silent> <leader>so :<c-u>so %<cr>
 
@@ -96,6 +98,10 @@ nnoremap <silent> <bar><space>    :<c-u>bp<cr>
 " local list commands are boring and more difficult
 nnoremap <silent> <leader>n  :<c-u>lnext<cr>
 nnoremap <silent> <bar>n     :<c-u>lprevious<cr>
+
+" improve vimdiff
+nnoremap <silent> <leader>dp V:diffput<cr>
+nnoremap <silent> <leader>dg V:diffget<cr>
 
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Plugin Mappings
