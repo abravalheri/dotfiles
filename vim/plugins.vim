@@ -31,6 +31,7 @@ Plug 'terryma/vim-multiple-cursors'    | " try to emulate sublime multiple curso
 Plug 'vim-scripts/matchit.zip'         | " extended % matching
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
+Plug 'Valloric/YouCompleteMe', { 'do': './install.py' } | " better autocomplete
 
 " DiffEhancements:
 Plug 'lambdalisue/vim-unified-diff'    | " automatically uses git diff --histogram to imrpove diffs
