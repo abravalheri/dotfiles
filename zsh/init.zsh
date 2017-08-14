@@ -13,7 +13,7 @@ command_exists() {
 
 # Path setup
 if command_exists ruby; then
-  gems_dir="$(ruby -e 'print Gem.user_dir')"
+  gems_dir="$(ruby -e 'print Gem.user_dir')/bin"
   # http://stackoverflow.com/questions/229551/string-contains-in-bash
   [ -n "${PATH##*$gems_dir*}" ] && PATH="$PATH:$gems_dir"
 fi

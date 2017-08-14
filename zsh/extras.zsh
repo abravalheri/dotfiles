@@ -19,3 +19,15 @@ export _Z_DATA=$XDG_CONFIG_HOME/.z
 if [ ! -f $_Z_DATA ]; then
   touch $_Z_DATA
 fi
+
+# local yarn-packages
+YARN_GLOBAL_MODULES=$HOME/.local/stow/yarn-packages
+if [ -d "$YARN_GLOBAL_MODULES/bin" ] && [ -n "${PATH##*$YARN_GLOBAL_MODULES/bin*}" ]; then
+  export PATH="$PATH:$YARN_GLOBAL_MODULES/bin"
+fi
+
+# tabtab source for yarn package
+# uninstall by removing these lines or running `tabtab uninstall yarn`
+if [ -f "${XDG_CONFIG_HOME}/yarn/global/node_modules/tabtab/.completions/yarn.zsh" ]; then
+  source "${XDG_CONFIG_HOME}/yarn/global/node_modules/tabtab/.completions/yarn.zsh"
+fi

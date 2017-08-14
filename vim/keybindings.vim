@@ -81,6 +81,7 @@ endfunction
 noremap  <silent> <leader>ev :<c-u>e $MYVIMRC<cr>
 noremap  <silent> <leader>ep :<c-u>e $DOTFILES/vim/plugins.vim<cr>
 noremap  <silent> <leader>ek :<c-u>e $DOTFILES/vim/keybindings.vim<cr>
+noremap  <silent> <leader>ee :<c-u>e $DOTFILES/vim/extras.vim<cr>
 noremap  <silent> <leader>sv :<c-u>so $MYVIMRC<cr>
 noremap  <silent> <leader>so :<c-u>so %<cr>
 

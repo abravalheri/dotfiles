@@ -4,6 +4,7 @@ if has('autocmd')
   augroup missing_filetypes
     autocmd!
     autocmd BufNewFile,BufRead *.gsl set filetype=gsl
+    autocmd BufNewFile,BufRead *.make set filetype=make
     autocmd BufNewFile,BufRead {*.pylintrc,pylintrc,.coafile} set filetype=cfg
   augroup END
 
@@ -11,6 +12,7 @@ if has('autocmd')
     autocmd!
     autocmd BufNewFile,BufRead *.rst setlocal shiftwidth=4 tabstop=4 textwidth=79
     autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2 textwidth=79
+    autocmd FileType yaml setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
   augroup END
 
   augroup fix_word_separators
@@ -30,6 +32,7 @@ if exists('g:use_syntastic')
 else
   " let g:ale_lint_on_save = 0 => avoid always checking
   let g:ale_set_loclist = 1
+  let g:ale_echo_msg_format = '[%severity%:%linter%] %s'
   command! Lint ALELint
 endif
 
