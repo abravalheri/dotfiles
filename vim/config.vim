@@ -86,6 +86,7 @@ set wildignore+=**/dist/**
 set wildignore+=**/coverage/**
 set wildignore+=**/.bundle/**
 set wildignore+=**/.sass-cache/**
+set wildignore+=**/*.egg-info/**
 
 " keep buffers alive, even if inactive
 " (http://nvie.com/posts/how-i-boosted-my-vim/#change-vim-behaviour)
