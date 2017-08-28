@@ -139,8 +139,8 @@ if has('autocmd')
     "   autocmd FileType {text,vim} set colorcolumn=+1  " one character after textwidth
     " endif
     " make it red
-    autocmd FileType {text,vim}
-      \ au BufWrite,BufWinEnter * let w:m2=matchadd('ErrorMsg', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), -1)
+    autocmd FileType {text,vim,python}
+      \ au BufNewFile,BufRead,BufWrite,BufWinEnter * let w:m2=matchadd('ErrorMsg', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), -1)
 
     " When editing a file, always jump to the last known cursor position.
     " Don't do it when the position is invalid or when inside an event handler
