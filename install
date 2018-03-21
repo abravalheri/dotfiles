@@ -2,15 +2,10 @@
 
 set -e
 
-CONFIG="install.conf.yaml"
-DOTBOT_DIR="dotbot"
+cd "$(dirname "${BASH_SOURCE[0]}")"
+BASEDIR="$(pwd)"
 
-DOTBOT_BIN="bin/dotbot"
-BASEDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-cd "${BASEDIR}"
-echo "Update submodules ..."
-git submodule update --init --recursive  #"${DOTBOT_DIR}"
+echo "Update submodules ..." git submodule update --init --recursive
 
 function command_exists {
   command -v "$1" >/dev/null 2>&1
@@ -42,10 +37,11 @@ fi
 echo ""
 
 if command_exists nvim; then
-  echo "Please install python-neovim and python2-neovim (or python3-neovim) modules."
+  echo "Please install python-neovim and python2-neovim neovim-remote (or python3-neovim) modules."
   echo "See https://github.com/neovim/neovim/wiki/Installing-Neovim."
 fi
 
 echo ""
 
-"${BASEDIR}/${DOTBOT_DIR}/${DOTBOT_BIN}" -d "${BASEDIR}" -c "${CONFIG}" "${@}"
+# Install everything that is not a hidden directory or starts with + using GNU Stow
+find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow

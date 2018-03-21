@@ -21,6 +21,7 @@
 [push]
 	default = simple
 [diff]
+  compactionHeuristic = true
   mnemonicprefix = true
 	renames = copies
 	algorithm = patience
@@ -28,22 +29,15 @@
 	autosetupmerge = true
 [rerere]
 	enabled = true
-#[include]
-#	path=~/.config/git/author.conf
+[include]
+	path=~/.config/git/+local.conf
 [alias]
 	forget = credential-cache exit
 	untracked = ls-files --others --exclude-standard
 	add-untracked = !git add $(git ls-files -o --exclude-standard)
 	remove-untracked = clean -df
-	last = log -1 --stat
-	cp = cherry-pick
-	co = checkout
-	cl = clone
-	ci = commit
-	st = status -sb
-	br = branch
 	unstage = reset HEAD --
-	dc = diff --cached
+	last = log -1 --stat
 
   log-merge = !git log $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P $1))..$1 --graph --pretty=oneline --abbrev-commit --boundary
   log-all = !git log --graph --decorate --pretty=oneline --abbrev-commit --all $(git fsck --no-reflogs | grep commit | cut -d\\  -f3)
@@ -57,18 +51,6 @@
 	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
 	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
 	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %an%C(reset): %s%C(reset)'
-	stree = !bash -c '"                                                                             \
-		        while IFS=+ read -r hash time branch message; do                                            \
-		            timelength=$(echo \"$time\" | sed -r \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
-		            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
-		            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"\";          \
-		        done < <(git logx && echo);"'
-	vtree = !bash -c '"                                                                             \
-		        while IFS=+ read -r hash time branch message; do                                            \
-		            timelength=$(echo \"$time\" | sed -r \"s:[^ ][[]([0-9]{1,2}(;[0-9]{1,2})?)?m::g\");     \
-		            timelength=$(echo \"16+${#time}-${#timelength}\" | bc);                                 \
-		            printf \"%${timelength}s    %s %s %s\n\" \"$time\" \"$hash\" \"$branch\" \"$message\";  \
-		        done < <(git logx && echo);"'
 
   ls = ls-files
 	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short

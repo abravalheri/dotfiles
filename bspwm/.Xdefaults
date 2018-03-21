@@ -1,0 +1,13 @@
+*customization: -color
+xterm*termName: xterm-256color
+urxvt*termName: rxvt-256color
+
+urxvt.perl-ext-common: selection-to-clipboard,resize-font
+
+!! Appearance
+urxvt.scrollBar: false
+urxvt.background: black
+urxvt.foreground: grey
+
+urxvt*font: xft:DejaVu Sans Mono:pixelsize=14:antialias=true:hinting=true
+urxvt*boldFont: xft:DejaVu Sans Mono:bold:pixelsize=14:antialias=true:hinting=true
