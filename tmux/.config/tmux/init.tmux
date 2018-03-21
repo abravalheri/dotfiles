@@ -1,5 +1,5 @@
 # Before hook
-run '$DOTFILES/tmux/before.sh'
+run '$HOME/.config/tmux/before.sh'
 
 # address vim mode switching delay (http://superuser.com/a/252717/65504)
 set -s escape-time 0
@@ -30,10 +30,10 @@ set -g focus-events on
 setw -g aggressive-resize on
 
 ## --- Bash extensions (better programmability) ---
-run "$DOTFILES/tmux/utf-8.sh"
-run "$DOTFILES/tmux/mouse.sh"
-run "$DOTFILES/tmux/style.sh"
-run "$DOTFILES/tmux/clipboard.sh"
+run "$HOME/.config/tmux/utf-8.sh"
+run "$HOME/.config/tmux/mouse.sh"
+run "$HOME/.config/tmux/style.sh"
+run "$HOME/.config/tmux/clipboard.sh"
 
 ## --- Key Bindings ---
-source "$DOTFILES/tmux/keybindings.tmux"
+source "$HOME/.config/tmux/keybindings.tmux"

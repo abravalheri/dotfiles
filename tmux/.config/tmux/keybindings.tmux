@@ -1,6 +1,11 @@
 # Use vim keybindings in copy mode
 setw -g mode-keys vi
 
+# Use CTRL+a instead of CTRL+b
+unbind C-b
+set -g prefix C-a
+bind C-a send-prefix
+
 # Open windows/panels in the current dir
 bind | split-window -h -c "#{pane_current_path}"
 bind % split-window -v -c "#{pane_current_path}"

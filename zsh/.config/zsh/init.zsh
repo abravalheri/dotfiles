@@ -49,17 +49,18 @@ fi
 
 # Path to oh-my-zsh installation {{{
 export DOTFILES=$HOME/.dotfiles
-export ZSH=$DOTFILES/zsh/oh-my-zsh
+_config_base=$DOTFILES/zsh/.config/zsh
+export ZSH=$_config_base/oh-my-zsh
 # }}}
 
 # Theme {{{
-ZSH_CUSTOM=$DOTFILES/zsh/custom
+ZSH_CUSTOM=$_config_base/custom
 ZSH_THEME="custom" #terminalparty #sunaku #muse
 COMPLETION_WAITING_DOTS="true"
 # }}}
 
 # Load oh-my-zsh {{{
-source $DOTFILES/zsh/plugins.zsh
+source $_config_base/plugins.zsh
 source $ZSH/oh-my-zsh.sh
 # }}}
 
@@ -75,13 +76,18 @@ elif command_exists vim; then
   export EDITOR='vim'
 fi
 
-# Allow local configuration to interfere with extras and style {{{
-if [ -f $DOTFILES/zsh/+local.zsh ]; then
-  source $DOTFILES/zsh/+local.zsh
+
+# Source configurations from extra files {{{
+source $_config_base/style.zsh
+source $_config_base/alias.zsh
+source $_config_base/functions.zsh
+source $_config_base/extras.zsh
+
+if [ -f $_config_base/+local.zsh ]; then
+  source $_config_base/+local.zsh
 fi
 
-source $DOTFILES/zsh/style.zsh
-source $DOTFILES/zsh/extras.zsh
+source $DOTFILES/tmux/.config/tmux/startup.sh
 # }}}
 
 # Cleanup duplicates in path (rbenv and pyenv do not care) {{{
@@ -89,3 +95,5 @@ if command_exists awk; then
   export PATH=$(printf %s "$PATH" | awk -v RS=: -v ORS=: '!arr[$0]++')
 fi
 # }}}
+
+unset _config_base

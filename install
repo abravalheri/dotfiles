@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
+here=$(pwd)
 
 set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
-BASEDIR="$(pwd)"
 
-echo "Update submodules ..." git submodule update --init --recursive
+echo "Update submodules ..."
+git submodule update --init --recursive
 
 function command_exists {
   command -v "$1" >/dev/null 2>&1
@@ -45,3 +46,5 @@ echo ""
 
 # Install everything that is not a hidden directory or starts with + using GNU Stow
 find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow
+
+cd "$here"

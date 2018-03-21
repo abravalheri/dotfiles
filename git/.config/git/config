@@ -1,61 +1,61 @@
 [core]
-	filemode = false
-	autocrlf = input
-	eol = lf
+  filemode = false
+  autocrlf = input
+  eol = lf
   safecrlf = warn
   whitespace = trailing-space,space-before-tab
 [color]
-	ui = true
+  ui = true
 [color "diff-highlight"]
-	oldNormal = red bold
-	oldHighlight = red bold 52
-	newNormal = green bold
-	newHighlight = green bold 22
+  oldNormal = red bold
+  oldHighlight = red bold 52
+  newNormal = green bold
+  newHighlight = green bold 22
 [credential]
-	helper = cache --timeout 14400
+  helper = cache --timeout 14400
 [mergetool]
-	keeptemporaries = false
-	keepbackups = false
-	prompt = false
-	trustexitcode = false
+  keeptemporaries = false
+  keepbackups = false
+  prompt = false
+  trustexitcode = false
 [push]
-	default = simple
+  default = simple
 [diff]
   compactionHeuristic = true
   mnemonicprefix = true
-	renames = copies
-	algorithm = patience
+  renames = copies
+  algorithm = patience
 [branch]
-	autosetupmerge = true
+  autosetupmerge = true
 [rerere]
-	enabled = true
+  enabled = true
 [include]
-	path=~/.config/git/+local.conf
+  path=~/.config/git/+local.conf
 [alias]
-	forget = credential-cache exit
-	untracked = ls-files --others --exclude-standard
-	add-untracked = !git add $(git ls-files -o --exclude-standard)
-	remove-untracked = clean -df
-	unstage = reset HEAD --
-	last = log -1 --stat
+  forget = credential-cache exit
+  untracked = ls-files --others --exclude-standard
+  add-untracked = !git add $(git ls-files -o --exclude-standard)
+  remove-untracked = clean -df
+  unstage = reset HEAD --
+  last = log -1 --stat
 
   log-merge = !git log $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P $1))..$1 --graph --pretty=oneline --abbrev-commit --boundary
   log-all = !git log --graph --decorate --pretty=oneline --abbrev-commit --all $(git fsck --no-reflogs | grep commit | cut -d\\  -f3)
 
-	lg0 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
-	lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
-	lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-	lg = !"git lg1"
+  lg0 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+  lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
+  lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
+  lg = !"git lg1"
 
   lol = log --graph --decorate --pretty=oneline --abbrev-commit
-	lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
-	tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
-	logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %an%C(reset): %s%C(reset)'
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
+  tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
+  logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %an%C(reset): %s%C(reset)'
 
   ls = ls-files
-	hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-	ign  = ls-files -o -i --exclude-standard # Show files ignored by git
-	puff = pull --ff-only
-	fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
-	wdiff = diff --color-words
-	graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
+  hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+  ign  = ls-files -o -i --exclude-standard # Show files ignored by git
+  puff = pull --ff-only
+  fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
+  wdiff = diff --color-words
+  graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"

@@ -5,10 +5,6 @@ export NVIM_GTK_NO_HEADERBAR=1              # Disable GTK decorations on nvim-gt
 export NVIM_LISTEN_ADDRESS=/tmp/nvimsocket  # Make nvim-{gtk,qt} work nicely with neovim-remote (nvr)
 # }}}
 
-source $DOTFILES/zsh/alias.zsh
-source $DOTFILES/zsh/functions.zsh
-source $DOTFILES/tmux/startup.sh
-
 # enable {linux,home}brew {{{
 BREW_ROOT=$HOME/.local/opt/brew
 if [ -d $BREW_ROOT ] && [ -n "${PATH##*$BREW_ROOT/bin*}" ]; then

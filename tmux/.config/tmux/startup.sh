@@ -9,7 +9,7 @@ if command_exists tmux; then
   }
 
   function greet {
-    greeting="$DOTFILES/tmux/greetings/$(hostname).sh"
+    greeting="$HOME/.config/tmux/greetings/$(hostname).sh"
     [ -f "$greeting" ] && sh $greeting
     tmux -2 setenv -gru display_greetings
   }
