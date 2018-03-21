@@ -96,4 +96,10 @@ if command_exists awk; then
 fi
 # }}}
 
+# Autostart X if directly logged to the machine {{{
+if [[ ! $DISPLAY && $XDG_VTNR -eq 1 ]]; then
+  exec startx
+fi
+# }}}
+
 unset _config_base
