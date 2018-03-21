@@ -1,0 +1,7 @@
+neovim-gtk
+neovim-qt
+pulseaudio-ctl
+redpen
+urxvt-resize-font-git
+xmind
+yabar-git

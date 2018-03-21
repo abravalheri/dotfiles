@@ -1,0 +1,14 @@
+flake8
+gitlint
+isort
+neovim
+neovim-remote
+proselint
+ptpython
+pylint
+pyscaffold
+rstcheck
+sphinx
+thefuck
+vint
+yamllint

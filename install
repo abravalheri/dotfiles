@@ -4,6 +4,7 @@ here=$(pwd)
 set -e
 
 cd "$(dirname "${BASH_SOURCE[0]}")"
+base_dir=$(pwd)
 
 echo "Update submodules ..."
 git submodule update --init --recursive
@@ -21,25 +22,38 @@ fi
 
 echo ""
 
+if command_exists pacman; then
+  # Try to auto-install packages from list
+  echo "Installing pacman packages ..."
+  sudo pacman -Syu --needed - < pacman-pkglist-native.txt
+  if ! command_exists trizen; then
+    echo "Installing trizen to help with AUR packages..."
+    cd /tmp
+    git clone https://aur.archlinux.org/trizen.git
+    cd trizen
+    sudo makepkg -si
+    cd "$base_dir"
+  fi
+  echo "Installing packages from AUR ..."
+  trizen -S --needed - < pacman-pkglist-foreign.txt
+fi
+
+if command_exists pip; then
+  # Try auto-install packages from list
+  pip install --upgrade pip
+  pip install --upgrade --user -r python-pkglist.txt
+fi
+
 deps=(zsh thefuck xclip awk vint ag)
-echo "Make sure to have the following commands availble: ${deps[*]}, vim or neovim."
+# Make sure to have commands available
 for cmd in "${deps[@]}"; do
   if ! command_exists "$cmd"; then
     echo "  - command $cmd not found."
   fi
 done
-echo "Also check the list of linters used by Vim:"
-echo "https://github.com/w0rp/ale"
 
 if ! command_exists vim && ! command_exists nvim; then
   echo "Neither vim, nor neovim were found."
-fi
-
-echo ""
-
-if command_exists nvim; then
-  echo "Please install python-neovim and python2-neovim neovim-remote (or python3-neovim) modules."
-  echo "See https://github.com/neovim/neovim/wiki/Installing-Neovim."
 fi
 
 echo ""
