@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-command_exists() {
+command-exists() {
   # which ignores previous aliases but is not portable
   # command does not ignore aliases, but is built in
   # so it's better to try to check first with which and fallback to command
   which "$1" &>/dev/null || command -v "$1" &>/dev/null
 }
 
-set_tmux_bindings_for_clipboard () {
+set-clipboard-bindings () {
   ## --- Version-specific commands [grumble, grumble] ---
   # See: https://github.com/tmux/tmux/blob/master/CHANGES
   # http://stackoverflow.com/a/40902312
@@ -29,7 +29,7 @@ set_tmux_bindings_for_clipboard () {
   local copy_script="xclip -i -sel p -f | xclip -i -sel c "
   local paste_script="xclip -o | tmux load-buffer - ; tmux paste-buffer"
 
-  if uname | grep -qi Linux && command_exists xclip; then
+  if uname | grep -qi Linux && command-exists xclip; then
     # Select
     eval "tmux unbind $copy_mode v"
     eval "tmux unbind $copy_mode V"
@@ -54,5 +54,5 @@ set_tmux_bindings_for_clipboard () {
   fi
 }
 
-set_tmux_bindings_for_clipboard
-unset -f set_tmux_bindings_for_clipboard
+set-clipboard-bindings
+unset -f set-clipboard-bindings

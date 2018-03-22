@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set_tmux_style() {
+set-style() {
   # style - chosen by env var / hostname or fallback to default
   local style_name=${TMUX_STYLE:-$(hostname)}
   if [ ! -f "$HOME/.config/tmux/styles/$style_name.tmux" ]; then
@@ -13,5 +13,5 @@ set_tmux_style() {
   tmux source "$HOME/.config/tmux/styles/$TMUX_STYLE.tmux"
 }
 
-set_tmux_style
-unset -f set_tmux_style
+set-style
+unset -f set-style

@@ -9,7 +9,7 @@ base_dir=$(pwd)
 echo "Update submodules ..."
 git submodule update --init --recursive
 
-function command_exists {
+function command-exists {
   command -v "$1" >/dev/null 2>&1
 }
 
@@ -22,11 +22,11 @@ fi
 
 echo ""
 
-if command_exists pacman; then
+if command-exists pacman; then
   # Try to auto-install packages from list
   echo "Installing pacman packages ..."
   sudo pacman -Syu --needed - < pacman-pkglist-native.txt
-  if ! command_exists trizen; then
+  if ! command-exists trizen; then
     echo "Installing trizen to help with AUR packages..."
     cd /tmp
     git clone https://aur.archlinux.org/trizen.git
@@ -38,7 +38,7 @@ if command_exists pacman; then
   trizen -S --needed - < pacman-pkglist-foreign.txt
 fi
 
-if command_exists pip; then
+if command-exists pip; then
   # Try auto-install packages from list
   sudo pip install --upgrade pip
   pip install --upgrade --user -r python-pkglist.txt
@@ -47,12 +47,12 @@ fi
 deps=(zsh thefuck xclip awk vint ag)
 # Make sure to have commands available
 for cmd in "${deps[@]}"; do
-  if ! command_exists "$cmd"; then
+  if ! command-exists "$cmd"; then
     echo "  - command $cmd not found."
   fi
 done
 
-if ! command_exists vim && ! command_exists nvim; then
+if ! command-exists vim && ! command-exists nvim; then
   echo "Neither vim, nor neovim were found."
 fi
 
