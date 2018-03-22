@@ -1,5 +1,6 @@
-+*
-%*
++plugins
++local*
+%local*
 # files starting with % and + can be used for local host-only configurations
 # % is listed before files starting with letters and + after
 

@@ -84,12 +84,7 @@ endif
 " Configuration itself
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-"" but for dotfiles purposes:
-if empty($DOTFILES)
-  let $DOTFILES = $HOME . '/.dotfiles'
-endif
-
-let _config_base = $DOTFILES . '/vim/.config/' . _editor
+let _config_base = $HOME . '/.config/' . _editor
 let s:config_file = _config_base . '/config.vim'
 
 if !empty(glob(s:config_file))
