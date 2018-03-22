@@ -22,7 +22,7 @@ fi
 
 echo ""
 
-if [[ -v SKIP_PAKAGES ]]; then
+if [ -z "${SKIP_PACKAGES+x}" ]; then  # if var is unset
   if command-exists pacman; then
     # Try to auto-install packages from list
     echo "Installing pacman packages ..."
