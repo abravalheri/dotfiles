@@ -40,7 +40,7 @@ fi
 
 if command_exists pip; then
   # Try auto-install packages from list
-  pip install --upgrade pip
+  sudo pip install --upgrade pip
   pip install --upgrade --user -r python-pkglist.txt
 fi
 
