@@ -31,6 +31,18 @@ set nocompatible              " be iMproved, required
 
 if has('nvim')
   let _editor = 'nvim'
+
+  set backupdir-=.
+  " ^  Avoid silly backup files in working dir
+
+  let s:bkp=split(&backupdir, ',')[0]
+  if s:bkp =~ '.local/share' && !isdirectory(s:bkp)
+    call mkdir(s:bkp, 'p')
+  endif
+  " ^  Make sure backupdir exists so bkp files can be created
+
+  set backupdir+=/tmp,.
+  " ^  Support old backup files if they exist
 else
   let _editor = 'vim'
 
@@ -55,10 +67,10 @@ else
     call mkdir($XDG_CACHE_HOME . '/vim/undo', 'p')
   endif
 
-  set directory=$XDG_CACHE_HOME/vim/swap,~/,/tmp
-  set backupdir=$XDG_CACHE_HOME/vim/backup,~/,/tmp
+  set directory=$XDG_CACHE_HOME/vim/swap,/tmp,.
+  set backupdir=$XDG_CACHE_HOME/vim/backup,/tmp,.
   if has('persistent_undo')
-    set undodir=$XDG_CACHE_HOME/vim/undo,~/,/tmp
+    set undodir=$XDG_CACHE_HOME/vim/undo,/tmp,.
   endif
   set viminfo+=n$XDG_CACHE_HOME/vim/viminfo
 

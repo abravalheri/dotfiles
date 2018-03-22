@@ -1,3 +1,6 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker :
+
 zsh-reload () {
   source $HOME/.zshrc
 }
@@ -60,5 +63,6 @@ show-color-table() {
 }
 
 restart-network() {
-  sudo ifdown eth0 && sudo ifup eth0
+  interface=${1:-"enp0s3"}
+  sudo ifdown "$interface" && sudo ifup "$interface"
 }

@@ -1,6 +1,9 @@
 +*
+%*
+# files starting with % and + can be used for local host-only configurations
+# % is listed before files starting with letters and + after
+
 plug.vim
-vimrc
 tags
 
 # Created by https://www.gitignore.io

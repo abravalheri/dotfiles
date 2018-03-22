@@ -40,6 +40,7 @@ shellcheck
 stow
 sxhkd
 the_silver_searcher
+tk
 tldr
 tmux
 tree

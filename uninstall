@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+here=$(pwd)
+
+set -e
+
+cd "$(dirname "${BASH_SOURCE[0]}")"
+base_dir=$(pwd)
+
+find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow -D
+
+cd "$here"
