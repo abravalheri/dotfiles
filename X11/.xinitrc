@@ -31,13 +31,10 @@ if [ -d "$HOME/.config/X11/xinit/xinitrc.d" ]; then
   unset f
 fi
 
-# if [ -d "$HOME/.config/X11/xinit/xinitrc.d/after" ]; then
-#   # Loaded late... useful when `exec`ing and replacing with a children process
-#   for f in $HOME/.config/X11/xinit/xinitrc.d/after/?*.sh; do
-#     [ -x "$f" ] && . "$f"
-#   done
-#   unset f
-# fi
-start-pulseaudio-x11  # used for polybar and volume hotkeys
-
-exec bspwm
+if [ -d "$HOME/.config/X11/xinit/xinitrc.d/after" ]; then
+  # Loaded late... useful when `exec`ing and replacing with a children process
+  for f in $HOME/.config/X11/xinit/xinitrc.d/after/?*.sh; do
+    [ -x "$f" ] && . "$f"
+  done
+  unset f
+fi
