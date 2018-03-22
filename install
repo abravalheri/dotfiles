@@ -22,26 +22,28 @@ fi
 
 echo ""
 
-if command-exists pacman; then
-  # Try to auto-install packages from list
-  echo "Installing pacman packages ..."
-  sudo pacman -Syu --needed - < pacman-pkglist-native.txt
-  if ! command-exists trizen; then
-    echo "Installing trizen to help with AUR packages..."
-    cd /tmp
-    git clone https://aur.archlinux.org/trizen.git
-    cd trizen
-    sudo makepkg -si
-    cd "$base_dir"
+if [[ -v SKIP_PAKAGES ]]; then
+  if command-exists pacman; then
+    # Try to auto-install packages from list
+    echo "Installing pacman packages ..."
+    sudo pacman -Syu --needed - < pacman-pkglist-native.txt
+    if ! command-exists trizen; then
+      echo "Installing trizen to help with AUR packages..."
+      cd /tmp
+      git clone https://aur.archlinux.org/trizen.git
+      cd trizen
+      sudo makepkg -si
+      cd "$base_dir"
+    fi
+    echo "Installing packages from AUR ..."
+    trizen -S --needed - < pacman-pkglist-foreign.txt
   fi
-  echo "Installing packages from AUR ..."
-  trizen -S --needed - < pacman-pkglist-foreign.txt
-fi
 
-if command-exists pip; then
-  # Try auto-install packages from list
-  sudo pip install --upgrade pip
-  pip install --upgrade --user -r python-pkglist.txt
+  if command-exists pip; then
+    # Try auto-install packages from list
+    sudo pip install --upgrade pip
+    pip install --upgrade --user -r python-pkglist.txt
+  fi
 fi
 
 deps=(zsh thefuck xclip awk vint ag)
