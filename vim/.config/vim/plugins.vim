@@ -17,7 +17,7 @@ endif
 let s:vim_plug=s:autoload_dir . '/plug.vim'
 
 if empty(glob(s:vim_plug))
-  silent !mkdir -p $DOTFILES/vim/+plugins
+  exec 'silent !mkdir -p ' . _config_base . '/+plugins'
   exec 'silent !curl -kfLo ' . s:vim_plug . ' --create-dirs ' .
     \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
   augroup install_vim_plug
