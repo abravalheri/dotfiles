@@ -25,7 +25,7 @@ ZSH_THEME_GIT_PROMPT_SUFFIX=")"
 local user_color=$my_green
 test $UID -eq 0 && user_color=$my_red
 
-PROMPT='%(?,%{$FG[$my_green]%},%{$FG[$my_red]%}) %% %{$reset_color%}'
+PROMPT='%(?,%{$FG[$my_green]%},%{$FG[$my_red]%}) $ %{$reset_color%}'
 RPS1='%{$FG[$my_blue]%}'\
 '%~ '\
 '%{$FG[$my_grey_dark]%}'\

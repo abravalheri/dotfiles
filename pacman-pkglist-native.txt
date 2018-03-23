@@ -1,3 +1,4 @@
+adobe-source-code-pro-fonts
 alsa-utils
 autojump
 base
@@ -26,6 +27,7 @@ net-tools
 nmap
 openssh
 otf-font-awesome
+p7zip
 pkgfile
 ponymix
 pulseaudio
@@ -54,6 +56,7 @@ xclip
 xkeycaps
 xorg
 xorg-xinit
+xterm
 yarn
 zathura
 zathura-djvu
