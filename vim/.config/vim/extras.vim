@@ -26,9 +26,9 @@ if has('autocmd')
   augroup END
 
   if has('nvim')
-    augroup start_terminal_on_insert_mode
+    augroup start_terminal_on_insert_mode_no_spell
       autocmd!
-      autocmd TermOpen term://* startinsert
+      autocmd TermOpen term://* setlocal nospell | startinsert
     augroup END
   endif
 endif
