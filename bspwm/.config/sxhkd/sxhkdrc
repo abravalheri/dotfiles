@@ -10,9 +10,13 @@ super + Return
 super + @space
 	dmenu_run
 
-# make sxhkd reload its configuration files:
+# reload bspwm and companion programs
 super + Escape
-	yabar-reload && sxhkd-reload && bspwm-reset-monitors
+	source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
+
+# make sxhkd reload its configuration files:
+super + shift + Escape
+	pkill -USR1 -x sxhkd
 
 #
 # bspwm hotkeys

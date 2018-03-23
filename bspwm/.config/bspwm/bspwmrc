@@ -1,41 +1,9 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
-sxhkd-reload() {
-  if ! pgrep sxhkd &>/dev/null; then
-    sxhkd &>/dev/null &
-  fi
-  pkill -USR1 sxhkd &>/dev/null | true
-}
+source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh
 
-yabar-reload() {
-  pkill yabar &>/dev/null | true
-  yabar &>/dev/null &
-}
+sxhkd &
+yabar &
 
-bspwm-reset-monitors() {
-  IFS=$'\n' monitors=( $(bspc query --monitors --names) )
-  for mon in "${monitors[@]}"; do
-    bspc monitor "$mon" --reset-desktops {1..4}
-  done
-}
-
-export -f bspwm-reset-monitors sxhkd-reload yabar-reload
-
-sxhkd-reload
-yabar-reload
-bspwm-reset-monitors
-
-wallpaper=$HOME/.config/wallpapers/background
-if [ -f "$wallpaper" ]; then
-  feh --bg-center "$wallpaper"
-fi
-unset wallpaper
-
-bspc config border_width         1
-bspc config window_gap           10
-
-bspc config split_ratio          0.52
-bspc config borderless_monocle   true
-bspc config gapless_monocle      true
-
-bspc rule -a '*:zathura' state=tiled
+bspwm-reload
+feh-configure-wallpaper
