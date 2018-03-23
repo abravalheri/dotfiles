@@ -10,8 +10,12 @@ super + Return
 super + @space
 	dmenu_run
 
-# make sxhkd reload its configuration files:
+# reload bspwm and companion programs
 super + Escape
+	source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
+
+# make sxhkd reload its configuration files:
+super + shift + Escape
 	pkill -USR1 -x sxhkd
 
 #
@@ -69,6 +73,10 @@ super + {_,shift + }c
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
+
+# focus the next/previous monitor
+super + brace{left,right}
+	bspc monitor -f {prev,next}
 
 # focus the last node/desktop
 super + {grave,Tab}
