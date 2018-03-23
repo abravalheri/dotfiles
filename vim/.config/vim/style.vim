@@ -26,3 +26,9 @@ endif
 if &t_Co > 2 || has('gui_running') || exists('g:GuiLoaded')
   syntax on
 endif
+
+" GVIM Font:
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has('gui_running')
+  set guifont=Source\ Code\ Pro\ 11
+endif

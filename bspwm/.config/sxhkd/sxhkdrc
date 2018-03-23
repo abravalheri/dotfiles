@@ -12,7 +12,7 @@ super + @space
 
 # make sxhkd reload its configuration files:
 super + Escape
-	pkill -USR1 -x sxhkd
+	yabar-reload && sxhkd-reload && bspwm-reset-monitors
 
 #
 # bspwm hotkeys
@@ -69,6 +69,10 @@ super + {_,shift + }c
 # focus the next/previous desktop in the current monitor
 super + bracket{left,right}
 	bspc desktop -f {prev,next}.local
+
+# focus the next/previous monitor
+super + brace{left,right}
+	bspc monitor -f {prev,next}
 
 # focus the last node/desktop
 super + {grave,Tab}
