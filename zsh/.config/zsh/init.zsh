@@ -1,6 +1,17 @@
 #!/usr/bin/env zsh
 # vim: set foldmethod=marker :
 
+# Profiling: https://kev.inburke.com/kevin/profiling-zsh-startup-time/ {{{
+PROFILE_STARTUP=false
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    zmodload zsh/zprof # Output load-time statistics
+    # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+    PS4=$'%D{%M%S%.} %N:%i> '
+    exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/.cache}/zsh_statup.$$"
+    setopt xtrace prompt_subst
+fi
+# }}}
+
 # Set XDG global variables to their defaults if not set {{{
 : ${XDG_CONFIG_HOME:=$HOME/.config}
 : ${XDG_DATA_HOME:=$HOME/.local/share}
@@ -37,6 +48,14 @@ fi
 # Cleanup duplicates in path (rbenv and pyenv do not care) {{{
 if command-exists awk; then
   export PATH=$(printf %s "$PATH" | awk -v RS=: -v ORS=: '!arr[$0]++')
+fi
+# }}}
+
+# Profiling {{{
+if [[ "$PROFILE_STARTUP" == true ]]; then
+    zprof
+    unsetopt xtrace
+    exec 2>&3 3>&-
 fi
 # }}}
 
