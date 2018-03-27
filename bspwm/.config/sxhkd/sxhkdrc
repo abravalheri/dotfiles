@@ -10,10 +10,6 @@ super + Return
 super + @space
 	dmenu_run
 
-# reload bspwm and companion programs
-super + Escape
-	source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
-
 # make sxhkd reload its configuration files:
 super + shift + Escape
 	pkill -USR1 -x sxhkd
@@ -21,6 +17,10 @@ super + shift + Escape
 #
 # bspwm hotkeys
 #
+
+# reload bspwm config and companion programs
+super + Escape
+	source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
 
 # quit bspwm normally
 super + alt + Escape
@@ -58,7 +58,7 @@ super + ctrl + {x,y,z}
 # focus/swap
 #
 
-# focus the node in the given direction
+# focus/swap the node in the given direction
 super + {_,shift + }{h,j,k,l}
 	bspc node -{f,s} {west,south,north,east}
 

@@ -13,13 +13,6 @@ function command-exists {
   command -v "$1" >/dev/null 2>&1
 }
 
-if [ -n "${SHELL##*zsh*}" ]; then
-  echo -e "To use ZSH as default shell please do:\n"
-  echo "  chsh -s $(which zsh)"
-  echo "  env zsh"
-  echo "  source ~/.zshrc"
-fi
-
 echo ""
 
 if [ -z "${SKIP_PACKAGES+x}" ]; then  # if var is unset
@@ -39,10 +32,10 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then  # if var is unset
     trizen -S --needed - < pacman-pkglist-foreign.txt
   fi
 
-  if command-exists pip; then
+  if command-exists python3; then
     # Try auto-install packages from list
-    sudo pip install --upgrade pip
-    pip install --upgrade --user -r python-pkglist.txt
+    sudo python3 -m pip install --upgrade pip
+    python3 -m pip install --upgrade --user -r python-pkglist.txt
   fi
 fi
 
@@ -64,3 +57,10 @@ echo ""
 find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow
 
 cd "$here"
+
+if [ -n "${SHELL##*zsh*}" ]; then
+  echo -e "To use ZSH as default shell please do:\n"
+  echo "  chsh -s $(which zsh)"
+  echo "  env zsh"
+  echo "  source ~/.zshrc"
+fi
