@@ -14,6 +14,7 @@ fi
 
 # Set XDG global variables to their defaults if not set {{{
 : ${XDG_CONFIG_HOME:=$HOME/.config}
+: ${XDG_CACHE_HOME:=$HOME/.cache}
 : ${XDG_DATA_HOME:=$HOME/.local/share}
 : ${XDG_CONFIG_DIRS:=/etc/xdg}
 : ${XDG_DATA_DIRS:=/usr/local/share:/usr/share}
