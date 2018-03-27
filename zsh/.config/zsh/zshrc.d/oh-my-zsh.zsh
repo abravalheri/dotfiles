@@ -9,6 +9,8 @@ ZSH_CUSTOM="$ZSH_CONFIG_HOME/oh-my-zsh.d"
 ZSH_THEME="custom" #terminalparty #sunaku #muse
 COMPLETION_WAITING_DOTS="true"
 
+zstyle :omz:plugins:ssh-agent agent-forwarding on
+
 # Select plugins to enable
 plugins=(
   autojump

@@ -3,7 +3,7 @@
 	url = git://github.com/robbyrussell/oh-my-zsh.git
 [submodule "urxvt/.config/urxvt/base16"]
 	path = urxvt/.config/urxvt/base16
-	url = git@github.com:chriskempson/base16-xresources.git
+	url = git://github.com/chriskempson/base16-xresources.git
 [submodule "urxvt/.config/base16-xresources"]
 	path = urxvt/.config/base16-xresources
-	url = git@github.com:chriskempson/base16-xresources.git
+	url = git://github.com/chriskempson/base16-xresources.git
