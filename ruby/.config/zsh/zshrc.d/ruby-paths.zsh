@@ -1,12 +1,7 @@
 #!/usr/bin/env zsh
 
 if command-exists ruby; then
-  export GEM_HOME="$XDG_DATA_HOME/gem"
-  export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
-
-  gems_dir="$(ruby -e 'print Gem.user_dir')/bin"
-  # http://stackoverflow.com/questions/229551/string-contains-in-bash
-  [ -n "${PATH##*$gems_dir*}" ] && PATH="$PATH:$gems_dir"
-
-  export PATH
+  export PATH  # Make sure ruby have access to the updated PATH
+  PATH="$(ruby -e 'print (ENV["PATH"].split(":") + [Gem.bindir, Gem.user_dir + "/bin"]).uniq.compact.join(":")')"
+  export PATH  # Make sure updated version of env var is available
 fi
