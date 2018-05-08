@@ -7,8 +7,8 @@ set -g prefix C-a
 bind C-a send-prefix
 
 # Open windows/panels in the current dir
-bind | split-window -h -c "#{pane_current_path}"
-bind % split-window -v -c "#{pane_current_path}"
+bind % split-window -h -c "#{pane_current_path}"
+bind '"' split-window -v -c "#{pane_current_path}"
 bind c new-window      -c "#{pane_current_path}"
 
 # Switch panes using Ctrl-arrow without prefix
