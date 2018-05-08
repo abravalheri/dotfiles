@@ -1,24 +1,18 @@
 # dotfiles
 Custom Linux configuration files, including default oh-my-zsh and
-vundle configuration
-(using [dotbot](https://github.com/anishathalye/dotbot/)).
+vim-plug configuration
 
 ## Instalation
 
-Clone the repo to `~/.config/dotfiles` and run the installation script:
+Clone the repo to `~/.dotfiles` and run the installation script:
 
 ```bash
-mkdir -p ~/.config
-cd ~/.config
-git clone --recursive https://github.com/abravalheri/dotfiles
-cd dotfiles
-zsh ./install
+cd ~
+mkdir -p .config
+git clone --recursive https://github.com/abravalheri/dotfiles .dotfiles
+cd .dotfiles
+./install
 ```
-
-This script will symlink the dotfiles and clone the required repositories
-(vundle, oh-my-zsh).
-
-Please make sure to have `zsh`, `git`, `python`, `ruby`, `tmux`, `vim` and `astyle` installed before running this.
 
 ## Local Customizations
 

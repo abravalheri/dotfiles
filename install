@@ -30,6 +30,8 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then  # if var is unset
     fi
     echo "Installing packages from AUR ..."
     trizen -S --needed - < pacman-pkglist-foreign.txt
+  elif command-exists apt-get && grep -qw "Ubuntu" /etc/os-release; then
+    source ./ubuntu-packages.sh
   fi
 
   if command-exists python3; then

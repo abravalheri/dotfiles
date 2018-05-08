@@ -59,3 +59,5 @@
   fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
   wdiff = diff --color-words
   graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
+[user]
+	name = Anderson Bravalheri
