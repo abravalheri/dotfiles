@@ -57,7 +57,9 @@ Plug 'airblade/vim-gitgutter'          | " displays change markers on lines
 
 " Extra Syntax: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
+Plug 'ekalinin/Dockerfile.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Linters: {{{
