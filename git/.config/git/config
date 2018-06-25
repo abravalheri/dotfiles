@@ -45,19 +45,26 @@
   lg0 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
   lg1 = log --graph --abbrev-commit --decorate --date=relative --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(bold yellow)%d%C(reset)' --all
   lg2 = log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(dim white)- %an%C(reset)' --all
-  lg = !"git lg1"
 
   lol = log --graph --decorate --pretty=oneline --abbrev-commit
   lola = log --graph --decorate --pretty=oneline --abbrev-commit --all --date=local
-  tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
   logx = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset)+(%cr)%C(reset)+%C(auto)%d%C(reset)++\n+++       %an%C(reset): %s%C(reset)'
+  lg = !"git --no-pager lola -n 10"  # Show last 10 lines of history without pager
+  tree = log --all --graph --decorate=short --color --format=format:'%C(bold blue)%h%C(reset) %C(auto)%d%C(reset)\n         [%cr]%C(reset)  %x09%an: %s %C(reset)'
 
   ls = ls-files
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
-  ign  = ls-files -o -i --exclude-standard # Show files ignored by git
+  ign  = ls-files -o -i --exclude-standard  # Show files ignored by git
   puff = pull --ff-only
+  purr = pull --rebase
   fixws = !export VISUAL=: && git -c apply.whitespace=fix add -ue . && git checkout . && git resets
   wdiff = diff --color-words
   graphviz = "!f() { echo 'digraph git {' ; git log --pretty='format:  %h -> { %p }' \"$@\" | sed 's/[0-9a-f][0-9a-f]*/\"&\"/g' ; echo '}'; }; f"
+
+    # git change-commits GIT_COMMITTER_NAME "old name" "new name"
+  change-commits = "!f() { VAR=$1; OLD=$2; NEW=$3; shift 3; git filter-branch --env-filter \"if [[ \\\"$`echo $VAR`\\\" = '$OLD' ]]; then export $VAR='$NEW'; fi\" $@; }; f "
+    # from https://help.github.com/articles/remove-sensitive-data
+  remove-file = "!f() { git filter-branch -f --index-filter \"git rm --cached --ignore-unmatch $1\" --prune-empty --tag-name-filter cat -- --all; }; f"
+
 [user]
 	name = Anderson Bravalheri
