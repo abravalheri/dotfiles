@@ -49,6 +49,10 @@ Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
 
+" Python: {{{
+Plug 'jmcantrell/vim-virtualenv'
+" }}}
+
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'tpope/vim-fugitive'              | " git frontend for vim

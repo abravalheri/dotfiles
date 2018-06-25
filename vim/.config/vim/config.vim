@@ -56,7 +56,7 @@ let &showbreak='↪ … '
 " ^  use ellipsis to indicate line is broken in softwrap
 "
 " netrw config {{{
-let g:netrw_banner = 0
+let g:netrw_banner = 1
 let g:netrw_liststyle = 3   " tree view
 let g:netrw_winsize = 30
 let g:netrw_preview = 1     " Split previews vertical split
