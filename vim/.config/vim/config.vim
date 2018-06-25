@@ -49,7 +49,7 @@ set showcmd         " display incomplete commands
 set visualbell
 set list
 set listchars=tab:▶\ ,trail:•,extends:❱,precedes:❰,nbsp:␣,eol:↲
-set scrolloff=3     " show 3 lines before and 3 lines after cursor always
+set scrolloff=5     " show 5 lines before and 3 lines after cursor always
 set number
 set linebreak
 let &showbreak='↪ … '
@@ -88,21 +88,6 @@ if has('mouse')
 endif
 
 if has('autocmd')
-  "" Deprecated, vim is too slow -- Color Column If Overlength: {{{
-  """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  " augroup set_colorcolumn
-  "   autocmd!
-  "   autocmd BufWinEnter,InsertEnter,InsertLeave,BufWinLeave *
-  "     \ let w:m2=matchadd('Overlength', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), 125)
-  "   " ^  color 1 column after textlength with priority 125
-
-  "   autocmd ColorScheme * highlight Overlength guifg=#232526 guibg=#F92672 gui=bold
-  "   if &t_Co > 255
-  "     autocmd ColorScheme * highlight Overlength ctermfg=16 ctermbg=199 cterm=bold
-  "   end
-  " augroup END
-  """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
-
   "" Open Last Editted Line: {{{
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   augroup last_line_edited
