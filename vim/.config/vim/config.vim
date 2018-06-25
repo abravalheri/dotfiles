@@ -40,6 +40,7 @@ filetype plugin indent on
 
 " UI Properties: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set colorcolumn=+1
 set title           " change the terminal's title
 set showmode
 set laststatus=2
@@ -87,19 +88,19 @@ if has('mouse')
 endif
 
 if has('autocmd')
-  "" Color Column If Overlength: {{{
+  "" Deprecated, vim is too slow -- Color Column If Overlength: {{{
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-  augroup set_colorcolumn
-    autocmd!
-    autocmd BufWinEnter,InsertEnter,InsertLeave,BufWinLeave *
-      \ let w:m2=matchadd('Overlength', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), 125)
-    " ^  color 1 column after textlength with priority 125
+  " augroup set_colorcolumn
+  "   autocmd!
+  "   autocmd BufWinEnter,InsertEnter,InsertLeave,BufWinLeave *
+  "     \ let w:m2=matchadd('Overlength', printf('\%%<%dv.\%%>%dv', &textwidth+2, &textwidth+1), 125)
+  "   " ^  color 1 column after textlength with priority 125
 
-    autocmd ColorScheme * highlight Overlength guifg=#232526 guibg=#F92672 gui=bold
-    if &t_Co > 255
-      autocmd ColorScheme * highlight Overlength ctermfg=16 ctermbg=199 cterm=bold
-    end
-  augroup END
+  "   autocmd ColorScheme * highlight Overlength guifg=#232526 guibg=#F92672 gui=bold
+  "   if &t_Co > 255
+  "     autocmd ColorScheme * highlight Overlength ctermfg=16 ctermbg=199 cterm=bold
+  "   end
+  " augroup END
   """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
   "" Open Last Editted Line: {{{
