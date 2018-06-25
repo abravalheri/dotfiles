@@ -1,14 +1,13 @@
 " vim: set foldmethod=marker :
 scriptencoding utf8  " encoding for this file
 
-
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! g:SetColorScheme()
   try
     set t_Co=256
     let g:rehash256=1
-    colorscheme molokai
+    colorscheme dracula
   catch
     silent !echo 'colorscheme not found:' . g:colors_name
     colorscheme delek

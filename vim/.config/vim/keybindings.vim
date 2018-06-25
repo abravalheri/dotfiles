@@ -89,18 +89,20 @@ function! ExecuteMacroOverVisualRange()
 endfunction
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
-" On The Fly Reconfiguration: {{{
+" VIM On The Fly Reconfiguration: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " in mappings instead of writing de pipe character |, <bar> should be used
 " <c-u> can be used to clear the command prompt
 
 " quickly edit/reload the vimrc file
 " (from http://nvie.com/posts/how-i-boosted-my-vim/)
+exec 'noremap  <silent> <leader>vi :<c-u>e ' . _config_base . '/init.vim<cr>'
 exec 'noremap  <silent> <leader>vc :<c-u>e ' . _config_base . '/config.vim<cr>'
 exec 'noremap  <silent> <leader>vp :<c-u>e ' . _config_base . '/plugins.vim<cr>'
 exec 'noremap  <silent> <leader>vk :<c-u>e ' . _config_base . '/keybindings.vim<cr>'
 exec 'noremap  <silent> <leader>ve :<c-u>e ' . _config_base . '/extras.vim<cr>'
-noremap  <silent> <leader>vs :<c-u>so $MYVIMRC<cr>
+exec 'noremap  <silent> <leader>vs :<c-u>e ' . _config_base . '/style.vim<cr>'
+noremap  <silent> <leader>vr :<c-u>so $MYVIMRC<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Buffer Management: {{{
