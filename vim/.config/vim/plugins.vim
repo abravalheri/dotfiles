@@ -48,10 +48,7 @@ Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of st
 Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
-
-" Python: {{{
-Plug 'jmcantrell/vim-virtualenv'
-" }}}
+Plug 'padde/jump.vim'                  | " integrate autojump to vim
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
