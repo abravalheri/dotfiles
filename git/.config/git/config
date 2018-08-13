@@ -39,6 +39,9 @@
   unstage = reset HEAD --
   last = log -1 --stat
 
+  addnw = !git diff -w | git apply --cached --ignore-whitespace
+  # ^  Add non whitespace changes
+
   log-merge = !git log $(git merge-base --octopus $(git log -1 --merges --pretty=format:%P $1))..$1 --graph --pretty=oneline --abbrev-commit --boundary
   log-all = !git log --graph --decorate --pretty=oneline --abbrev-commit --all $(git fsck --no-reflogs | grep commit | cut -d\\  -f3)
 

@@ -44,11 +44,14 @@ Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/brac
     augroup END
   endif
 " }}}
+Plug 'tpope/vim-vinegar'               | " improve netrw
+Plug 'tpope/vim-unimpaired'            | " better navigation
 Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of style
 Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
 Plug 'padde/jump.vim'                  | " integrate autojump to vim
+Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -61,6 +64,7 @@ Plug 'airblade/vim-gitgutter'          | " displays change markers on lines
 Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
 Plug 'ekalinin/Dockerfile.vim'
+Plug 'python-mode/python-mode', { 'branch': 'develop' }
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Linters: {{{

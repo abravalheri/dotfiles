@@ -56,7 +56,6 @@ let &showbreak='↪ … '
 " ^  use ellipsis to indicate line is broken in softwrap
 "
 " netrw config {{{
-let g:netrw_banner = 1
 let g:netrw_liststyle = 3   " tree view
 let g:netrw_winsize = 30
 let g:netrw_preview = 1     " Split previews vertical split
@@ -66,7 +65,7 @@ let g:netrw_altv = 1        " Split botright first
 
 " try to make things faster {{{
 set lazyredraw
-set synmaxcol=100
+set synmaxcol=200
 syntax sync minlines=255
 
 if has('gui_running')

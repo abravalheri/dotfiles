@@ -66,3 +66,16 @@ restart-network() {
   interface=${1:-"enp0s3"}
   sudo ifdown "$interface" && sudo ifup "$interface"
 }
+
+activate-venv() {
+    project_root=$(pwd -P 2>/dev/null || command pwd)
+    while [ ! -d "${project_root}/.venv" ]; do
+      project_root=${project_root%/*}
+      if [ "${project_root}" = "" ]; then
+        echo "Virtual env not found enywhere in the current path" >&2
+        return 1
+      fi
+    done
+    source "${project_root}/.venv/bin/activate"
+    echo "${project_root}/.venv activated"
+}
