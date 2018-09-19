@@ -79,3 +79,7 @@ activate-venv() {
     source "${project_root}/.venv/bin/activate"
     echo "${project_root}/.venv activated"
 }
+
+browse() {
+  tabbed -c vimb -e "$@"
+}

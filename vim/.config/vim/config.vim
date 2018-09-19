@@ -65,8 +65,8 @@ let g:netrw_altv = 1        " Split botright first
 
 " try to make things faster {{{
 set lazyredraw
-set synmaxcol=200
-syntax sync minlines=255
+" set synmaxcol=200
+" syntax sync minlines=255
 
 if has('gui_running')
   set guioptions-=m   " remove menu bar

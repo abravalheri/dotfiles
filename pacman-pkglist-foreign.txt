@@ -1,5 +1,5 @@
 neovim-gtk
-neovim-qt
+# neovim-qt
 pulseaudio-ctl
 redpen
 urxvt-resize-font-git

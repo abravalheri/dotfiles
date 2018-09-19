@@ -122,7 +122,7 @@ nnoremap <silent> <bar><space>    :<c-u>bp<cr>
 " List Management: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " local list commands are boring and more difficult
-nnoremap <silent> <leader>n  :<c-u>lnext<cr>
+nnoremap <silent> <leader>n  :<c-u>lNext<cr>
 nnoremap <silent> <bar>n     :<c-u>lprevious<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
