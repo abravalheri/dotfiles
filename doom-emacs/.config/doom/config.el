@@ -1,3 +1,3 @@
 ;;; private/custom/config.el -*- lexical-binding: t; -*-
 
-(load! +bindings)
+(load (expand-file-name "+keybindings" (file-name-directory load-file-name)))
