@@ -7,3 +7,7 @@
 [submodule "urxvt/.config/base16-xresources"]
 	path = urxvt/.config/base16-xresources
 	url = git://github.com/chriskempson/base16-xresources.git
+[submodule "doom-emacs/.emacs.d"]
+	path = doom-emacs/.emacs.d
+	url = https://github.com/hlissner/doom-emacs.git
+	branch = develop
