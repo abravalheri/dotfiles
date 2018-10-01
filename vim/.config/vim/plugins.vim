@@ -65,6 +65,8 @@ Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
 Plug 'ekalinin/Dockerfile.vim'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
+Plug 'plytophogy/vim-virtualenv'
+Plug 'aquach/vim-http-client'
 Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-endwise'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}

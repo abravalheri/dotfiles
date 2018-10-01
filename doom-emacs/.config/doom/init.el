@@ -1,6 +1,15 @@
 ;;; init.el -*- lexical-binding: t; -*-
 ;; Copy me to ~/.doom.d/init.el or ~/.config/doom/init.el, then edit me!
 
+;; start emacs server, if it's not already running:
+(require 'server)
+(unless (server-running-p) (server-start))
+
+(setq doom-font (font-spec :family "Fira Mono" :size 16)
+      doom-variable-pitch-font (font-spec :family "Fira Sans")
+      doom-unicode-font (font-spec :family "Source Code Pro")
+      doom-big-font (font-spec :family "Fira Mono" :size 21))
+
 (doom! :feature
       ;debugger          ; FIXME stepping through code, to help you add bugs
        eval              ; run code, run (also, repls)
@@ -17,11 +26,11 @@
        :completion
        (company          ; the ultimate code completion backend
         +auto)           ; as-you-type code completion
+      ;(ivy              ; a search engine for love and life
+      ; +fuzzy)          ; enable fuzzy search backend for ivy
        (helm             ; the *other* search engine for love and life
         +fuzzy)          ; enable fuzzy search backend for helm
       ;ido               ; the other *other* search engine...
-      ;(ivy              ; a search engine for love and life
-      ; +fuzzy)          ; enable fuzzy search backend for ivy
 
        :ui
       ;deft              ; notational velocity for Emacs
@@ -30,7 +39,7 @@
        doom-modeline     ; a snazzy Atom-inspired mode-line
        doom-quit         ; DOOM quit-message prompts when you quit Emacs
        evil-goggles      ; display visual hints when editing in evil
-      ;fci               ; a `fill-column' indicator
+       fci               ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE tags
       ;modeline          ; snazzy, Atom-inspired modeline, plus API
        nav-flash         ; blink the current line after jumping
@@ -40,7 +49,7 @@
         +all             ; catch all popups that start with an asterix
         +defaults)       ; default popup rules
       ;pretty-code       ; replace bits of code with pretty symbols
-      ;tabbar            ; FIXME an (incomplete) tab bar for Emacs
+       tabbar            ; FIXME an (incomplete) tab bar for Emacs
       ;unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
@@ -95,7 +104,7 @@
       ;ess               ; emacs speaks statistics
        go                ; the hipster dialect
        (haskell +intero) ; a language that's lazier than I am
-      ;hy                ; readability of scheme w/ speed of python
+       hy                ; readability of scheme w/ speed of python
       ;idris             ;
        (java +meghanada) ; the poster child for carpal tunnel syndrome
        javascript        ; all(hope(abandon(ye(who(enter(here))))))
@@ -155,4 +164,3 @@
        ;; library, and additional ex commands for evil-mode. Use it as a
        ;; reference for your own modules.
        (default +bindings +snippets +evil-commands))
-

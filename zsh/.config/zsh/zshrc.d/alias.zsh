@@ -3,7 +3,7 @@
 
 alias clipboard='xclip -sel clip'
 alias aj='autojump'
-alias e='emacsclient -cna ""'
-alias et='emacsclient -ta ""'
-alias em='emacsclient -na ""'
+alias mx='emacsclient -na ""'
+alias em='emacsclient -cna ""'
+alias e='emacsclient -ta emacs'
 alias ek='emacsclient -e "(kill-emacs)"'
