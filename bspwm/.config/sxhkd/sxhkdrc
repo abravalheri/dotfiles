@@ -78,6 +78,14 @@ super + bracket{left,right}
 super + brace{left,right}
 	bspc monitor -f {prev,next}
 
+# send current window to next desktop (and focus on that desktop)
+super + alt + bracket{left,right}
+    bspc node -d {prev,next} -f
+
+# send current window to next monitor (and focus on that monitor)
+super + alt + brace{left,right}
+    bspc node -m {prev,next} -f
+
 # focus the last node/desktop
 super + {grave,Tab}
 	bspc {node,desktop} -f last
