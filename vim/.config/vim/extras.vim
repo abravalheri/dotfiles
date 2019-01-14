@@ -4,6 +4,15 @@ scriptencoding utf8  " encoding for this file
 
 " Minor Fixes: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" fix python mode
+let g:pymode_python = 'python3'
+" let g:pymode_syntax_all = 1
+" let g:pymode_rope = 0 " Too much
+" let g:pymode_options = 0
+if has('python3')
+  silent! python3 1
+endif
+
 if has('autocmd')
   augroup missing_filetypes
     autocmd!
