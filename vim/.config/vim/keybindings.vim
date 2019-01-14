@@ -59,10 +59,16 @@ cnoremap <left> <left>
 cnoremap <right> <right>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
+" Open Relative: {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+cabbr <expr> %% expand('%:p:h')
+nnoremap <leader>e :e <c-r>=expand('%:p:h') . '/'<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+
 " Search: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " clean search highlight with a space | entering in insert mode:
-nnoremap <silent> <space> :nohlsearch<cr>
+nnoremap <silent> <space> :nohlsearch<CR>
 if has('autocmd')
   " it is not a keybinding but is similar ...
   augroup stop_hlsearch
@@ -192,8 +198,8 @@ nmap <leader>a<tab> :<c-u>easyalign<space>/
 xmap <leader>a<tab> :<c-u>easyalign<space>/
 nmap <leader>a      <plug>(easyalign)
 xmap <leader>a      <plug>(easyalign)
-nmap <leader>e      <plug>(liveeasyalign)
-xmap <leader>e      <plug>(liveeasyalign)
+nmap <leader>la     <plug>(liveeasyalign)
+xmap <leader>la     <plug>(liveeasyalign)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Gundo: {{{
