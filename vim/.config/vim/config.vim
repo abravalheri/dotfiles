@@ -87,7 +87,7 @@ if has('mouse')
 endif
 
 if has('autocmd')
-  "" Open Last Editted Line: {{{
+  "" Open Last Edited Line: {{{
   """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
   augroup last_line_edited
     autocmd!
