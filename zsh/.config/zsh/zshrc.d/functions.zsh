@@ -83,3 +83,7 @@ activate-venv() {
 browse() {
   tabbed -c vimb -e "$@"
 }
+
+wttr() {
+  curl -4 wttr.in/"$@"
+}
