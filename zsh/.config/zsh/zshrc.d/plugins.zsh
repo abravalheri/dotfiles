@@ -5,8 +5,13 @@ export ZPLUG_HOME=$ZDOTDIR/+zplug
 
 source $ZPLUG_HOME/init.zsh
 
+# Plugin Configuration:
+zstyle :omz:plugins:ssh-agent lifetime 4h
+
+# Debugging and Troubleshooting:
 zplug "b4b4r07/zplug-doctor"
 
+# Plugin Definition:
 zplug "MichaelAquilina/zsh-you-should-use"
 zplug "laurenkt/zsh-vimto"
 zplug "mafredri/zsh-async"
@@ -23,6 +28,7 @@ zplug "plugins/git-auto-fetch", from:oh-my-zsh
 zplug "plugins/thefuck", from:oh-my-zsh
 zplug "plugins/tig", from:oh-my-zsh
 zplug "plugins/web-search", from:oh-my-zsh
+zplug "plugins/ssh-agent", from:oh-my-zsh
 zplug "srijanshetty/zsh-pandoc-completion"
 zplug "zsh-users/zsh-completions"
 zplug "zsh-users/zsh-history-substring-search"
