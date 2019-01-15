@@ -7,6 +7,7 @@ source $ZPLUG_HOME/init.zsh
 
 # Plugin Configuration:
 zstyle :omz:plugins:ssh-agent lifetime 4h
+PURE_PROMPT_SYMBOL="%%"
 
 # Debugging and Troubleshooting:
 zplug "b4b4r07/zplug-doctor"
@@ -20,7 +21,7 @@ zplug "modules/archive", from:prezto
 zplug "modules/command-not-found", from:prezto
 zplug "modules/history", from:prezto
 zplug "modules/spectrum", from:prezto
-zplug "plugins/asdf.plugin.zsh", from:oh-my-zsh
+zplug "plugins/asdf", from:oh-my-zsh
 zplug "plugins/autojump", from:oh-my-zsh
 zplug "plugins/colored-man-pages", from:oh-my-zsh
 zplug "plugins/fzf", from:oh-my-zsh
@@ -30,12 +31,17 @@ zplug "plugins/tig", from:oh-my-zsh
 zplug "plugins/web-search", from:oh-my-zsh
 zplug "plugins/ssh-agent", from:oh-my-zsh
 zplug "srijanshetty/zsh-pandoc-completion"
-zplug "zsh-users/zsh-completions"
-zplug "zsh-users/zsh-history-substring-search"
+zplug "zsh-users/zaw"
+# zplug "zsh-users/zsh-completions"
+# zplug "zsh-users/zsh-history-substring-search"
 
 # Themes:
+#  - First turn off GRML prompt, so we can actually use a theme
+autoload -Uz promptinit
+promptinit
+prompt off
+zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 # zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
-# zplug "denysdovhan/spaceship-prompt", use:spaceship.zsh, from:github, as:theme
 
 # Executables:
 zplug "junegunn/fzf-bin", \
