@@ -23,10 +23,11 @@ command-exists() {
 }
 # }}}
 
-# Uses the GRML as bases for the system (same as Arch Linux Live CD)
 source $ZDOTDIR/auto-packages.zsh
 boot-grml-zshrc
+# ^  Uses the GRML as bases for the system (same as Arch Linux Live CD)
 boot-asdf
+# ^  Manager for different versions of programming languages
 
 # Source configurations from extra files {{{
 typeset -U extra

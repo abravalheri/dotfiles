@@ -8,6 +8,7 @@ source $ZPLUG_HOME/init.zsh
 # Plugin Configuration:
 zstyle :omz:plugins:ssh-agent lifetime 4h
 PURE_PROMPT_SYMBOL="%%"
+SPACESHIP_VI_MODE_SHOW=false
 
 # Debugging and Troubleshooting:
 zplug "b4b4r07/zplug-doctor"
