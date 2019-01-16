@@ -53,6 +53,3 @@ boot-asdf() {
     )
   fi
 }
-
-# Make sure the file exists and it is up-to-date {{{
-# }}}

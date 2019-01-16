@@ -80,6 +80,10 @@ activate-venv() {
     echo "${project_root}/.venv activated"
 }
 
+top10() {
+  print -l -- ${(o)history%% *} | uniq -c | sort -nr | head -n 10
+}
+
 browse() {
   tabbed -c vimb -e "$@"
 }
