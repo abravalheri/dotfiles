@@ -2,7 +2,7 @@
 # vim: set foldmethod=marker :
 
 zsh-reload () {
-  source $HOME/.zshrc
+  source $ZDOTDIR/.zshrc
 }
 
 ssh-init() {

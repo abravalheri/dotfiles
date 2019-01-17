@@ -2,7 +2,7 @@
 # vim: set foldmethod=marker :
 
 # Profiling: https://kev.inburke.com/kevin/profiling-zsh-startup-time/ {{{
-PROFILE_STARTUP=true
+PROFILE_STARTUP=false
 if [[ "$PROFILE_STARTUP" == true ]]; then
   # zmodload zsh/zprof # Output load-time statistics
   # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
@@ -35,7 +35,7 @@ extra=(
   $ZDOTDIR/+grml.zsh
   $ZDOTDIR/+local.zsh
   # ^  Files specific to host, not shared via dotfiles
-  $ZDOTDIR/zshrc.d/?*.zsh
+  $XDG_CONFIG_HOME/zshrc.d/?*.zsh
   # ^  Files from other program configurations (e.g. TMUX)
 )
 for fp in $extra; [ -x $fp ] && source $fp
