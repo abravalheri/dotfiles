@@ -18,3 +18,5 @@ alias commit='git commit'
 alias ammend='git commit --amend'
 alias push='git push'
 alias branch='git checkout -b'
+alias dash=zeal
+alias mmv='noglob zmv'
