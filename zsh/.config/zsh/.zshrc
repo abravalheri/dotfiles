@@ -24,7 +24,7 @@ if [[ "${PROFILE_STARTUP:-false}" == true ]]; then
   # exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/.cache}/zsh_statup.$$.log"
   setopt xtrace prompt_subst
 
-  # Alternativelly:
+  # Alternatively:
   # zmodload zsh/zprof # Start recording load-time statistics
 fi
 # }}}
@@ -33,25 +33,21 @@ source $ZDOTDIR/base.zsh
 
 # Autoloaded Functions: {{{
 typeset -U fpath
+local fp
 fpath=($XDG_CONFIG_HOME/zshrc.d/autoloaded $fpath)
-function() {
-  local fp
-  for fp in $XDG_CONFIG_HOME/zshrc.d/autoloaded/*(x); autoload -Uz $fp
-}
+for fp in $XDG_CONFIG_HOME/zshrc.d/autoloaded/*(x); autoload -Uz $fp
 # }}}
 
 # Source configurations from extra files {{{
-function () {
-  local -U extra
-  local fp
-  extra=(
-    $ZDOTDIR/+local.zsh(x)
-    # ^  Files specific to host, not shared via dotfiles
-    $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
-    # ^  Files from other program configurations (e.g. TMUX)
-  )
-  for fp in $extra; source $fp
-}
+local -U extra
+extra=(
+  $ZDOTDIR/+local.zsh(x)
+  # ^  Files specific to host, not shared via dotfiles
+  $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
+  # ^  Files from other program configurations (e.g. TMUX)
+)
+for fp in $extra; source $fp
+unset fp extra  # Cleanup global scope
 # }}}
 
 # Run GRML completion framework
@@ -65,7 +61,7 @@ if [[ "${PROFILE_STARTUP:-false}" == true ]]; then
   echo "ZSHRC took $(($(date +'%s') - $zsh_start)) seconds"
   unset zsh_start
 
-  # Alternativelly:
+  # Alternatively:
   # zprof # Output load-time statistics
 fi
 # }}}
