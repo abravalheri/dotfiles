@@ -55,9 +55,10 @@ Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'tpope/vim-fugitive'              | " git frontend for vim
-Plug 'airblade/vim-gitgutter'          | " displays change markers on lines
-Plug 'jreybert/vimagit'                | " another git porcelain (experimental)
+Plug 'tpope/vim-fugitive'                 | " git frontend for vim
+Plug 'airblade/vim-gitgutter'             | " displays change markers on lines
+Plug 'jreybert/vimagit'                   | " another git porcelain (experimental)
+Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Extra Syntax: {{{
