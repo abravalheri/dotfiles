@@ -20,3 +20,6 @@ alias push='git push'
 alias branch='git checkout -b'
 alias dash=zeal
 alias mmv='noglob zmv'
+
+alias vim='nvim'
+alias vimdiff='nvim -d'
