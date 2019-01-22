@@ -197,7 +197,7 @@ endif
 
 " Load Additional Configuration: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let s:files = ['plugins', 'keybindings', 'style', 'extras', '+local']
+let s:files = ['plugins', 'style', 'extras', 'keybindings', '+local']
 
 for s:file in s:files
   let s:fname = _config_base . '/' . s:file . '.vim'
