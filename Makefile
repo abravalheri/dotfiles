@@ -20,10 +20,6 @@ default: pre-compile stow
 
 pre-compile: ${TARGET}
 
-stow:
-	# Install everything that is not a hidden directory or starts with + using GNU Stow
-	find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow -R
-
 ${ZDOT_TARGET} ${AUTOLOAD_TARGET}: %.zwc: %
 	./zcompile.zsh $<
 
@@ -35,6 +31,10 @@ clean:
 	find -L . -iname "*.zwc" -exec rm -rf {} \;
 	find -L ${ZDOTDIR} -iname "*.zwc" -exec rm -rf {} \;
 	find -L ${ZSHRCD} -iname "*.zwc" -exec rm -rf {} \;
+
+stow:
+	# Install everything that is not a hidden directory or starts with + using GNU Stow
+	find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow -R
 
 watch:
 	find ~/.dotfiles -iname "*.zsh" -or -iname ".*rc" | entr -d ${MAKE} -C ~/.dotfiles
