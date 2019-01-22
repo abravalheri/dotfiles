@@ -157,8 +157,11 @@ if has('nvim')
   set inccommand=split
 end
 
-if executable('ag')
-  " faster grep
+" faster grep
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat^=%f:%l:%c:%m  " file:line:column:message
+elseif executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor\ --vimgrep
   set grepformat^=%f:%l:%c:%m  " file:line:column:message
 endif
