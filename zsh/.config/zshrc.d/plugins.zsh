@@ -1,9 +1,23 @@
-#!/usr/bin/env vim
-export ZPLUG_HOME=$ZDOTDIR/+zplug
+#!/usr/bin/env zsh
+declare -A ZPLGM
+ZPLGM[HOME_DIR]=${XDG_DATA_HOME}/zplugin
+ZPLGM[BIN_DIR]=${ZPLGM[HOME_DIR]}/bin
+ZPLGM[PLUGINS_DIR]=${ZPLGM[HOME_DIR]}/plugins
+ZPLGM[COMPLETIONS_DIR]=${ZPLGM[HOME_DIR]}/completions
+ZPLGM[SNIPPETS_DIR]=${ZPLGM[HOME_DIR]}/snippets
+ZPLGM[SERVICES_DIR]=${ZPLGM[HOME_DIR]}/services
 
-[ -d $ZPLUG_HOME ] || git clone https://github.com/zplug/zplug $ZPLUG_HOME
-
-source $ZPLUG_HOME/init.zsh
+if [ ! -d ${ZPLGM[HOME_DIR]} ]; then
+  mkdir -p ${ZPLGM[HOME_DIR]}
+  git clone https://github.com/zdharma/zplugin ${ZPLGM[BIN_DIR]}
+  source ${ZPLGM[HOME_DIR]}/bin/zplugin.zsh
+  zplugin self-update
+else
+  source ${ZPLGM[HOME_DIR]}/bin/zplugin.zsh
+fi
+autoload -Uz _zplugin
+# shellcheck disable=SC2154,2034,2004
+(( ${+_comps} )) && _comps[zplugin]=_zplugin
 
 # Plugin Configuration:
 zstyle :omz:plugins:ssh-agent lifetime 4h
@@ -12,56 +26,23 @@ zstyle :omz:plugins:ssh-agent agent-forwarding on
 # PURE_PROMPT_SYMBOL="%%"
 # SPACESHIP_VI_MODE_SHOW=false
 
-# Debugging and Troubleshooting:
-zplug "b4b4r07/zplug-doctor"
-
 # Plugin Definition:
-zplug "MichaelAquilina/zsh-you-should-use"
-# zplug "laurenkt/zsh-vimto"
-zplug "mafredri/zsh-async"
-zplug "modules/archive", from:prezto
-zplug "modules/command-not-found", from:prezto
-zplug "modules/history", from:prezto
-# zplug "modules/spectrum", from:prezto
-zplug "plugins/asdf", from:oh-my-zsh
-zplug "plugins/autojump", from:oh-my-zsh
-zplug "plugins/colored-man-pages", from:oh-my-zsh
-zplug "plugins/fzf", from:oh-my-zsh
-zplug "plugins/git-auto-fetch", from:oh-my-zsh
-zplug "plugins/thefuck", from:oh-my-zsh
-# zplug "plugins/tig", from:oh-my-zsh
-zplug "plugins/web-search", from:oh-my-zsh
-zplug "plugins/ssh-agent", from:oh-my-zsh
-# zplug "srijanshetty/zsh-pandoc-completion"
-# zplug "zsh-users/zaw"
-# zplug "zsh-users/zsh-completions"
-# zplug "zsh-users/zsh-history-substring-search"
-
-# Executables:
-zplug "junegunn/fzf-bin", \
-  from:gh-r, \
-  as:command, \
-  rename-to:fzf, \
-  lazy:on, \
-  use:"*linux*amd64*"
-
-zplug "raylee/tldr", \
-  from:github, \
-  as:command, \
-  use:"tldr", \
-  lazy:on, \
-  hook-load:"complete -W \"\$(tldr 2>/dev/null --list)\" tldr"
-
-# Manage itself
-zplug "zplug/zplug", hook-build:"zplug --self-manage"
-
-# Install plugins if there are plugins that have not been installed
-if ! zplug check --verbose; then
-  printf "Install? [y/N]: "
-  if read -q; then
-    echo; zplug install
-  fi
-fi
-
-# Then, source plugins and add commands to $PATH
-zplug load
+# zplugin ice wait:3
+zplugin light "MichaelAquilina/zsh-you-should-use"
+# zplugin light "laurenkt/zsh-vimto"
+zplugin light "mafredri/zsh-async"
+zplugin ice svn; zplugin snippet PZT::"modules/command-not-found"
+zplugin ice svn; zplugin snippet PZT::"modules/history"
+# zplugin ice svn; zplugin snippet PZT::"modules/spectrum"
+zplugin ice svn; zplugin snippet OMZ::"plugins/autojump"
+zplugin ice svn; zplugin snippet OMZ::"plugins/colored-man-pages"
+# zplugin ice svn; zplugin snippet OMZ::"plugins/fzf"
+zplugin ice svn; zplugin snippet OMZ::"plugins/git-auto-fetch"
+zplugin ice svn; zplugin snippet OMZ::"plugins/thefuck"
+# zplugin ice svn; zplugin "plugins/tig", from:oh-my-zsh
+zplugin ice svn; zplugin snippet OMZ::"plugins/web-search"
+zplugin ice svn; zplugin snippet OMZ::"plugins/ssh-agent"
+# zplugin ice svn; zplugin snippet "srijanshetty/zsh-pandoc-completion"
+# zplugin ice svn; zplugin snippet "zsh-users/zaw"
+# zplugin ice svn; zplugin snippet "zsh-users/zsh-completions"
+# zplugin ice svn; zplugin snippet "zsh-users/zsh-history-substring-search"

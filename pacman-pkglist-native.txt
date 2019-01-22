@@ -44,6 +44,7 @@ ripgrep
 rxvt-unicode
 shellcheck
 stow
+svn
 sxhkd
 the_silver_searcher
 tk
