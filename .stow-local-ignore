@@ -1,0 +1,9 @@
+.+\.txt
+README.*
+LICENSE.*
+COPYING.*
+\.git.+
+.+~
+.+\.swp
+.+\.swo
+\#.*\#

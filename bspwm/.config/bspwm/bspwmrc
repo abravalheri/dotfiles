@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 
-source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh
+source ~/.config/zshrc.d/bspwm-helpers.zsh
 
 sxhkd &
 yabar &

@@ -5,6 +5,7 @@ plug.vim
 tags
 tags.lock
 tags.temp
+*.zwc
 
 # Created by https://www.gitignore.io
 

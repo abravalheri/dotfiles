@@ -41,7 +41,7 @@ filetype plugin indent on
 " UI Properties: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set colorcolumn=+1
-set title           " change the terminal's title
+" set title           " change the terminal's title, broken on URXVT
 set showmode
 set laststatus=2
 set ruler           " show the cursor position all the time
@@ -54,7 +54,7 @@ set number
 set linebreak
 let &showbreak='↪ … '
 " ^  use ellipsis to indicate line is broken in softwrap
-"
+
 " netrw config {{{
 let g:netrw_liststyle = 3   " tree view
 let g:netrw_winsize = 30
@@ -157,8 +157,11 @@ if has('nvim')
   set inccommand=split
 end
 
-if executable('ag')
-  " faster grep
+" faster grep
+if executable('rg')
+  set grepprg=rg\ --vimgrep\ --no-heading\ --smart-case
+  set grepformat^=%f:%l:%c:%m  " file:line:column:message
+elseif executable('ag')
   set grepprg=ag\ --nogroup\ --nocolor\ --vimgrep
   set grepformat^=%f:%l:%c:%m  " file:line:column:message
 endif
@@ -197,7 +200,7 @@ endif
 
 " Load Additional Configuration: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let s:files = ['plugins', 'keybindings', 'style', 'extras', '+local']
+let s:files = ['plugins', 'style', 'extras', 'keybindings', '+local']
 
 for s:file in s:files
   let s:fname = _config_base . '/' . s:file . '.vim'

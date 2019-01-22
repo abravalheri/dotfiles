@@ -8,7 +8,10 @@ ctags
 dex
 dmenu
 docker
+entr
+fd
 feh
+fzy
 git
 graphviz
 grub
@@ -37,9 +40,11 @@ python-matplotlib
 python-pip
 qutebrowser
 ranger
+ripgrep
 rxvt-unicode
 shellcheck
 stow
+svn
 sxhkd
 the_silver_searcher
 tk
@@ -62,4 +67,5 @@ zathura
 zathura-djvu
 zathura-pdf-mupdf
 zathura-ps
+zeal
 zsh

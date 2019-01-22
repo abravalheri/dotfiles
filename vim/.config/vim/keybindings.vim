@@ -63,6 +63,11 @@ cnoremap <right> <right>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 cabbr <expr> %% expand('%:p:h')
 nnoremap <leader>e :e <c-r>=expand('%:p:h') . '/'<cr>
+if executable('fzy') && executable('fd')
+  nnoremap <space>e :call FzyCommand("fd --type f", ":e")<cr>
+  nnoremap <space>v :call FzyCommand("fd --type f", ":vs")<cr>
+  nnoremap <space>s :call FzyCommand("fd --type f", ":sp")<cr>
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Search: {{{

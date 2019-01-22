@@ -31,6 +31,7 @@ bspwm-config-rules() {
   bspc rule -a '*:zathura' state=tiled
   bspc rule -a Emacs state=tiled
   bspc rule -a emacs state=tiled
+  bspc rule -a Surf state=tiled
 }
 
 bspwm-reload() {

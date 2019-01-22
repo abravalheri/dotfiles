@@ -52,12 +52,14 @@ Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
 Plug 'padde/jump.vim'                  | " integrate autojump to vim
 Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
+Plug 'vim-scripts/BufOnly.vim'         | " `only` but for buffers
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'tpope/vim-fugitive'              | " git frontend for vim
-Plug 'airblade/vim-gitgutter'          | " displays change markers on lines
-Plug 'jreybert/vimagit'                | " another git porcelain (experimental)
+Plug 'tpope/vim-fugitive'                 | " git frontend for vim
+Plug 'airblade/vim-gitgutter'             | " displays change markers on lines
+Plug 'jreybert/vimagit'                   | " another git porcelain (experimental)
+Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Extra Syntax: {{{

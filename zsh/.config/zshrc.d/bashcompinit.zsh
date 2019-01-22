@@ -6,9 +6,5 @@ if command-exists bashcompinit; then
   autoload bashcompinit
   bashcompinit
 
-  if [ -d "$HOME/.local/etc/bash_completion.d" ]; then
-    for filename in "$HOME/.local/etc/bash_completion.d/"*; do
-      [ -f "$filename" ] && source "$filename";
-    done
-  fi
+  for fp in $HOME/.local/etc/bash_completion.d/*(.); source $fp
 fi
