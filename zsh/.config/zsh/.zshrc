@@ -1,51 +1,72 @@
 #!/usr/bin/env zsh
 # vim: set foldmethod=marker :
 
-# Profiling: https://kev.inburke.com/kevin/profiling-zsh-startup-time/ {{{
-PROFILE_STARTUP=false
-if [[ "$PROFILE_STARTUP" == true ]]; then
-  # zmodload zsh/zprof # Output load-time statistics
-  # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
-  # PS4=$'%D{%M%S%.} %N:%i> '
-  PS4=$'\\\011%D{%s%6.}\011%x\011%I\011%N\011%e\011'
-  exec 3>&2 2>/tmp/zshstart.$$.log
-  # exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/.cache}/zsh_statup.$$"
-  setopt xtrace prompt_subst
-fi
-# }}}
+# zshrc runs for interactive sessions (login or non-login)
+# https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html
 
-# Functions required for bootstrapping {{{
-command-exists() {
-  # which ignores previous aliases but is not portable
-  # command does not ignore aliases, but is built in
-  # so it's better to try to check first with which and fallback to command
-  which "$1" &>/dev/null || command -v "$1" &>/dev/null
-}
-# }}}
-
-source $ZDOTDIR/auto-packages.zsh
-boot-grml-zshrc
-# ^  Uses the GRML as bases for the system (same as Arch Linux Live CD)
-boot-asdf
-# ^  Manager for different versions of programming languages
-
-# Source configurations from extra files {{{
-typeset -U extra
-extra=(
-  $ZDOTDIR/+grml.zsh
-  $ZDOTDIR/+local.zsh
-  # ^  Files specific to host, not shared via dotfiles
-  $XDG_CONFIG_HOME/zshrc.d/?*.zsh
-  # ^  Files from other program configurations (e.g. TMUX)
-)
-for fp in $extra; [ -x $fp ] && source $fp
+# Variables for interactive sessions: {{{
+export EDITOR=vim
+export PAGER=less
+export CLICOLOR=1  # OSX / FreeBSD colored ls
 # }}}
 
 # Profiling {{{
-if [[ "$PROFILE_STARTUP" == true ]]; then
-    # zprof
-    unsetopt xtrace
-    exec 2>&3 3>&-
+PROFILE_STARTUP=true
+if [[ "${PROFILE_STARTUP:-false}" == true ]]; then
+  # Profiling:
+  # https://kev.inburke.com/kevin/profiling-zsh-startup-time/
+
+  zsh_start=$(date +'%s')
+
+  # http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html
+  PS4=$'\\\011%D{%s%6.}\011%x\011%I\011%N\011%e\011'
+  exec 3>&2 2>/tmp/zsh-profile.$$.log
+  # exec 3>&2 2>"${XDG_CACHE_HOME:-$HOME/.cache}/zsh_statup.$$.log"
+  setopt xtrace prompt_subst
+
+  # Alternativelly:
+  # zmodload zsh/zprof # Start recording load-time statistics
+fi
+# }}}
+
+source $ZDOTDIR/base.zsh
+
+# Autoloaded Functions: {{{
+typeset -U fpath
+fpath=($XDG_CONFIG_HOME/zshrc.d/autoloaded $fpath)
+function() {
+  local fp
+  for fp in $XDG_CONFIG_HOME/zshrc.d/autoloaded/*(x); autoload -Uz $fp
+}
+# }}}
+
+# Source configurations from extra files {{{
+function () {
+  local -U extra
+  local fp
+  extra=(
+    $ZDOTDIR/+local.zsh(x)
+    # ^  Files specific to host, not shared via dotfiles
+    $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
+    # ^  Files from other program configurations (e.g. TMUX)
+  )
+  for fp in $extra; source $fp
+}
+# }}}
+
+# Run GRML completion framework
+is4 && grmlcomp
+
+# Profiling {{{
+if [[ "${PROFILE_STARTUP:-false}" == true ]]; then
+  unsetopt xtrace
+  exec 2>&3 3>&-
+
+  echo "ZSHRC took $(($(date +'%s') - $zsh_start)) seconds"
+  unset zsh_start
+
+  # Alternativelly:
+  # zprof # Output load-time statistics
 fi
 # }}}
 
