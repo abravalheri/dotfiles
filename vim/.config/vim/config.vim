@@ -41,7 +41,7 @@ filetype plugin indent on
 " UI Properties: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 set colorcolumn=+1
-set title           " change the terminal's title
+" set title           " change the terminal's title, broken on URXVT
 set showmode
 set laststatus=2
 set ruler           " show the cursor position all the time
