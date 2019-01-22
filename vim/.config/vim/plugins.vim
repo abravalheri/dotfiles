@@ -52,6 +52,7 @@ Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
 Plug 'padde/jump.vim'                  | " integrate autojump to vim
 Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
+Plug 'vim-scripts/BufOnly.vim'         | " `only` but for buffers
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
