@@ -20,7 +20,7 @@ super + shift + Escape
 
 # reload bspwm config and companion programs
 super + Escape
-	source ~/.config/zsh/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
+	source ~/.config/zshrc.d/bspwm-helpers.zsh && desktop-environment-reload
 
 # quit bspwm normally
 super + alt + Escape
