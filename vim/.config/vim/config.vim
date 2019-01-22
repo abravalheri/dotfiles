@@ -54,7 +54,7 @@ set number
 set linebreak
 let &showbreak='↪ … '
 " ^  use ellipsis to indicate line is broken in softwrap
-"
+
 " netrw config {{{
 let g:netrw_liststyle = 3   " tree view
 let g:netrw_winsize = 30

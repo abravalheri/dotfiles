@@ -31,3 +31,11 @@ endif
 if has('gui_running')
   set guifont=Source\ Code\ Pro\ 11
 endif
+
+" Make Active Window Obvjious:
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+augroup BgHighlight
+    autocmd!
+    autocmd WinEnter * set cul
+    autocmd WinLeave * set nocul
+augroup END
