@@ -66,12 +66,11 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
-Plug 'ekalinin/Dockerfile.vim'
 Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'plytophogy/vim-virtualenv'
 Plug 'aquach/vim-http-client'
-Plug 'vim-ruby/vim-ruby'
 Plug 'tpope/vim-endwise'
+Plug 'sheerun/vim-polyglot'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Linters: {{{
@@ -97,7 +96,7 @@ endif
 
 " UI: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-Plug 'dracula/vim', {'as': 'dracula'}
+Plug 'flazz/vim-colorschemes'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 call plug#end()

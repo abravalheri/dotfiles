@@ -17,7 +17,8 @@ set -g status-interval 5
 setw -g automatic-rename
 
 # Avoid non 256 terminals
-set -g default-terminal "screen-256color"
+set -g default-terminal "tmux-256color"
+set -ga terminal-overrides ",*256col*:Tc"
 
 # Set window notifications
 setw -g monitor-activity on

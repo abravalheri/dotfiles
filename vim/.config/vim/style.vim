@@ -4,10 +4,18 @@ scriptencoding utf8  " encoding for this file
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! g:SetColorScheme()
+  " For true color terminals (not the case for urxvt)
   try
+    if $TERM !~ "rxvt" && $TERM =~ '256' && exists('+termguicolors')
+      let &t_8f = '\<Esc>[38;2;%lu;%lu;%lum'
+      let &t_8b = '\<Esc>[48;2;%lu;%lu;%lum'
+      set termguicolors
+    endif
+
     set t_Co=256
     let g:rehash256=1
-    colorscheme dracula
+    colorscheme railscasts
+    hi CursorLine cterm=underline gui=underline
   catch
     silent !echo 'colorscheme not found:' . g:colors_name
     colorscheme delek
