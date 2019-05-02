@@ -78,3 +78,25 @@ if executable('fzy')
   endfunction
 endif
 " }}}
+
+
+" Automatic Tasks On Save: {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+
+let g:autoformat_on_save = 1
+
+function! s:external_format(command)
+  if g:autoformat_on_save
+    silent execute('!' . a:command) | edit!
+  endif
+endfunction
+
+" augroup tasks_on_save
+"   autocmd!
+"   autocmd BufWritePost *.exs,*.ex call s:external_format('!mix format %')
+" augroup END
+
+augroup tasks_on_save
+  autocmd!
+  autocmd BufWritePost *.py call s:external_format('black --line-length=79 %')
+augroup END
