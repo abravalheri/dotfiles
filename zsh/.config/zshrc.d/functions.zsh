@@ -91,3 +91,30 @@ browse() {
 wttr() {
   curl -4 wttr.in/"$@"
 }
+
+docker-ip() {
+  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
+}
+
+docker-cleanup() {
+  # remove exited containers:
+  docker ps --filter status=dead --filter status=exited -aq | xargs -t -r docker rm -v
+
+  # remove unused images:
+  docker images --no-trunc | grep '<none>' | awk '{ print $3 }' | xargs -t -r docker rmi
+
+  # remove unused volumes:
+  docker volume ls -qf dangling=true | xargs -t -r docker volume rm
+}
+
+# docker-clean() {
+#   docker rm $(docker ps -q -f 'status=exited')
+#   docker rm $(docker ps -q -f 'status=dead')
+#   docker rmi $(docker images -q -f "dangling=true")
+#   docker volume rm $(docker volume ls -qf dangling=true)
+# }
+
+rcp () {
+  # scp but using rsync
+  rsync --progress --exclude-from ~/.rsync.exclude -v -rc -e ssh "$@"
+}
