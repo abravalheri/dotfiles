@@ -71,6 +71,10 @@ Plug 'plytophogy/vim-virtualenv'
 Plug 'aquach/vim-http-client'
 Plug 'tpope/vim-endwise'
 Plug 'sheerun/vim-polyglot'
+Plug 'slashmili/alchemist.vim'
+Plug 'mhinz/vim-mix-format'  " {{{
+  let g:mix_format_on_save = 1
+" }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Linters: {{{
