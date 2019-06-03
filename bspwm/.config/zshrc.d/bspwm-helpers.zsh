@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 sxhkd-reload() {
-  pkill -USR1 sxhkd &>/dev/null | true
+  pkill -USR1 -x sxhkd &>/dev/null | true
 }
 
 yabar-reload() {

@@ -83,9 +83,9 @@ endif
 " Automatic Tasks On Save: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-let g:autoformat_on_save = 1
+let g:autoformat_on_save = 0
 
-function! s:external_format(command)
+function! ExternalFormat(command)
   if g:autoformat_on_save
     silent execute('!' . a:command) | edit!
   endif
@@ -98,5 +98,5 @@ endfunction
 
 augroup tasks_on_save
   autocmd!
-  autocmd BufWritePost *.py call s:external_format('black --line-length=79 %')
+  autocmd BufWritePost *.py call ExternalFormat('black --line-length=79 %')
 augroup END
