@@ -1,8 +1,8 @@
 # dotfiles
-Custom Linux configuration files, including default oh-my-zsh and
-vim-plug configuration
+Linux configuration files for my personal environment.
+Programs supported include `git`, `vim`, `tmux` and `zsh`
 
-## Instalation
+## Default Installation
 
 Clone the repo to `~/.dotfiles` and run the installation script:
 
@@ -14,9 +14,23 @@ cd .dotfiles
 ./install
 ```
 
+## Profile-based installation
+A small subset of configurations can be installed, this can be achieved using
+`profiles`.
+Since `dotfiles` uses GNU Stow, a profile is a simple text file with lists of
+subdirectories to be stwoed.
+
+For example, a minimal dotfiles installation in ubuntu can be achieved (after
+cloning the repository as indicated above) by:
+
+```bash
+./ubuntu-packages.sh
+stow -R $(< minimal.stow)
+```
+
 ## Local Customizations
 
 Per-machine customizations (not versioned) can be done by adding the following files:
 
-- `vim/+local.vim`;
-- `zsh/+local.zsh`.
+- `~/.config/vim/+local.vim`
+- `~/.config/zsh/+local.zsh`
