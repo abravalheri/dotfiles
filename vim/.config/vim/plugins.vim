@@ -46,7 +46,7 @@ Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/brac
 " }}}
 Plug 'tpope/vim-vinegar'               | " improve netrw
 Plug 'tpope/vim-unimpaired'            | " better navigation
-Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of style
+Plug 'roxma/vim-tmux-clipboard'        | " clipboard integration
 Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
