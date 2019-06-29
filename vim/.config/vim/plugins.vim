@@ -31,9 +31,13 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin(_config_base . '/+plugins')
 
+Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of style
+
 Plug 'beloglazov/vim-online-thesaurus' | " search for replacing words
 Plug 'junegunn/vim-easy-align'         | " align using chars/regex
 Plug 'tpope/vim-commentary'            | " easily add/remove/toogle comments on lines
+Plug 'tpope/vim-eunuch'                | " unix helpers, such as SudoWrite
+Plug 'tpope/vim-projectionist'         | " easily change between files
 Plug 'tpope/vim-repeat'                | " make the . command do more
 Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/braces/tags/etc ... {{{
   if has('autocmd')
