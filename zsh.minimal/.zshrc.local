@@ -1,0 +1,96 @@
+#!/usr/bin/env zsh
+# Fix terminal colors
+function() {
+  dircolors_config=~/.config/dircolors/dircolors.solarized-256-dark
+  if [ -f "${dircolors_config}" ]; then
+    eval "$(dircolors "${dircolors_config}")"
+  fi
+}
+
+# Functions
+command-exists() {
+  which "$1" &>/dev/null || command -v "$1" &>/dev/null
+}
+
+activate-venv() {
+    project_root=$(pwd -P 2>/dev/null || command pwd)
+    while [ ! -d "${project_root}/.venv" ]; do
+      project_root=${project_root%/*}
+      if [ "${project_root}" = "" ]; then
+        echo "Virtual env not found enywhere in the current path" >&2
+        return 1
+      fi
+    done
+    source "${project_root}/.venv/bin/activate"
+    echo "${project_root}/.venv activated"
+}
+
+openurl () {
+  cmd.exe /c start "microsoft-edge:$1"
+}
+
+# Imports
+if [ -f $HOME/.config/zshrc.d/tmux-startup.zsh ]; then
+  source $HOME/.config/zshrc.d/tmux-startup.zsh
+fi
+
+if [ -f /usr/share/autojump/autojump.zsh ]; then
+  source /usr/share/autojump/autojump.zsh
+fi
+
+# Docker
+docker-ip () {
+  docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
+}
+
+_docker-ip() {
+  local -a containers
+  IFS=$'\n' containers=($(docker ps | awk '{if ($1 != "CONTAINER") print $1 ": " $NF " -- " $2}'))
+  _describe 'containers' containers
+}
+
+compdef _docker-ip docker-ip
+
+docker-cleanup() {
+  # remove exited containers:
+  docker ps --filter status=dead --filter status=exited -aq | xargs -t -r docker rm -v
+
+  # remove unused images:
+  docker images --no-trunc | grep '<none>' | awk '{ print $3 }' | xargs -t -r docker rmi
+
+  # remove unused volumes:
+  docker volume ls -qf dangling=true | xargs -t -r docker volume rm
+}
+
+# Adjust PATH
+export -U PATH="$HOME/.local/bin:$PATH"
+export -U FPATH="$HOME/.dotfiles/zsh/.config/zshrc.d/autoloaded/:$FPATH"
+
+# SSH/GPG Agents
+autoload -Uz ssh-init
+ssh-init
+
+rcp () {
+  # scp but using rsync
+  rsync --progress --exclude-from ~/.rsync.exclude -v -rc -e ssh "$@"
+}
+
+# VIM MODE
+bindkey -v
+
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
+
+function zle-line-init zle-keymap-select {
+    VIM_PROMPT="%F{yellow}-- NORMAL --%f"
+    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+    zle reset-prompt
+}
+
+zle -N zle-line-init
+zle -N zle-keymap-select
+export KEYTIMEOUT=1
