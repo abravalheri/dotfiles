@@ -212,6 +212,11 @@ xmap <leader>la     <plug>(liveeasyalign)
 nnoremap <silent> <leader>g :<c-u>GundoToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
+" Magit: {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+nnoremap <silent> <leader>m :<c-u>tabe <bar> MagitOnly<cr>
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+
 " Spelling: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 noremap <silent> <leader>s :<c-u>set spell!<cr>
