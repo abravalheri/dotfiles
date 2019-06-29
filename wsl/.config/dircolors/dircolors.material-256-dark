@@ -1,0 +1,408 @@
+# Term Section
+TERM Eterm
+TERM ansi
+TERM color-xterm
+TERM con132x25
+TERM con132x30
+TERM con132x43
+TERM con132x60
+TERM con80x25
+TERM con80x28
+TERM con80x30
+TERM con80x43
+TERM con80x50
+TERM con80x60
+TERM cons25
+TERM console
+TERM cygwin
+TERM dtterm
+TERM eterm-color
+TERM fbterm
+TERM gnome
+TERM gnome-256color
+TERM jfbterm
+TERM konsole
+TERM konsole-256color
+TERM kterm
+TERM linux
+TERM linux-c
+TERM mach-color
+TERM mlterm
+TERM putty
+TERM putty-256color
+TERM rxvt
+TERM rxvt-256color
+TERM rxvt-cygwin
+TERM rxvt-cygwin-native
+TERM rxvt-unicode
+TERM rxvt-unicode256
+TERM rxvt-unicode-256color
+TERM screen
+TERM screen-256color
+TERM screen-256color-bce
+TERM screen-256color-s
+TERM screen-256color-bce-s
+TERM screen-bce
+TERM screen-w
+TERM screen.linux
+TERM st
+TERM st-meta
+TERM st-256color
+TERM st-meta-256color
+TERM vt100
+TERM xterm
+TERM xterm-16color
+TERM xterm-256color
+TERM xterm-88color
+TERM xterm-color
+TERM xterm-debian
+TERM xterm-termite
+
+# Special files
+
+NORMAL 00
+# reset to "normal" color
+RESET 0
+
+# regular file
+# No color at all
+FILE 00
+
+# files with executable flag
+# system red in bold and underlined
+EXEC 04;01;31
+
+# directory
+# white on dark blue background
+# DIR 48;5;4;38;5;15;
+# bold and reversed
+DIR 30;47;01
+
+# symbolic link. (If you set this to 'target' instead of a
+# numerical value, the color is as for the file pointed to.)
+# white on light green background
+LINK 48;5;2;38;5;15;
+
+# symlink to nonexistent file, or non-stat'able file
+# white on red background
+ORPHAN 48;5;160;38;5;15;
+
+# ORPHAN 48;5;160;38;5;15;01 # <-bold
+# ORPHAN 48;5;235;38;5;160 # red on gray
+
+# regular file with more than one link
+# No color at all
+MULTIHARDLINK 00
+
+# named pipe
+# white on dark green background
+FIFO 48;5;8;38;5;15
+
+# socket
+# white on light blue background
+SOCK 48;5;12;38;5;15;
+
+# block device driver
+# white on brown background
+BLK 48;5;1;38;5;15
+
+# door
+# white on orange background
+DOOR 48;5;9;38;5;15
+
+# character device driver
+# white on pink background
+CHR 48;5;5;38;5;15
+
+# file that is setuid (u+s)
+# white on cyan background
+SETUID 48;5;14;38;5;15
+
+# file that is setgid (g+s)
+# white on gray background
+SETGID 48;5;0;38;5;15
+
+# file with capability
+# white on yellow background
+CAPABILITY 48;5;226;38;5;15
+
+# dir that is sticky and other-writable (+t,o+w)
+# white on purple background
+STICKY_OTHER_WRITABLE 48;5;55;38;5;15
+
+# dir that is other-writable (o+w) and not sticky
+# white on violet background
+OTHER_WRITABLE 48;5;93;38;5;15
+
+# dir with the sticky bit set (+t) and not other-writable
+# white on pink background
+STICKY 48;5;129;38;5;15
+
+# Filetypes
+
+# archives
+.7z 00;38;5;{archive_color}
+.Z 00;38;5;{archive_color}
+.ace 00;38;5;{archive_color}
+.apk 00;38;5;{archive_color}
+.apk 00;38;5;{archive_color}
+.arj 00;38;5;{archive_color}
+.bz 00;38;5;{archive_color}
+.bz2 00;38;5;{archive_color}
+.cpio 00;38;5;{archive_color}
+.deb 00;38;5;{archive_color}
+.dz 00;38;5;{archive_color}
+.egg 00;38;5;{archive_color}
+.gem 00;38;5;{archive_color}
+.gz 00;38;5;{archive_color}
+.jad 00;38;5;{archive_color}
+.jar 00;38;5;{archive_color}
+.lz 00;38;5;{archive_color}
+.lzh 00;38;5;{archive_color}
+.lzma 00;38;5;{archive_color}
+.rar 00;38;5;{archive_color}
+.rpm 00;38;5;{archive_color}
+.rpm 00;38;5;{archive_color}
+.rz 00;38;5;{archive_color}
+.tar 00;38;5;{archive_color}
+.taz 00;38;5;{archive_color}
+.tbz 00;38;5;{archive_color}
+.tbz2 00;38;5;{archive_color}
+.tgz 00;38;5;{archive_color}
+.tlz 00;38;5;{archive_color}
+.txz 00;38;5;{archive_color}
+.tz 00;38;5;{archive_color}
+.xz 00;38;5;{archive_color}
+.z 00;38;5;{archive_color}
+.zip 00;38;5;{archive_color}
+.zoo 00;38;5;{archive_color}
+
+# images
+.CR2 00;38;5;{image_color}
+.JPEG 00;38;5;{image_color}
+.JPG 00;38;5;{image_color}
+.bmp 00;38;5;{image_color}
+.cgm 00;38;5;{image_color}
+.dl 00;38;5;{image_color}
+.emf 00;38;5;{image_color}
+.eps 00;38;5;{image_color}
+.gif 00;38;5;{image_color}
+.ico 00;38;5;{image_color}
+.jpeg 00;38;5;{image_color}
+.jpg 00;38;5;{image_color}
+.mng 00;38;5;{image_color}
+.pbm 00;38;5;{image_color}
+.pcx 00;38;5;{image_color}
+.pgm 00;38;5;{image_color}
+.png 00;38;5;{image_color}
+.ppm 00;38;5;{image_color}
+.svg 00;38;5;{image_color}
+.svgz 00;38;5;{image_color}
+.tga 00;38;5;{image_color}
+.tif 00;38;5;{image_color}
+.tiff 00;38;5;{image_color}
+.xbm 00;38;5;{image_color}
+.xbm 00;38;5;{image_color}
+.xcf 00;38;5;{image_color}
+.xpm 00;38;5;{image_color}
+.xwd 00;38;5;{image_color}
+.yuv 00;38;5;{image_color}
+.xpm 00;38;5;{image_color}
+
+# audio
+.aac 00;38;5;{audio_color}
+.au 00;38;5;{audio_color}
+.au 00;38;5;{audio_color}
+.axa 00;38;5;{audio_color}
+.flac 00;38;5;{audio_color}
+.flac 00;38;5;{audio_color}
+.m4a 00;38;5;{audio_color}
+.mid 00;38;5;{audio_color}
+.mid 00;38;5;{audio_color}
+.midi 00;38;5;{audio_color}
+.midi 00;38;5;{audio_color}
+.mka 00;38;5;{audio_color}
+.mka 00;38;5;{audio_color}
+.mp3 00;38;5;{audio_color}
+.mp3 00;38;5;{audio_color}
+.mpc 00;38;5;{audio_color}
+.mpc 00;38;5;{audio_color}
+.oga 00;38;5;{audio_color}
+.ogg 00;38;5;{audio_color}
+.ogg 00;38;5;{audio_color}
+.ra 00;38;5;{audio_color}
+.ra 00;38;5;{audio_color}
+.spx 00;38;5;{audio_color}
+.wav 00;38;5;{audio_color}
+.wav 00;38;5;{audio_color}
+.xspf 00;38;5;{audio_color}
+
+# video
+.anx 00;38;5;{video_color}
+.asf 00;38;5;{video_color}
+.avi 00;38;5;{video_color}
+.axv 00;38;5;{video_color}
+.divx 00;38;5;{video_color}
+.flc 00;38;5;{video_color}
+.fli 00;38;5;{video_color}
+.flv 00;38;5;{video_color}
+.gl 00;38;5;{video_color}
+.m2ts 00;38;5;{video_color}
+.m2v 00;38;5;{video_color}
+.m4v 00;38;5;{video_color}
+.mkv 00;38;5;{video_color}
+.mov 00;38;5;{video_color}
+.mp4 00;38;5;{video_color}
+.mp4v 00;38;5;{video_color}
+.mpeg 00;38;5;{video_color}
+.mpg 00;38;5;{video_color}
+.nuv 00;38;5;{video_color}
+.ogm 00;38;5;{video_color}
+.ogv 00;38;5;{video_color}
+.ogx 00;38;5;{video_color}
+.qt 00;38;5;{video_color}
+.qt 00;38;5;{video_color}
+.rm 00;38;5;{video_color}
+.rmvb 00;38;5;{video_color}
+.vob 00;38;5;{video_color}
+.webm 00;38;5;{video_color}
+.wmv 00;38;5;{video_color}
+
+# sourcecode
+*1 01;38;5;{sourcecode_color}
+*rc 01;38;5;{sourcecode_color}
+.awk 01;38;5;{sourcecode_color}
+.bash 01;38;5;{sourcecode_color}
+.bat 01;38;5;{sourcecode_color}
+.c 01;38;5;{sourcecode_color}
+.cc 01;38;5;{sourcecode_color}
+.coffee 01;38;5;{sourcecode_color}
+.cpp 01;38;5;{sourcecode_color}
+.cs 01;38;5;{sourcecode_color}
+.el 01;38;5;{sourcecode_color}
+.go 01;38;5;{sourcecode_color}
+.h 01;38;5;{sourcecode_color}
+.hs 01;38;5;{sourcecode_color}
+.java 01;38;5;{sourcecode_color}
+.js 01;38;5;{sourcecode_color}
+.lisp 01;38;5;{sourcecode_color}
+.lua 01;38;5;{sourcecode_color}
+.php 01;38;5;{sourcecode_color}
+.pl 01;38;5;{sourcecode_color}
+.py 01;38;5;{sourcecode_color}
+.rb 01;38;5;{sourcecode_color}
+.s 01;38;5;{sourcecode_color}
+.scala 01;38;5;{sourcecode_color}
+.scm 01;38;5;{sourcecode_color}
+.sed 01;38;5;{sourcecode_color}
+.sh 01;38;5;{sourcecode_color}
+.swift 01;38;5;{sourcecode_color}
+.vim 01;38;5;{sourcecode_color}
+.vue 01;38;5;{sourcecode_color}
+.zsh 01;38;5;{sourcecode_color}
+.zsh-theme 01;38;5;{sourcecode_color}
+
+# other dev files
+*AUTHORS 01;38;5;{dev_color}
+*CMakeLists.txt 01;38;5;{dev_color}
+*Dockerfile 01;38;5;{dev_color}
+*LICENSE 01;38;5;{dev_color}
+*Makefile 01;38;5;{dev_color}
+*README 01;38;5;{dev_color}
+*Rakefile 01;38;5;{dev_color}
+*Vagrantfile 01;38;5;{dev_color}
+*build.xml 01;38;5;{dev_color}
+*license 01;38;5;{dev_color}
+.256dark 01;38;5;{dev_color}
+.cabal 01;38;5;{dev_color}
+.cfg 01;38;5;{dev_color}
+.conf 01;38;5;{dev_color}
+.config 01;38;5;{dev_color}
+.svn 01;38;5;{dev_color}
+.gitignore 01;38;5;{dev_color}
+.gitmodules 01;38;5;{dev_color}
+.gpg 01;38;5;{dev_color}
+.ini 01;38;5;{dev_color}
+.log 01;38;5;{dev_color}
+.make 01;38;5;{dev_color}
+.min 01;38;5;{dev_color}
+.mk 01;38;5;{dev_color}
+.sql 01;38;5;{dev_color}
+
+# data
+.csv 01;38;5;{data_color}
+.dat 01;38;5;{data_color}
+.json 01;38;5;{data_color}
+.sqlite3 01;38;5;{data_color}
+.xml 01;38;5;{data_color}
+.yaml 01;38;5;{data_color}
+.yml 01;38;5;{data_color}
+
+# markup & style
+.css 01;38;5;{markup_color}
+.htm 01;38;5;{markup_color}
+.html 01;38;5;{markup_color}
+.less 01;38;5;{markup_color}
+.mustache 01;38;5;{markup_color}
+.sass 01;38;5;{markup_color}
+.scss 01;38;5;{markup_color}
+.theme 01;38;5;{markup_color}
+.xhtml 01;38;5;{markup_color}
+.xml 01;38;5;{markup_color}
+
+# unimportant files
+*# 00;38;5;{unimportant_color}
+*~ 00;38;5;{unimportant_color}
+.DS_Store 00;38;5;{unimportant_color}
+.aux 00;38;5;{unimportant_color}
+.bak 00;38;5;{unimportant_color}
+.bbl 00;38;5;{unimportant_color}
+.blg 00;38;5;{unimportant_color}
+.bu 00;38;5;{unimportant_color}
+.cache 00;38;5;{unimportant_color}
+.class 00;38;5;{unimportant_color}
+.elc 00;38;5;{unimportant_color}
+.incomplete 00;38;5;{unimportant_color}
+.lof 00;38;5;{unimportant_color}
+.lol 00;38;5;{unimportant_color}
+.lot 00;38;5;{unimportant_color}
+.old 00;38;5;{unimportant_color}
+.out 00;38;5;{unimportant_color}
+.part 00;38;5;{unimportant_color}
+.project 00;38;5;{unimportant_color}
+.pyc 00;38;5;{unimportant_color}
+.swp 00;38;5;{unimportant_color}
+.temp 00;38;5;{unimportant_color}
+.tmp 00;38;5;{unimportant_color}
+.toc 00;38;5;{unimportant_color}
+
+# text
+.markdown 00;38;5;{text_color}
+.md 00;38;5;{text_color}
+.mkd 00;38;5;{text_color}
+.nfo 00;38;5;{text_color}
+.org 00;38;5;{text_color}
+.pandoc 00;38;5;{text_color}
+.rst 00;38;5;{text_color}
+.tex 00;38;5;{text_color}
+.txt 00;38;5;{text_color}
+
+# office
+.doc 00;38;5;{office_color}
+.docx 00;38;5;{office_color}
+.ics 00;38;5;{office_color}
+.odp 00;38;5;{office_color}
+.ods 00;38;5;{office_color}
+.odt 00;38;5;{office_color}
+.odt 00;38;5;{office_color}
+.ppt 00;38;5;{office_color}
+.pptx 00;38;5;{office_color}
+.rtf 00;38;5;{office_color}
+.xls 00;38;5;{office_color}
+.xlsx 00;38;5;{office_color}
+
+# documents
+.epub 00;38;5;{document_color}
+.mobi 00;38;5;{document_color}
+.pdc 00;38;5;{document_color}
+.pdf 00;38;5;{document_color}
