@@ -38,6 +38,10 @@ if [ -f /usr/share/autojump/autojump.zsh ]; then
   source /usr/share/autojump/autojump.zsh
 fi
 
+if [ -f "~/.config/zsh/+local.zsh" ]; then
+  source "~/.config/zsh/+local.zsh"
+fi
+
 # Docker
 docker-ip () {
   docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
