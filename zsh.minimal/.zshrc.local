@@ -7,6 +7,9 @@ function() {
   fi
 }
 
+# Alias
+alias vim=nvim
+
 # Functions
 command-exists() {
   which "$1" &>/dev/null || command -v "$1" &>/dev/null
