@@ -1,9 +1,10 @@
 set bell-style visible
 
-case ":$PATH:" in
-  *":$HOME/.local/bin:"*) :;; # already there
-  *) PATH="$HOME/.local/bin:$PATH";;
-esac
+## Expand PATH if custom program is needed
+# case ":$PATH:" in
+#   *":$HOME/.local/bin:"*) :;; # already there
+#   *) PATH="$HOME/.local/bin:$PATH";;
+# esac
 
 # Launch ZSH
 if [ -t 1 ]; then
