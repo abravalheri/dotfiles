@@ -34,7 +34,7 @@ call plug#begin(_config_base . '/+plugins')
 Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of style
 
 Plug 'beloglazov/vim-online-thesaurus' | " search for replacing words
-Plug 'junegunn/vim-easy-align'         | " align using chars/regex
+
 Plug 'tpope/vim-commentary'            | " easily add/remove/toogle comments on lines
 Plug 'tpope/vim-eunuch'                | " unix helpers, such as SudoWrite
 Plug 'tpope/vim-projectionist'         | " easily change between files
@@ -50,13 +50,25 @@ Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/brac
 " }}}
 Plug 'tpope/vim-vinegar'               | " improve netrw
 Plug 'tpope/vim-unimpaired'            | " better navigation
+
+Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
+Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
+Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
+Plug 'michaeljsmith/vim-indent-object' | " extra text object: vii, vaI
+Plug 'nelstrom/vim-visual-star-search'
+Plug 'padde/jump.vim'                  | " integrate autojump to vim
+Plug 'rhysd/clever-f.vim'              | " more convenient and responsive f {{{
+  let g:clever_f_across_no_line = 1
+  let g:clever_f_fix_key_direction = 1
+  let g:clever_f_timeout_ms = 3000
+" }}}
 Plug 'roxma/vim-tmux-clipboard'        | " clipboard integration
 Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
-Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
-Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
-Plug 'padde/jump.vim'                  | " integrate autojump to vim
-Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
+Plug 'tommcdo/vim-lion'                | " easy alignment with gl<char> {{{
+  let g:lion_squeeze_spaces = 1
+" }}}
 Plug 'vim-scripts/BufOnly.vim'         | " `only` but for buffers
+Plug 'wellle/targets.vim'              | " extra text objects, e.g. ci_ va| da,
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
