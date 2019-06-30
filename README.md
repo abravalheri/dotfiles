@@ -24,7 +24,7 @@ For example, a minimal dotfiles installation in ubuntu can be achieved (after
 cloning the repository as indicated above) by:
 
 ```bash
-./ubuntu-packages.sh
+sudo apt install $(< minimal.apt)
 stow -R $(< minimal.stow)
 ```
 
