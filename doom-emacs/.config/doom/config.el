@@ -1,6 +1,9 @@
 ;;; private/custom/config.el -*- lexical-binding: t; -*-
 
 (setq-default fill-column 79)
+(setq
+  projectile-project-search-path '("~/projects/" "~/papers")
+  projectile-enable-caching t)
 
 (load (expand-file-name "+keybindings" (file-name-directory load-file-name)))
 

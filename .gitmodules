@@ -7,7 +7,6 @@
 [submodule "doom-emacs/.emacs.d"]
 	path = doom-emacs/.emacs.d
 	url = https://github.com/hlissner/doom-emacs.git
-	branch = develop
 [submodule "tmux/.config/tmux/+plugins/tpm"]
 	path = tmux/.config/tmux/+plugins/tpm
 	url = https://github.com/tmux-plugins/tpm.git
