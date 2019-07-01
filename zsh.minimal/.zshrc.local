@@ -33,17 +33,29 @@ openurl () {
 }
 
 # Imports
-if [ -f $HOME/.config/zshrc.d/tmux-startup.zsh ]; then
-  source $HOME/.config/zshrc.d/tmux-startup.zsh
-fi
-
-if [ -f /usr/share/autojump/autojump.zsh ]; then
-  source /usr/share/autojump/autojump.zsh
-fi
-
-if [ -f "~/.config/zsh/+local.zsh" ]; then
-  source "~/.config/zsh/+local.zsh"
-fi
+# Source configurations from extra files {{{
+function() {
+  local -U extra priv fp
+  extra=(
+    /usr/share/autojump/autojump.zsh
+  )
+  priv=(
+    $HOME/.config/zsh/+local.zsh
+    # ^  Files specific to host, not shared via dotfiles
+    $HOME/.config/zshrc.d/?*.zsh
+    # ^  Files from other program configurations (e.g. TMUX)
+  )
+  for fp in $extra; do
+    # Meant for external installations, just check if file exists
+    [[ -f $fp ]] && source $fp
+  done
+  for fp in $priv; do
+    # Check if file is executable => this allow deactivating file by changing
+    # its permission
+    [[ -x $fp ]] && source $fp
+  done
+}
+# }}}
 
 # Docker
 docker-ip () {
@@ -83,21 +95,23 @@ rcp () {
 }
 
 # VIM MODE
-bindkey -v
-
-bindkey '^P' up-history
-bindkey '^N' down-history
-bindkey '^?' backward-delete-char
-bindkey '^h' backward-delete-char
-bindkey '^w' backward-kill-word
-bindkey '^r' history-incremental-search-backward
-
 function zle-line-init zle-keymap-select {
     VIM_PROMPT="%F{yellow}-- NORMAL --%f"
     RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
     zle reset-prompt
 }
 
-zle -N zle-line-init
-zle -N zle-keymap-select
-export KEYTIMEOUT=1
+function() {
+  bindkey -v
+
+  bindkey '^P' up-history
+  bindkey '^N' down-history
+  bindkey '^?' backward-delete-char
+  bindkey '^h' backward-delete-char
+  bindkey '^w' backward-kill-word
+  bindkey '^r' history-incremental-search-backward
+
+  zle -N zle-line-init
+  zle -N zle-keymap-select
+  export KEYTIMEOUT=1
+}
