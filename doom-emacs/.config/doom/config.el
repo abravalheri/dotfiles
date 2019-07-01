@@ -24,3 +24,7 @@
 
 (add-to-list 'display-buffer-alist
              '("^\\*Ibuffer\\*$" . (display-buffer-same-window)))
+
+;;; Eshell aliases
+(defun eshell/e (file) (find-file file))
+(defun eshell/emacs (file) (find-file file))

@@ -12,12 +12,14 @@ vcxsrv-init() {
   local VCXSRV_PID="$RUNTIME_DIR/vcxsrv.pid"
 
   if [[ ! -f "$VCXSRV_PID" ]] || ! process-running "$(< "${VCXSRV_PID}")"; then
-    "${VCXSRV_ROOT}/vcxsrv.exe" :0 -multiwindow -clipboard -wgl -silent-dup-error -xkblayout us -xkbvariant altgr-intl -xkbvariant nodeadkeys  &>/dev/null &
+    "${VCXSRV_ROOT}/vcxsrv.exe" :0 -dpi auto -multiwindow -clipboard -wgl -silent-dup-error -xkblayout us -xkbvariant altgr-intl -xkbvariant nodeadkeys  &>/dev/null &
     # sudo /etc/init.d/dbus start
     PID=$!
     echo "$PID" > "$VCXSRV_PID"
   fi
 
+  export DISPLAY=:0
+  export LIBGL_ALWAYS_INDIRECT=1
   cat "$VCXSRV_PID"
 }
 
