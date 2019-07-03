@@ -2,4 +2,6 @@ git
 vim
 rsync
 tmux
-zsh.minimal
+zsh.common
+%zsh.minimal
+%zsh.bootstrap

@@ -1,11 +1,14 @@
+build-essential
+ctags
 curl
-exuberant-ctags
+git
 hwinfo
 jq
+nmap
 silversearcher-ag
 stow
 tmux
 tree
+vim
 wget
 zsh
-vim
