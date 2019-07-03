@@ -1,6 +1,7 @@
 +plugins
 +local*
 %local*
+@local*
 plug.vim
 tags
 tags.lock
