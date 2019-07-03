@@ -12,7 +12,8 @@
 (require 'server)
 (unless (server-running-p) (server-start))
 
-;; Example on how to change fonts
+;; Configurations that need to be done before doom is loaded
+(setq display-line-numbers 'relative)
 (defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
 (when (and (display-graphic-p)
            (font-exists-p "Fira Code")

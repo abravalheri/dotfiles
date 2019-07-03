@@ -18,6 +18,10 @@
  projectile-project-search-path '("~/projects/" "~/papers")
  projectile-enable-caching t)
 
+(setq-default
+ display-line-numbers-type 'relative
+ display-line-numbers-current-absolute t)
+
 ;; Add new packages
 (def-package! seeing-is-believing
   :config
