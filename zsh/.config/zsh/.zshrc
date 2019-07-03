@@ -31,23 +31,17 @@ fi
 
 source $ZDOTDIR/base.zsh
 
-# Autoloaded Functions: {{{
-typeset -U fpath
-local fp
-fpath=($XDG_CONFIG_HOME/zshrc.d/autoloaded $fpath)
-for fp in $XDG_CONFIG_HOME/zshrc.d/autoloaded/*(x); autoload -Uz $fp
-# }}}
-
 # Source configurations from extra files {{{
-local -U extra
-extra=(
-  $ZDOTDIR/+local.zsh(x)
-  # ^  Files specific to host, not shared via dotfiles
-  $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
-  # ^  Files from other program configurations (e.g. TMUX)
-)
-for fp in $extra; source $fp
-unset fp extra  # Cleanup global scope
+function() {
+  local fp
+  local -U extra=(
+    $ZDOTDIR/+local.zsh(x)
+    # ^  Files specific to host, not shared via dotfiles
+    $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
+    # ^  Files from other program configurations (e.g. TMUX)
+  )
+  for fp in $extra; source $fp
+}
 # }}}
 
 # Run GRML completion framework

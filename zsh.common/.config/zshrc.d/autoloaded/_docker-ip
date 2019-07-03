@@ -1,0 +1,8 @@
+#compdef _docker-ip docker-ip
+# vim: set foldmethod=marker filetype=zsh :
+
+_docker-ip() {
+  local -a containers
+  IFS=$'\n' containers=($(docker ps | awk '{if ($1 != "CONTAINER") print $1 ": " $NF " -- " $2}'))
+  _describe 'containers' containers
+}

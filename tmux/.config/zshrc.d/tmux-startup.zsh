@@ -1,5 +1,7 @@
 #!/bin/env zsh
 
+autoload -Uz command-exists
+
 if command-exists tmux; then
   alias tmux='tmux -2'
   alias tm='tmux -2 new-session -A -s main'
@@ -9,7 +11,7 @@ if command-exists tmux; then
   }
 
   function greet {
-    greeting="$HOME/.config/tmux/greetings/$(hostname).sh"
+    local greeting="$HOME/.config/tmux/greetings/$(hostname).sh"
     [ -f "$greeting" ] && sh $greeting
     tmux -2 setenv -gru display_greetings
   }

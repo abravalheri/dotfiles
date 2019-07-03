@@ -2,7 +2,7 @@
 # vim: set foldmethod=marker filetype=zsh :
 
 function () {
-  SSH_ENV="$HOME/.ssh/environment"
+  local SSH_ENV="$HOME/.ssh/environment"
 
   ssh-add -l &>/dev/null
   if [[ "$?" == 2 ]]; then  # No Agent running

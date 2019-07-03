@@ -1,0 +1,5 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker :
+
+# scp but using rsync
+rsync --progress --exclude-from ~/.rsync.exclude -v -rc -e ssh "$@"

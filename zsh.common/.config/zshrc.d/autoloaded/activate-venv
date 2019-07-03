@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker filetype=zsh :
+
+function() {
+  local project_root=$(pwd -P 2>/dev/null || command pwd)
+  while [ ! -d "${project_root}/.venv" ]; do
+    project_root=${project_root%/*}
+    if [ "${project_root}" = "" ]; then
+      echo "Virtual env not found enywhere in the current path" >&2
+      return 1
+    fi
+  done
+  source "${project_root}/.venv/bin/activate"
+  echo "${project_root}/.venv activated"
+}
