@@ -1,68 +1,136 @@
 #!/usr/bin/env bash
-here=$(pwd)
+# Setup vars
+if [[ "$*" == *--help* ]]; then
+  echo -e "NAME\n\t$0 - install dotfiles"
+  echo -e "SYNOPSIS\n\t$0 [--help] [<bundle>...] [layer...]\n"
+  echo -e "OPTIONS\n"
+  echo -e "\t<layer>..."
+  echo -e "\t    Folders to be stowed to ~ (not starting with '@')."
+  echo -e "\t<bundle>..."
+  echo -e "\t    Bundles to be installed (starting with '@')."
+  echo -e "\t    Bundles contain instructions to install more than one layer and"
+  echo -e "\t    may install OS packages/programs."
+  echo -e "EXAMPLE\n\t$0 @minimal @wsl ptpython\n"
+  exit 0
+fi
 
-set -e
+DIR=$(pwd)
+args=($@)
+[ "$#" -ge 1 ] || args=("@default")
+bundles=($({ IFS=$'\n'; echo "${args[*]}"; } | grep '@'))
+extra_layers=($({ IFS=$'\n'; echo "${args[*]}"; } | grep -v '@'))
 
-cd "$(dirname "${BASH_SOURCE[0]}")"
-base_dir=$(pwd)
+cd "$(dirname "${BASH_SOURCE[0]}")" || {
+  echo "Unable to switch to ${BASH_SOURCE[0]}"
+  exit 1
+}
+BASE_DIR=$(pwd)
 
-echo "Update submodules ..."
-git submodule update --init --recursive
+log () { echo -e "$*"; }
 
-function command-exists {
-  command -v "$1" >/dev/null 2>&1
+# Import Libraries
+for lib in $BASE_DIR/+lib/*.sh; do
+  # shellcheck source=/dev/null
+  source "$lib"
+done
+
+log "Updating submodules ..."
+{ set +x;
+  git submodule update --init --recursive;
 }
 
-echo ""
+log "Bootstraping installation of bundles ..."
+bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
+for script in "${bootstrap_scripts[@]}"; do
+  log "Running $script ..."
+  # shellcheck source=/dev/null
+  bash "$script"
+done
 
-if [ -z "${SKIP_PACKAGES+x}" ]; then  # if var is unset
-  if command-exists pacman; then
-    # Try to auto-install packages from list
-    echo "Installing pacman packages ..."
-    sudo pacman -Syu --needed - < pacman-pkglist-native.txt
-    if ! command-exists trizen; then
-      echo "Installing trizen to help with AUR packages..."
-      cd /tmp
-      git clone https://aur.archlinux.org/trizen.git
-      cd trizen
-      sudo makepkg -si
-      cd "$base_dir"
+log "Installing layers ..."
+layers=($(read-list '*.stow' "${bundles[@]}"))
+layers=("${layers[@]}" "${extra_layers[@]}")
+{ set +x;
+  stow -R "${layers[@]}";
+}
+
+log "Compile zsh files ..."
+make pre-compile
+
+if [ -z "${SKIP_PACKAGES+x}" ]; then
+  log "Installing packages ..."
+  # SKIP_PACKAGES is not set
+  brew_pkgs=($(read-list '*.brew' "$bundles"))
+  if (( ${#brew_pkgs[@]} )); then
+    bootstrap-brew
+    { set +x;
+      brew install "${brew_pkgs[@]}";
+    }
+  fi
+
+  if [ -z "${SKIP_SYSTEM_PACKAGES+x}" ]; then
+    if command-exists apt-get; then
+      apt_pkgs=($(read-list '*.apt' "$bundles"))
+      if (( ${#apt_pkgs[@]} )); then
+        { set +x;
+          sudo apt-get update;
+          sudo apt-get install "${apt_pkgs[@]}";
+        }
+      fi
     fi
-    echo "Installing packages from AUR ..."
-    trizen -S --needed - < pacman-pkglist-foreign.txt
-  elif command-exists apt-get && grep -qw "Ubuntu" /etc/os-release; then
-    source ./ubuntu-packages.sh
+
+    if command-exists pacman; then
+      pacman_pkgs=($(read-list "$bundles" '*.pacman'))
+      if (( ${#pacman_pkgs[@]} )); then
+        { set +x;
+          sudo pacman -Syu;
+          sudo pacman -S "${pacman_pkgs[@]}";
+        }
+      fi
+
+      trizen_pkgs=($(read-list '*.trizen' "$bundles"))
+      if (( ${#trizen_pkgs[@]} )); then
+        bootstrap-trizen
+        { set +x;
+          trizen -S "${trizen_pkgs[@]}";
+        }
+      fi
+    fi
+  else
+    log "Skipping installation of packages at system level ..."
   fi
 
   if command-exists python3; then
-    # Try auto-install packages from list
-    sudo python3 -m pip install --upgrade pip
-    python3 -m pip install --upgrade --user -r python-pkglist.txt
+    pipx_pkgs=($(read-list '*.pipx' "$bundles"))
+    if (( ${#pipx_pkgs[@]} )); then
+      { set +x;
+        bootstrap-pipx;
+        printf '%s\n' "${pipx_pkgs[@]}" | xargs -n1 pipx install
+      }
+    fi
   fi
+
+  if command-exists ruby; then
+    gem_pkgs=($(read-list '*.gem' "$bundles"))
+    if (( ${#gem_pkgs[@]} )); then
+      export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
+      { set +x;
+        gem install --user-install "${gem_pkgs[@]}";
+      }
+    fi
+  fi
+else
+  log "Skipping installation of packages ..."
 fi
 
-deps=(zsh thefuck xclip awk vint ag)
-# Make sure to have commands available
-for cmd in "${deps[@]}"; do
-  if ! command-exists "$cmd"; then
-    echo "  - command $cmd not found."
-  fi
+log "Finishing installation of bundles ..."
+finish_scripts=($(find-scripts 'finish.sh' "${bundles[@]}"))
+for script in "${finish_scripts[@]}"; do
+  log "Running $script ..."
+  # shellcheck source=/dev/null
+  bash "$script"
 done
 
-if ! command-exists vim && ! command-exists nvim; then
-  echo "Neither vim, nor neovim were found."
-fi
+exit 0
 
-echo ""
-
-# Install everything that is not a hidden directory or starts with + using GNU Stow
-find . -maxdepth 1 -type d -not -iregex "^\.\(/[.+].*\)?" | sed "s~./~~" | xargs -L1 stow
-
-cd "$here"
-
-if [ -n "${SHELL##*zsh*}" ]; then
-  echo -e "To use ZSH as default shell please do:\n"
-  echo "  chsh -s $(which zsh)"
-  echo "  env zsh"
-  echo "  source ~/.zshrc"
-fi
+cd "$DIR"

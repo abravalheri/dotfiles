@@ -1,0 +1,4 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker filetype=zsh :
+
+source "${ZDOTDIR:-$HOME/.congig/zsh}/.zshrc"

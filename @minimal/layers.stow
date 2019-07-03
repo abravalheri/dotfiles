@@ -1,0 +1,7 @@
+git
+vim
+rsync
+tmux
+zsh.common
+%zsh.minimal
+%zsh.bootstrap

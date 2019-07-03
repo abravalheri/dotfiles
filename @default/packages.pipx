@@ -1,8 +1,9 @@
 flake8
 gitlint
+howdoi
+httpie
 isort
-neovim
-neovim-remote
+pre-commit
 proselint
 ptpython
 pylint
@@ -10,5 +11,8 @@ pyscaffold
 rstcheck
 sphinx
 thefuck
+tldr
+tmuxp
+vim-vint
 vint
 yamllint

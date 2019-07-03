@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # zshenv runs for all types of shells, so let's keep only the minimal
-  # variables and configurations here.
+# variables and configurations here.
 # https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html
 
 # Don't load default /etc/zsh files

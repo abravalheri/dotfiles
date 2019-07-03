@@ -1,0 +1,66 @@
+#!/usr/bin/env zsh
+# Fix terminal colors
+function() {
+  local dircolors_config=~/.config/dircolors/dircolors.solarized-256-dark
+  if [ -f "${dircolors_config}" ]; then
+    eval "$(dircolors "${dircolors_config}")"
+  fi
+}
+
+# Adjust PATH
+export -U PATH="$HOME/.local/bin:$PATH"
+export -U FPATH="$XDG_CONFIG_HOME/zshrc.d/autoloaded/:$FPATH"
+
+# Imports
+# Source configurations from extra files {{{
+function() {
+  local -U extra priv
+  local fp
+  extra=(
+    /usr/share/autojump/autojump.zsh
+  )
+  priv=(
+    $HOME/.config/zsh/+local.zsh
+    # ^  Files specific to host, not shared via dotfiles
+    $HOME/.config/zshrc.d/?*.zsh
+    # ^  Files from other program configurations (e.g. TMUX)
+  )
+  for fp in $extra; do
+    # Meant for external installations, just check if file exists
+    [[ -f $fp ]] && source $fp
+  done
+  for fp in $priv; do
+    # Check if file is executable => this allow deactivating file by changing
+    # its permission
+    [[ -x $fp ]] && source $fp
+  done
+}
+# }}}
+
+# SSH/GPG Agents
+ssh-init
+
+# VIM MODE
+function zle-line-init zle-keymap-select {
+    VIM_PROMPT="%F{yellow}-- NORMAL --%f"
+    RPS1="${${KEYMAP/vicmd/$VIM_PROMPT}/(main|viins)/} $EPS1"
+    zle reset-prompt
+}
+
+function() {
+  bindkey -v
+
+  bindkey '^P' up-history
+  bindkey '^N' down-history
+  bindkey '^?' backward-delete-char
+  bindkey '^h' backward-delete-char
+  bindkey '^w' backward-kill-word
+  bindkey '^r' history-incremental-search-backward
+
+  zle -N zle-line-init
+  zle -N zle-keymap-select
+  export KEYTIMEOUT=1
+}
+
+export -U PATH
+export -U FPATH

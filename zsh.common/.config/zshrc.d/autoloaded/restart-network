@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker filetype=zsh :
+
+function() {
+  local interface=${1:-"enp0s3"}
+  sudo ifdown "$interface" && sudo ifup "$interface"
+}

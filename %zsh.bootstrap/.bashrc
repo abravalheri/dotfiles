@@ -6,10 +6,11 @@ set bell-style visible
 #   *) PATH="$HOME/.local/bin:$PATH";;
 # esac
 
-# Launch ZSH
+# Hack to start ZSH from Bash
 if [ -t 1 ]; then
-  # Hack to start Windows Terminal App on WSL ~
   if [[ ! -v _start_home ]]; then
+    # Usefull hack to make tmux open ~ at first,
+    # but keep $pwd otherwise
     cd ~ || return
     export _start_home=$(pwd)
   fi
