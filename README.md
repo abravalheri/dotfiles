@@ -72,13 +72,13 @@ An example of how a bundle can be organized can be found bellow:
 ```
 
 ## Bundle-based installation
-The process of installing a bundle can be summarized in 3 steps:
+The process of installing a bundle can be summarized in 5 steps:
 
-#. Run `bootstrap.sh` scripts
-#. Stow listed layers (`*.stow`)
-#. Pre-compile ZSH scripts (`make pre-compile`)
-#. Install packages (order: `*.brew`, `*.apt` or `*.pacman` + `*.trizen*`, `*.pipx`, `*.gem`)
-#. Run `finish.sh` scripts
+1. Run `bootstrap.sh` scripts
+2. Stow listed layers (`*.stow`)
+3. Pre-compile ZSH scripts (`make pre-compile`)
+4. Install packages (order: `*.brew`, `*.apt` or `*.pacman` + `*.trizen*`, `*.pipx`, `*.gem`)
+5. Run `finish.sh` scripts
 
 For all the steps, the installation script looks recursively for files and
 expands symbolic links.
