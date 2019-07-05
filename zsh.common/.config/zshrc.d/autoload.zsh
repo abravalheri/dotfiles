@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 # Autoload Functions
-typeset -U fpath
 
 function() {
   local fp

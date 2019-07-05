@@ -62,5 +62,4 @@ function() {
   export KEYTIMEOUT=1
 }
 
-export -U PATH
-export -U FPATH
+export -U PATH FPATH
