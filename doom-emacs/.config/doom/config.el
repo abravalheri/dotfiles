@@ -11,7 +11,36 @@
   (add-to-list 'display-buffer-alist
                '("^\\*Ibuffer\\*$" . (display-buffer-same-window))))
 
+(setq personal~themes-to-restore '())
+
+(defun personal/load-theme (theme)
+  (setq personal~themes-to-restore custom-enabled-themes)
+  ;; themes are cumulative, so disable all of them
+  (dolist (enabled-theme custom-enabled-themes)
+    (disable-theme enabled-theme))
+  (load-theme theme))
+
+(defun personal/restore-themes ()
+  (when personal~themes-to-restore
+    (dolist (theme personal--themes-to-restore)
+      (load-theme theme))
+    (setq personal~themes-to-restore '())))
+
+(defun personal/org-mode-enter ()
+  (personal/load-theme 'leuven))
+
+(defun personal/org-mode-leave ()
+  (pesonal/restore-themes))
+
+(defun personal/change-mode ()
+  (when (eq major-mode 'org-mode)
+    (personal/org-mode-leave)))
+
 (add-hook! 'emacs-startup-hook #'personal/configurations)
+
+(add-hook! 'org-mode-hook #'personal/org-mode-enter)
+
+(add-hook! 'change-major-mode-hook #'personal/change-mode)
 
 ;; Standalone Configurations (don't require packages to be loaded)
 (setq
