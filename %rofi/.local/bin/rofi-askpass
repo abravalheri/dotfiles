@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+
+# Take password prompt from STDIN, print password to STDOUT
+# the sed piece just removes the colon from the provided
+# prompt: rofi -p already gives us a colon
+
+function() {
+  local flags=${DISPLAY:+'-normal-window'}
+  local prompt=${1:-"Password for '$USER'"}
+  prompt="$(printf "$prompt" | sed s/://)"
+
+  rofi \
+    -dmenu \
+    -password \
+    -no-fixed-num-lines \
+    "$flags" \
+    -p "$prompt"
+}
