@@ -37,7 +37,7 @@ implemented as folders starting with a `/a-z/i` char, while alternative
 layers are folders starting with an `%` char. Default folders are meant to be
 used regularly, while alternative folders are created for special cases.
 For example, the `zsh` layer provides the preferable configurations for the
-standard dev environment, while `%zsh.minimal` is created to be installed in
+standard dev environment, while `%zsh.grml` is created to be installed in
 secondary machines, used occasionally, shared with more users, or with less
 powerful hardware.
 

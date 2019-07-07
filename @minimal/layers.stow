@@ -3,5 +3,5 @@ vim
 rsync
 tmux
 zsh.common
-%zsh.minimal
+%zsh.grml
 %zsh.bootstrap
