@@ -1,11 +1,10 @@
 #!/usr/bin/env zsh
 # Fix terminal colors
-function() {
-  local dircolors_config=~/.config/dircolors/dircolors.solarized-256-dark
-  if [ -f "${dircolors_config}" ]; then
-    eval "$(dircolors "${dircolors_config}")"
-  fi
-}
+local __dircolors_config=~/.config/dircolors/dircolors.solarized-256-dark
+if [ -f "${__dircolors_config}" ]; then
+  eval "$(dircolors "${__dircolors_config}")"
+fi
+unset __dircolors_config
 
 # Adjust PATH
 export -U PATH="$HOME/.local/bin:$PATH"
@@ -13,7 +12,7 @@ export -U FPATH="$XDG_CONFIG_HOME/zshrc.d/autoloaded/:$FPATH"
 
 # Imports
 # Source configurations from extra files {{{
-function() {
+function __zshrc_load_extra() {
   local -U extra priv
   local fp
   extra=(
@@ -35,6 +34,8 @@ function() {
     [[ -x $fp ]] && source $fp
   done
 }
+__zshrc_load_extra
+unset -f __zshrc_load_extra  # avoid lambdas so zprof can be used
 # }}}
 
 # SSH/GPG Agents
@@ -47,19 +48,17 @@ function zle-line-init zle-keymap-select {
     zle reset-prompt
 }
 
-function() {
-  bindkey -v
+bindkey -v
 
-  bindkey '^P' up-history
-  bindkey '^N' down-history
-  bindkey '^?' backward-delete-char
-  bindkey '^h' backward-delete-char
-  bindkey '^w' backward-kill-word
-  bindkey '^r' history-incremental-search-backward
+bindkey '^P' up-history
+bindkey '^N' down-history
+bindkey '^?' backward-delete-char
+bindkey '^h' backward-delete-char
+bindkey '^w' backward-kill-word
+bindkey '^r' history-incremental-search-backward
 
-  zle -N zle-line-init
-  zle -N zle-keymap-select
-  export KEYTIMEOUT=1
-}
+zle -N zle-line-init
+zle -N zle-keymap-select
+export KEYTIMEOUT=1
 
 export -U PATH FPATH

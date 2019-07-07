@@ -1,5 +1,4 @@
 #!/usr/bin/env zsh
-function() {
-  local DOOM_BIN="$HOME/.emacs.d/bin"
-  [[ -d "$DOOM_BIN" ]] && export -U path=($path "$DOOM_BIN")
-}
+local __doom_bin="$HOME/.emacs.d/bin"
+[[ -d "$__doom_bin" ]] && path=($path "$__doom_bin")
+unset __doom_bin
