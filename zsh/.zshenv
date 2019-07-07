@@ -12,6 +12,7 @@ setopt no_global_rcs
 : ${XDG_DATA_HOME:=$HOME/.local/share}
 : ${XDG_CONFIG_DIRS:=/etc/xdg}
 : ${XDG_DATA_DIRS:=/usr/local/share:/usr/share}
+# : ${XDG_RUNTIME_DIR:=/tmp/run/$(id -u)}
 # }}}
 
 # Environment variables
@@ -24,7 +25,7 @@ export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
 export LANG=en_US.UTF-8
 
 # set up $PATH
-source "${ZDOTDIR}/.pathrc"
+source "${ZDOTDIR}/.pathrc"  # @inject $ZDOTDIR/.pathrc
 
 # Remove '/' from wordchars to allow word deletion on files
 export WORDCHARS=$(sed 's|/||' <<< $WORDCHARS)

@@ -33,13 +33,12 @@ a file `$dotfiles/git/.config/git/config` should be present in the
 repository.
 
 Layers can be classified as **default** or **alternative**. Default layers are
-implemented as folders starting with a `/a-z/i` char, while alternative
-layers are folders starting with an `%` char. Default folders are meant to be
-used regularly, while alternative folders are created for special cases.
-For example, the `zsh` layer provides the preferable configurations for the
-standard dev environment, while `%zsh.grml` is created to be installed in
-secondary machines, used occasionally, shared with more users, or with less
-powerful hardware.
+implemented as folders starting with a `/a-z/i` char, while alternative layers
+are folders starting with an `%` char. Default folders are meant to be used
+regularly, while alternative folders are created for special cases.  For
+example, the `doom-emacs` layer provides the preferable configurations for the
+standard dev environment, while `%emacs.minimal` is created as an experiment,
+to be installed in secondary machines, or with less powerful hardware.
 
 Layers are installed using [GNU Stow](https://www.gnu.org/software/stow/)
 ([tutorial](https://alexpearce.me/2016/02/managing-dotfiles-with-stow/)),

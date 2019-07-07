@@ -1,17 +1,5 @@
 #!/usr/bin/env zsh
-# Fix terminal colors
-local __dircolors_config=~/.config/dircolors/dircolors.solarized-256-dark
-if [ -f "${__dircolors_config}" ]; then
-  eval "$(dircolors "${__dircolors_config}")"
-fi
-unset __dircolors_config
 
-# Adjust PATH
-export -U PATH="$HOME/.local/bin:$PATH"
-export -U FPATH="$XDG_CONFIG_HOME/zshrc.d/autoloaded/:$FPATH"
-
-# Imports
-# Source configurations from extra files {{{
 function __zshrc_load_extra() {
   local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
   local fp="$cache_dir/extras-cache.zsh"
@@ -32,16 +20,10 @@ function __zshrc_load_extra() {
     set -x
     mkdir -p "$cache_dir"
     cat $extra > "$fp"
-    zcompile "$fp"
+    zcompile "$fp" &!
     set +x
   fi
   source "$fp"
 }
 __zshrc_load_extra
 unset -f __zshrc_load_extra  # avoid lambdas so zprof can be used
-# }}}
-
-# SSH/GPG Agents
-ssh-init
-
-export -U PATH FPATH

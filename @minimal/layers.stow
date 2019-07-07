@@ -2,6 +2,6 @@ git
 vim
 rsync
 tmux
+zsh
 zsh.common
-%zsh.grml
 %zsh.bootstrap

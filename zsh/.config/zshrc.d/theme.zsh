@@ -11,7 +11,7 @@ __zstyle_wrap() {
   zstyle $1 post $3
 }
 
-function () {
+__zshrc_theme() {
   local blue=081
   local green=118
   local red=197
@@ -44,7 +44,6 @@ function () {
   # zplug "sindresorhus/pure", use:pure.zsh, from:github, as:theme
 }
 
-# Anonymous function that will run automatically. Prevents polluting the global
-# scope
+__zshrc_theme
 
-unfunction __zstyle_wrap
+unset -f __zstyle_wrap __zshrc_theme
