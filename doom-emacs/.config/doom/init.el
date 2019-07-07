@@ -13,16 +13,16 @@
 (unless (server-running-p) (server-start))
 
 ;; Configurations that need to be done before doom is loaded
-(setq display-line-numbers 'relative)
-(defun font-exists-p (font) "check if font exists" (if (null (x-list-fonts font)) nil t))
+(defun font-exists-p (font)
+  "Check if font exists"
+  (if (null (x-list-fonts font)) nil t))
 (when (and (display-graphic-p)
            (font-exists-p "Fira Code")
            (font-exists-p "Fira Sans"))
     (setq doom-font (font-spec :family "Fira Code" :size 14)
           doom-variable-pitch-font (font-spec :family "Fira Sans")
           doom-unicode-font (font-spec :family "Fira Code")
-          doom-big-font (font-spec :family "Fira Code" :size 21))
-)
+          doom-big-font (font-spec :family "Fira Code" :size 21)))
 
 (doom! :input
        ;;chinese
@@ -38,7 +38,7 @@
        ;;deft              ; notational velocity for Emacs
        doom              ; what makes DOOM look the way it does
        doom-dashboard    ; a nifty splash screen for Emacs
-       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       ;;doom-quit         ; DOOM quit-message prompts when you quit Emacs
        fill-column       ; a `fill-column' indicator
        hl-todo           ; highlight TODO/FIXME/NOTE tags
        indent-guides     ; highlighted indent columns
@@ -51,7 +51,7 @@
         +defaults)       ; default popup rules
        pretty-code       ; replace bits of code with pretty symbols
        ;;tabbar            ; FIXME an (incomplete) tab bar for Emacs
-       treemacs          ; a project drawer, like neotree but cooler
+       ;;treemacs          ; a project drawer, like neotree but cooler
        unicode           ; extended unicode support for various languages
        vc-gutter         ; vcs diff in the fringe
        vi-tilde-fringe   ; fringe tildes to mark beyond EOB
