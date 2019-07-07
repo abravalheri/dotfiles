@@ -2,7 +2,8 @@
 # vim: set foldmethod=marker :
 # zshrc runs for interactive sessions (login or non-login)
 # https://blog.flowblok.id.au/2013-02/shell-startup-scripts.html
-zmodload zsh/zprof
+
+# zmodload zsh/zprof  # Profiling
 
 export EDITOR=vim
 export PAGER='less -R'
