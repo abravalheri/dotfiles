@@ -3,14 +3,29 @@
 
 local SSH_ENV="$HOME/.ssh/environment"
 
-ssh-add -l &>/dev/null
-if [[ "$?" == 2 ]]; then  # No Agent running
+__known_agent_running() {
+  (( ${+SSH_AGENT_PID} )) && kill -0 $SSH_AGENT_PID
+}
+
+__any_agent_running() {
+  ssh-add -l &>/dev/null
+  if [[ "$?" == 2 ]]; then  # No Agent running
+    return 1
+  fi
+  return 0
+}
+
+ssh-agent-running() {
+  __known_agent_running || __any_agent_running
+}
+
+
+if ! ssh-agent-running; then
   if [[ -r "$SSH_ENV" ]]; then
     eval "$(< "$SSH_ENV")" >/dev/null
   fi
 
-  ssh-add -l &>/dev/null
-  if [[ "$?" == 2 ]]; then  # Still cannot connect to agent
+  if ! ssh-agent-running; then  # Still cannot connect to agent
     (umask 066; ssh-agent -s -t 3600 > "$SSH_ENV")
     eval "$(< "$SSH_ENV")" >/dev/null
   fi
