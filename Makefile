@@ -33,7 +33,7 @@ ${ZSH_TARGET}: %.zwc: %.zsh
 	zsh -c 'zcompile $<'
 
 clean:
-	rm -rf ${TARGET}
+	rm -rf ${TARGET} "${XDG_CACHE_HOME}/zsh/"
 	find -L . -iname "*.zwc" -delete
 ifdef ZSH_USES_XDG
 	find -L ${ZDOTDIR} -iname "*.zwc" -delete
