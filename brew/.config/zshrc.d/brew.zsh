@@ -22,7 +22,7 @@ __zshrc_brew() {
         set -x
         mkdir -p "$cache_dir"
         "$brew_root/bin/brew" shellenv > "$fp"
-        zcompile "$fp"
+        zcompile "$fp" &!
         set +x
         break
       fi
