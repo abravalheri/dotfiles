@@ -1,5 +1,0 @@
-# vim: set ft=zsh foldmethod=marker :
-
-typeset -U path  # Array of unique elements
-path=($HOME/.local/bin $path)
-# $path and $PATH are different (but bound/linked) in ZSH
