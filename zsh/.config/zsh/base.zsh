@@ -2415,6 +2415,7 @@ if [[ -r /proc/mdstat ]]; then
 fi
 
 alias ...='cd ../../'
+alias ....='cd ../../../'
 
 # generate alias named "$KERNELVERSION-reboot" so you can use boot with kexec:
 if [[ -x /sbin/kexec ]] && [[ -r /proc/cmdline ]] ; then
@@ -2520,44 +2521,6 @@ $bg[white]$fg[black]
 Please report wishes + bugs to the grml-team: http://grml.org/bugs/
 Enjoy your grml system with the zsh!$reset_color"
 }
-
-# debian stuff
-if [[ -r /etc/debian_version ]] ; then
-    if [[ -z "$GRML_NO_APT_ALIASES" ]]; then
-        #a3# Execute \kbd{apt-cache policy}
-        alias acp='apt-cache policy'
-        if check_com -c apt ; then
-          #a3# Execute \kbd{apt search}
-          alias acs='apt search'
-          #a3# Execute \kbd{apt show}
-          alias acsh='apt show'
-          #a3# Execute \kbd{apt dist-upgrade}
-          salias adg="apt dist-upgrade"
-          #a3# Execute \kbd{apt upgrade}
-          salias ag="apt upgrade"
-          #a3# Execute \kbd{apt install}
-          salias agi="apt install"
-          #a3# Execute \kbd{apt update}
-          salias au="apt update"
-        else
-          alias acs='apt-cache search'
-          alias acsh='apt-cache show'
-          salias adg="apt-get dist-upgrade"
-          salias ag="apt-get upgrade"
-          salias agi="apt-get install"
-          salias au="apt-get update"
-        fi
-        #a3# Execute \kbd{aptitude install}
-        salias ati="aptitude install"
-        #a3# Execute \kbd{aptitude update ; aptitude safe-upgrade}
-        salias -a up="aptitude update ; aptitude safe-upgrade"
-        #a3# Execute \kbd{dpkg-buildpackage}
-        alias dbp='dpkg-buildpackage'
-        #a3# Execute \kbd{grep-excuses}
-        alias ge='grep-excuses'
-    fi
-
-fi
 
 # use /var/log/syslog iff present, fallback to journalctl otherwise
 if [ -e /var/log/syslog ] ; then
