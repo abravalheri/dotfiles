@@ -18,4 +18,4 @@ if ! ssh-agent-running; then
     eval "$(< "$SSH_ENV")" >/dev/null
   fi
 fi
-echo "** ssh-agent running\n"
+echo -e "* ssh-agent is running\n"
