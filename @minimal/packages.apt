@@ -1,6 +1,7 @@
 build-essential
 ctags
 curl
+fonts-firacode
 git
 hwinfo
 jq

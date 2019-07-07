@@ -1,1 +1,1 @@
-set guifont="DejaVu Sans Mono 12"
+.config/vim/ginit.vim
