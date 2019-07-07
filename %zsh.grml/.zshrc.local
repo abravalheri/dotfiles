@@ -13,26 +13,19 @@ export -U FPATH="$XDG_CONFIG_HOME/zshrc.d/autoloaded/:$FPATH"
 # Imports
 # Source configurations from extra files {{{
 function __zshrc_load_extra() {
-  local -U extra priv
+  local -U extra priv list
   local fp
   extra=(
-    /usr/share/autojump/autojump.zsh
-  )
-  priv=(
-    $HOME/.config/zsh/+local.zsh
+    # Meant for external installations, just check if file exists:
+    /usr/share/autojump/autojump.zs[h](N)  # [h] -> POG to activate glob
+
+    # Check if the file is executable (so we can deactivate it with chmod)
+    $HOME/.config/zsh/+local*.zsh(xN)
     # ^  Files specific to host, not shared via dotfiles
-    $HOME/.config/zshrc.d/?*.zsh
+    $HOME/.config/zshrc.d/?*.zsh(xN)
     # ^  Files from other program configurations (e.g. TMUX)
   )
-  for fp in $extra; do
-    # Meant for external installations, just check if file exists
-    [[ -f $fp ]] && source $fp
-  done
-  for fp in $priv; do
-    # Check if file is executable => this allow deactivating file by changing
-    # its permission
-    [[ -x $fp ]] && source $fp
-  done
+  for fp in $extra; source "$fp"
 }
 __zshrc_load_extra
 unset -f __zshrc_load_extra  # avoid lambdas so zprof can be used

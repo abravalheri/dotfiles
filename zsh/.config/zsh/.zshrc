@@ -35,9 +35,9 @@ source $ZDOTDIR/base.zsh
 function() {
   local fp
   local -U extra=(
-    $ZDOTDIR/+local.zsh(x)
+    $ZDOTDIR/+local*.zsh(xN)
     # ^  Files specific to host, not shared via dotfiles
-    $XDG_CONFIG_HOME/zshrc.d/?*.zsh(x)
+    $XDG_CONFIG_HOME/zshrc.d/?*.zsh(xN)
     # ^  Files from other program configurations (e.g. TMUX)
   )
   for fp in $extra; source $fp

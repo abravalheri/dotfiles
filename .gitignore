@@ -7,6 +7,8 @@ tags
 tags.lock
 tags.temp
 *.zwc
+*.zdirs
+*.zcompdump
 
 # Created by https://www.gitignore.io
 
