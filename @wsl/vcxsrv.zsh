@@ -65,7 +65,8 @@ vcxsrv-init() {
        -xkbvariant nodeadkeys \
        -xkboptions compose:rctrl &>/dev/null &
     PID=$!
-    echo "$PID" > "$VCXSRV_PID"
+    rm "$VCXSRV_PID"
+    (umask 066; echo "$PID" > "$VCXSRV_PID")
     sleep 0.3  # wait for X to boot-up before trying to load the keyboard
     load-keyboard
     start-dbus
