@@ -63,17 +63,22 @@ cnoremap <right> <right>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 cabbr <expr> %% expand('%:p:h')
 nnoremap <leader>e :e <c-r>=expand('%:p:h') . '/'<cr>
-if executable('fzy') && executable('fd')
-  nnoremap <space>e :call FzyCommand("fd --type f", ":e")<cr>
-  nnoremap <space>v :call FzyCommand("fd --type f", ":vs")<cr>
-  nnoremap <space>s :call FzyCommand("fd --type f", ":sp")<cr>
+nnoremap <leader>vs :vs <c-r>=expand('%:p:h') . '/'<cr>
+nnoremap <leader>sp :sp <c-r>=expand('%:p:h') . '/'<cr>
+if executable('fzy')
+  nnoremap <space>e :call FindFile()<cr>
+  nnoremap <space>v :call FindFile(':vs')<cr>
+  nnoremap <space>s :call FindFile(':sp')<cr>
+  nnoremap ,e :call FindFile()<cr>
+  nnoremap ,v :call FindFile(':vs')<cr>
+  nnoremap ,s :call FindFile(':sp')<cr>
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Search: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" clean search highlight with a space | entering in insert mode:
-nnoremap <silent> <space> :nohlsearch<CR>
+" clean search highlight with a backspace | entering in insert mode:
+nnoremap <silent> <bs> :nohlsearch<CR>
 if has('autocmd')
   " it is not a keybinding but is similar ...
   augroup stop_hlsearch

@@ -126,6 +126,10 @@ Plug 'flazz/vim-colorschemes'
 if !empty($NVIM_QT_RUNTIME_PATH)
   Plug 'equalsraf/neovim-gui-shim'
 endif
+
+if has('nvim')
+  Plug 'abravalheri/vim-picker', { 'branch': 'expose-direct-functions' }
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 call plug#end()

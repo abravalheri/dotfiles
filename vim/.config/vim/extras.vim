@@ -56,28 +56,60 @@ let g:markdown_syntax_conceal = 0
 let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'yaml', 'json', 'ruby', 'xml']
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
+" Personal Library {{{
+function! ProjectRoot()
+  try
+    return system("git rev-parse --show-toplevel 2>/dev/null | tr -d '\\n'")
+  catch /Vim:Interrupt/
+    " ignore error and return empty
+  endtry
+endfunction
+" }}}
+
+" Fzy Support: {{{
+if executable('fzy')
+  if has('nvim')
+    " nvim doesn't allow system to run interactive programs
+    function FzyCommand(choice_command, vim_command)
+      call picker#File(a:choice_command, a:vim_command)
+    endfunction
+  else
+    function! FzyCommand(choice_command, vim_command)
+      try
+        let l:output = system('echo -n "$('.a:choice_command.' | fzy)"')
+      catch /Vim:Interrupt/
+        " Swallow errors from ^C, allow redraw! bellow
+      endtry
+      redraw!
+      if v:shell_error == 0 && !empty(l:output)
+        echo fnameescape(l:output)
+        exec a:vim_command . ' ' . fnameescape(l:output)
+      endif
+    endfunction
+  endif
+
+  if executable('fd')
+    function! FindFile(...)
+      let l:vim_command = a:0 > 0 ? a:1 : ':e'
+      let l:project_root = ProjectRoot()
+      if !empty(l:project_root)
+        let l:flags = "--exclude '**/.git' --search-path ".l:project_root
+      else
+        let l:flags = ''
+      endif
+      call FzyCommand("fd -H --type f ".l:flags, l:vim_command)
+    endfunction
+  endif
+endif
+" }}}
+
 " Extra Commands: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 command! -nargs=* Wrap set wrap linebreak nolist
 " ^  linebreak prevents a word for being splitted between 2 lines,
 "    but unfortunatelly it do not work with the list option
+command! -nargs=* FindFile call FindFile(<f-args>)
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
-
-" Fzy Support: {{{
-if executable('fzy')
-  function! FzyCommand(choice_command, vim_command)
-    try
-      let output = system(a:choice_command . " | fzy ")
-    catch /Vim:Interrupt/
-      " Swallow errors from ^C, allow redraw! below
-    endtry
-    redraw!
-    if v:shell_error == 0 && !empty(output)
-      exec a:vim_command . ' ' . output
-    endif
-  endfunction
-endif
-" }}}
 
 
 " Automatic Tasks On Save: {{{
