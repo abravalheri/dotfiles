@@ -74,7 +74,12 @@ Plug 'wellle/targets.vim'              | " extra text objects, e.g. ci_ va| da,
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'tpope/vim-fugitive'                 | " git frontend for vim
 Plug 'airblade/vim-gitgutter'             | " displays change markers on lines
-Plug 'jreybert/vimagit'                   | " another git porcelain (experimental)
+Plug 'jreybert/vimagit'                   | " another git porcelain (experimental) {{{
+augroup magit_hooks
+  autocmd!
+  autocmd User VimagitBufferInit call fugitive#detect(@%)
+augroup END
+" }}}
 Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
