@@ -61,6 +61,7 @@
   ls-large = !"git ls-tree -l --full-tree -r HEAD | awk '/blob/' | awk '$4 >= (2^20)' | numfmt --to=iec --field=4 | awk '{print $4 \"\t\" $5}'"
   ls-largest = !"git ls-tree -l --full-tree -r HEAD | awk '/blob/' | sort -r -k 4 | head -n 10 | numfmt --to=iec --field=4 | awk '{print $4 \"\t\" $5}'"
   ls-gh-limit = !"git ls-tree -l --full-tree -r HEAD | awk '/blob/' | awk '$4 >= 100*(2^20)' | numfmt --to=iec --field=4 | awk '{print $4 \"\t\" $5}'"
+  ls-ignored = ls-files -o -i --exclude-standard
 
   hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
   ign  = ls-files -o -i --exclude-standard  # Show files ignored by git
