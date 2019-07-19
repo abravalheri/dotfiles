@@ -117,6 +117,10 @@ endif
 " UI: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'flazz/vim-colorschemes'
+
+if !empty($NVIM_QT_RUNTIME_PATH)
+  Plug 'equalsraf/neovim-gui-shim'
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 call plug#end()

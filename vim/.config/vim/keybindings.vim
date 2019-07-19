@@ -209,7 +209,7 @@ xmap <leader>la     <plug>(liveeasyalign)
 
 " Gundo: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nnoremap <silent> <leader>g :<c-u>GundoToggle<cr>
+nnoremap <silent> <leader>u :<c-u>GundoToggle<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Magit: {{{
