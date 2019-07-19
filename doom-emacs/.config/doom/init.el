@@ -12,18 +12,6 @@
 (require 'server)
 (unless (server-running-p) (server-start))
 
-;; Configurations that need to be done before doom is loaded
-(defun font-exists-p (font)
-  "Check if font exists"
-  (if (null (x-list-fonts font)) nil t))
-(when (and (display-graphic-p)
-           (font-exists-p "Fira Code")
-           (font-exists-p "Fira Sans"))
-    (setq doom-font (font-spec :family "Fira Code" :size 14)
-          doom-variable-pitch-font (font-spec :family "Fira Sans")
-          doom-unicode-font (font-spec :family "Fira Code")
-          doom-big-font (font-spec :family "Fira Code" :size 21)))
-
 (doom! :input
        ;;chinese
        ;;japanese
