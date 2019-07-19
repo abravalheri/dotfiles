@@ -202,16 +202,6 @@ nnoremap <M-l> <c-w>l
 " Plugin Mappings
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
-" EasyAlign: {{{
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-nmap <leader>a<tab> :<c-u>easyalign<space>/
-xmap <leader>a<tab> :<c-u>easyalign<space>/
-nmap <leader>a      <plug>(easyalign)
-xmap <leader>a      <plug>(easyalign)
-nmap <leader>la     <plug>(liveeasyalign)
-xmap <leader>la     <plug>(liveeasyalign)
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
-
 " Gundo: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <silent> <leader>u :<c-u>GundoToggle<cr>
