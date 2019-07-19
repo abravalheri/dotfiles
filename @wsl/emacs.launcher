@@ -3,6 +3,19 @@
 function() {
   local here="$(cd "$(dirname "${(%):-%x}")" && pwd)"
   export DISPLAY=:0
+
+  local load=(
+    ~/.config/zshrc.d/brew.zs[h](N)
+    /usr/share/autojump/autojump.zs[h](N)
+    # [h] -> POG to activate glob
+  )
+  for fp in $load; source "$fp"
+
   "$here/vcxsrv.zsh"
+
+  export SKIP_TMUX="true"
+  export SUDO_ASKPASS=~/.local/bin/rofi-askpass
+  export GIT_ASKPASS=~/.local/bin/rofi-askpass
+  export SSH_ASKPASS=~/.local/bin/rofi-askpass
   exec emacs  -mm
 }

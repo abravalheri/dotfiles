@@ -68,7 +68,7 @@ endfunction
 
 " Fzy Support: {{{
 if executable('fzy')
-  if has('nvim')
+if has('nvim') || has('terminal')
     " nvim doesn't allow system to run interactive programs
     function FzyCommand(choice_command, vim_command)
       call picker#File(a:choice_command, a:vim_command)

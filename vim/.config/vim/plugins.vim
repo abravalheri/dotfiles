@@ -127,7 +127,7 @@ if !empty($NVIM_QT_RUNTIME_PATH)
   Plug 'equalsraf/neovim-gui-shim'
 endif
 
-if has('nvim')
+if has('nvim') || has('terminal')
   Plug 'abravalheri/vim-picker', { 'branch': 'expose-direct-functions' }
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
