@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+
+function() {
+  local here="$(cd "$(dirname "${(%):-%x}")" && pwd)"
+  export DISPLAY=:0
+  local runtime='/usr/share/nvim-qt/runtime'
+  if [[ -d "$runtime" ]]; then
+    export NVIM_QT_RUNTIME_PATH="$runtime"
+  fi
+  "$here/vcxsrv.zsh"
+  export SUDO_ASKPASS=~/.local/bin/rofi-askpass
+  exec nvim-qt --maximized
+}
