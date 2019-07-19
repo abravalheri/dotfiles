@@ -7,7 +7,7 @@ if exists('g:GtkGuiLoaded')
   call rpcnotify(1, 'Gui', 'Font', 'Source Code Pro 12')
 elseif exists('g:GuiLoaded')
   " nvim-qt
-  GuiFont! Fira Code:h11
+  GuiFont! Fira Code:h9
 else
   set guifont=Fira\ Code\ 14
   set guioptions-=m  "remove menu bar
