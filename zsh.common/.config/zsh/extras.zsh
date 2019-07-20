@@ -2,10 +2,10 @@
 
 function __zshrc_load_extra() {
   local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-  local fp="$cache_dir/extras-cache.zsh"
+  local cache_file="$cache_dir/extras-cache.zsh"
   local -U extra priv list
 
-  if [ ! -f "$fp" ]; then
+  if [ ! -f "$cache_file" ]; then
     echo "Compiling extra zshrc files"
     extra=(
       # Meant for external installations, just check if file exists:
@@ -19,11 +19,16 @@ function __zshrc_load_extra() {
     )
     set -x
     mkdir -p "$cache_dir"
-    cat $extra > "$fp"
-    zcompile "$fp" &!
+    local fp;
+    for fp in $extra; do
+      echo "#### $fp ####" >> "$cache_file"
+      cat $fp >> "$cache_file"
+      echo "" >> "$cache_file"
+    done
+    zcompile "$cache_file" &!
     set +x
   fi
-  source "$fp"
+  source "$cache_file"
 }
 __zshrc_load_extra
 unset -f __zshrc_load_extra  # avoid lambdas so zprof can be used
