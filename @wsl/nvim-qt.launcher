@@ -18,9 +18,11 @@ function() {
 
   "$here/vcxsrv.zsh"
 
+  export NVIM_LISTEN_ADDRESS="localhost:32500"  # TCP socket on windows
+  export EDITOR="nvr"
   export SKIP_TMUX="true"
   export SUDO_ASKPASS=~/.local/bin/rofi-askpass
   export GIT_ASKPASS=~/.local/bin/rofi-askpass
   export SSH_ASKPASS=~/.local/bin/rofi-askpass
-  exec nvim-qt --maximized "${load[@]}"
+  exec nvim-qt --maximized
 }
