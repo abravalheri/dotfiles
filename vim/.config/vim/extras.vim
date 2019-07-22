@@ -58,11 +58,7 @@ let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'yaml', 'json', 
 
 " Personal Library {{{
 function! ProjectRoot()
-  try
-    return system("git rev-parse --show-toplevel 2>/dev/null | tr -d '\\n'")
-  catch /Vim:Interrupt/
-    " ignore error and return empty
-  endtry
+  return system("(git rev-parse --show-toplevel 2>/dev/null | tr -d '\\n') || echo ''")
 endfunction
 " }}}
 
@@ -92,10 +88,10 @@ if has('nvim') || has('terminal')
     function! FindFile(...)
       let l:vim_command = a:0 > 0 ? a:1 : ':e'
       let l:project_root = ProjectRoot()
-      if !empty(l:project_root)
-        let l:flags = "--exclude '**/.git' --search-path ".l:project_root
-      else
+      if empty(l:project_root)
         let l:flags = ''
+      else
+        let l:flags = "--exclude '**/.git' --search-path ".l:project_root
       endif
       call FzyCommand("fd -H --type f ".l:flags, l:vim_command)
     endfunction

@@ -56,7 +56,8 @@ Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a bu
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
 Plug 'michaeljsmith/vim-indent-object' | " extra text object: vii, vaI
 Plug 'nelstrom/vim-visual-star-search'
-Plug 'padde/jump.vim'                  | " integrate autojump to vim
+" Plug 'padde/jump.vim'                  | " integrate autojump to vim
+Plug 'abravalheri/jump.vim', { 'branch': 'fix-directory-not-found' }
 Plug 'rhysd/clever-f.vim'              | " more convenient and responsive f {{{
   let g:clever_f_across_no_line = 1
   let g:clever_f_fix_key_direction = 1
