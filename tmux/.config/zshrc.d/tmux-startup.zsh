@@ -1,9 +1,8 @@
 #!/bin/env zsh
 
-autoload -Uz command-exists
 local __session_name='-'
 
-if command-exists tmux; then
+if command -v tmux &>/dev/null; then
   alias tmux='tmux -2'
   alias tm="tmux -2 new-session -A -s '$__session_name'"
 

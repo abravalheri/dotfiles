@@ -13,6 +13,11 @@ function() {
 
   "$here/vcxsrv.zsh"
 
+  local venv="$HOME/.local/share/virtualenvs/emacs-elpy"
+  if [ -d "$venv" ]; then
+    source "$venv/bin/activate"
+  fi
+
   export SKIP_TMUX="true"
   export SUDO_ASKPASS=~/.local/bin/rofi-askpass
   export GIT_ASKPASS=~/.local/bin/rofi-askpass

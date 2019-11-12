@@ -23,6 +23,7 @@ if has('autocmd')
 
   augroup fix_shiftwidth
     autocmd!
+    autocmd FileType python setlocal colorcolumn=79,88,100
     autocmd BufNewFile,BufRead *.rst setlocal shiftwidth=4 tabstop=4 textwidth=79
     autocmd FileType javascript.jsx setlocal shiftwidth=2 tabstop=2 textwidth=79
     autocmd FileType yaml setlocal tabstop=2 expandtab shiftwidth=2 softtabstop=2
@@ -66,7 +67,7 @@ endfunction
 if executable('fzy')
 if has('nvim') || has('terminal')
     " nvim doesn't allow system to run interactive programs
-    function FzyCommand(choice_command, vim_command)
+    function! FzyCommand(choice_command, vim_command)
       call picker#File(a:choice_command, a:vim_command)
     endfunction
   else
@@ -112,6 +113,9 @@ command! -nargs=* FindFile call FindFile(<f-args>)
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 let g:autoformat_on_save = 0
+let g:autoformat_line_length = 88
+let g:autoformat_python = 'black --line-length=' .
+  \ g:autoformat_line_length . ' %'
 
 function! ExternalFormat(command)
   if g:autoformat_on_save
@@ -126,5 +130,5 @@ endfunction
 
 augroup tasks_on_save
   autocmd!
-  autocmd BufWritePost *.py call ExternalFormat('black --line-length=79 %')
+  autocmd BufWritePost *.py call ExternalFormat(g:autoformat_python)
 augroup END

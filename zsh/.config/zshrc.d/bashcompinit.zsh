@@ -2,7 +2,7 @@
 # vim: set foldmethod=marker :
 
 # Add bash completion for packages installed using stow
-if command-exists bashcompinit; then
+if command -v bashcompinit &>/dev/null; then
   autoload bashcompinit
   bashcompinit
 

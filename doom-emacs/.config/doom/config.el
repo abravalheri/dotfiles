@@ -30,7 +30,8 @@
 
 (setq
  projectile-project-search-path '("~/projects/" "~/papers")
- projectile-enable-caching t)
+ projectile-enable-caching t
+ projectile-sort-order 'recently-active)
 
 (setq-default
  display-line-numbers-type 'relative
@@ -48,6 +49,8 @@
 (def-package! elpy
   :config
   (add-hook 'python-mode-hook 'elpy-enable))
+
+(def-package! graphviz-dot-mode)
 
 ;; ;; Reconfigure existing packages
 (add-hook! 'dired-mode-hook #'dired-hide-details-mode)

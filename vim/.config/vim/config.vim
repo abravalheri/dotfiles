@@ -40,7 +40,7 @@ filetype plugin indent on
 
 " UI Properties: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set colorcolumn=+1
+set colorcolumn="+1,88,100"
 " set title           " change the terminal's title, broken on URXVT
 set showmode
 set laststatus=2

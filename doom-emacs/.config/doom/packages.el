@@ -6,6 +6,7 @@
 ;;   TODO: remove this after issue is solved
 
 (package! eshell-autojump)
-(package! seeing-is-believing)
 (package! evil-text-object-python)
 (package! elpy)
+(package! graphviz-dot-mode)
+(package! seeing-is-believing)

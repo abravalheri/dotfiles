@@ -25,7 +25,7 @@ source $ZDOTDIR/base.zsh      # @inject $ZDOTDIR/base.zsh
 source $ZDOTDIR/autoload.zsh  # @inject $XDG_CACHE_HOME/zsh/autoload-cache.zsh
 source $ZDOTDIR/extras.zsh    # @inject $XDG_CACHE_HOME/zsh/extras-cache.zsh
 
-ssh-init
+[ -z "${SKIP_AGENT+x}" ] && ssh-init
 
 # Run GRML completion framework
 is4 && grmlcomp

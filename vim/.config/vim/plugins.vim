@@ -68,6 +68,7 @@ Plug 'sjl/gundo.vim'                   | " visualize vim undo tree
 Plug 'tommcdo/vim-lion'                | " easy alignment with gl<char> {{{
   let g:lion_squeeze_spaces = 1
 " }}}
+Plug 'junegunn/vim-easy-align'
 Plug 'vim-scripts/BufOnly.vim'         | " `only` but for buffers
 Plug 'wellle/targets.vim'              | " extra text objects, e.g. ci_ va| da,
 

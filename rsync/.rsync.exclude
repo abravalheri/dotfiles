@@ -7,6 +7,8 @@ $RECYCLE.BIN/
 *.log
 .cache
 downloads
+.git
+*OneDrive*
 
 .python-version
 .Python

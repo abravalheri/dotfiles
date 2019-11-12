@@ -210,6 +210,7 @@ nnoremap <silent> <leader>u :<c-u>GundoToggle<cr>
 " Magit: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 nnoremap <silent> <leader>m :<c-u>tabe <bar> MagitOnly<cr>
+nnoremap <silent> ,m :<c-u>Magit<cr>
 nnoremap <silent> <leader>M :<c-u>MagitOnly<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
