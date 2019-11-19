@@ -112,13 +112,14 @@ endfunction
 
 " quickly edit/reload the vimrc file
 " (from http://nvie.com/posts/how-i-boosted-my-vim/)
-exec 'noremap  <silent> <leader>vi :<c-u>e ' . _config_base . '/init.vim<cr>'
-exec 'noremap  <silent> <leader>vc :<c-u>e ' . _config_base . '/config.vim<cr>'
-exec 'noremap  <silent> <leader>vp :<c-u>e ' . _config_base . '/plugins.vim<cr>'
-exec 'noremap  <silent> <leader>vk :<c-u>e ' . _config_base . '/keybindings.vim<cr>'
-exec 'noremap  <silent> <leader>ve :<c-u>e ' . _config_base . '/extras.vim<cr>'
-exec 'noremap  <silent> <leader>vs :<c-u>e ' . _config_base . '/style.vim<cr>'
-noremap  <silent> <leader>vr :<c-u>so $MYVIMRC<cr>
+exec 'nnoremap <silent> <leader>vi :<c-u>e ' . _config_base . '/init.vim<cr>'
+exec 'nnoremap <silent> <leader>vc :<c-u>e ' . _config_base . '/config.vim<cr>'
+exec 'nnoremap <silent> <leader>vp :<c-u>e ' . _config_base . '/plugins.vim<cr>'
+exec 'nnoremap <silent> <leader>vk :<c-u>e ' . _config_base . '/keybindings.vim<cr>'
+exec 'nnoremap <silent> <leader>ve :<c-u>e ' . _config_base . '/extras.vim<cr>'
+exec 'nnoremap <silent> <leader>vs :<c-u>e ' . _config_base . '/style.vim<cr>'
+exec 'nnoremap <silent> <leader>vg :<c-u>e '._config_base.'/ginit.vim<cr>'
+nnoremap  <silent> <leader>vr :<c-u>source $MYVIMRC<cr>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Buffer Management: {{{
@@ -219,3 +220,9 @@ nnoremap <silent> <leader>M :<c-u>MagitOnly<cr>
 noremap <silent> <leader>s :<c-u>set spell!<cr>
 " ^  toggle spell checker
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
+
+
+"""""""""""""""""""""""""""""""""""""""""""
+" Extra keybindings in the ginit.vim file "
+" (only runs when the GUI is active)      "
+"""""""""""""""""""""""""""""""""""""""""""
