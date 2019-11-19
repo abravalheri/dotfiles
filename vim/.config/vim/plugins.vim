@@ -100,8 +100,10 @@ Plug 'mhinz/vim-mix-format'  " {{{
 " }}}
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
-" Linters: {{{
+" Editor Features: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+Plug 'tpope/vim-obsession'  | " Record vim sessions with the command :Obsess
+
 if exists('g:use_syntastic') || v:version < 703
   Plug 'scrooloose/syntastic'
   Plug 'myint/syntastic-extras' | " {{{
@@ -118,6 +120,10 @@ else
 
     command! Lint ALELint
   " }}}
+endif
+
+if executable('node') || executable('nodejs')
+  Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 

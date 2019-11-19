@@ -9,6 +9,18 @@ let g:pymode_python = 'python3'
 " let g:pymode_syntax_all = 1
 " let g:pymode_rope = 0 " Too much
 " let g:pymode_options = 0
+"
+let g:ale_virtualenv_dir_names = [
+  \'.tox/default',
+  \'.env',
+  \'.venv',
+  \'env',
+  \'ve-py3',
+  \'ve',
+  \'virtualenv',
+  \'venv'
+\]
+
 if has('python3')
   silent! python3 1
 endif
@@ -112,15 +124,41 @@ command! -nargs=* FindFile call FindFile(<f-args>)
 " Automatic Tasks On Save: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+let g:autoformat_commands = {
+  \ 'python': 'black --line-length=LINE_LENGTH %',
+  \ 'elixir': 'mix format %',
+\ }
+
 let g:autoformat_on_save = 0
 let g:autoformat_line_length = 88
-let g:autoformat_python = 'black --line-length=' .
-  \ g:autoformat_line_length . ' %'
 
 function! ExternalFormat(command)
-  if g:autoformat_on_save
-    silent execute('!' . a:command) | edit!
+  let l:autoformat_on_save = get(b:, 'autoformat_on_save', g:autoformat_on_save)
+
+  if !l:autoformat_on_save
+    return
   endif
+
+  let l:autoformat_line_length = get(b:, 'autoformat_line_length', g:autoformat_line_length)
+
+  let l:command = substitute(a:command, 'LINE_LENGTH', l:autoformat_line_length, 'g')
+
+  if len(l:command) <= 0
+    echom 'Attempt to autoformat file "'.expand('%').'", ' .
+          \'but no autoformat command is defined. ' .
+          \'Please define `b:autoformat_command` or ' .
+          \'an entry for "'.&l:filetype.'"(filetype) ' .
+          \'in `g:autoformat_commands`.'
+    return
+  endif
+
+  silent execute('!' . l:command) | edit!
+endfunction
+
+function! FormatByFileType()
+  let l:default = get(g:autoformat_commands, &l:filetype, '')
+  let l:command = get(b:, 'autoformat_command', l:default)
+  call ExternalFormat(l:command)
 endfunction
 
 " augroup tasks_on_save
@@ -130,5 +168,23 @@ endfunction
 
 augroup tasks_on_save
   autocmd!
-  autocmd BufWritePost *.py call ExternalFormat(g:autoformat_python)
+  autocmd BufWritePost *.py call FormatByFileType()
 augroup END
+
+
+" Projectionist: {{{
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd User ProjectionistActivate call CustomProjectionistConfig()
+
+function! CustomProjectionistConfig() abort
+  for [root, value] in projectionist#query('textwidth')
+    let &l:textwidth = value
+    let b:autoformat_line_length = value
+    break
+  endfor
+  for [root, value] in projectionist#query('autoformat')
+    let b:autoformat_on_save = value
+    break
+  endfor
+endfunction
+" }}}
