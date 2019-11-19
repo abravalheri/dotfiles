@@ -122,7 +122,21 @@ else
   " }}}
 endif
 
-if executable('node') || executable('nodejs')
+if has('nvim') || v:version >= 800
+  Plug 'prabirshrestha/async.vim'
+  Plug 'prabirshrestha/vim-lsp' | " {{{
+    if executable('pyls')
+      " make sure to run ``pip3 install python-language-server``
+      au User lsp_setup call lsp#register_server({
+          \ 'name': 'pyls',
+          \ 'cmd': {server_info->['pyls']},
+          \ 'whitelist': ['python'],
+          \ })
+    endif
+  " }}}
+end
+
+if has('nvim') && (executable('node') || executable('nodejs'))
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
