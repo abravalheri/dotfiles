@@ -151,7 +151,7 @@ call DefaultFont()
 " Key Bindings:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Reload:
-exec 'nnoremap <silent> <leader>vR :<c-u>source '._config_base.'/ginit.vim<cr>'
+exec 'nnoremap <silent> <leader>vR :<C-u>source '._config_base.'/ginit.vim<cr>'
 
 " Font Size:
 nnoremap <silent> <leader>+ :<c-u>call IncreaseFont()<cr>
