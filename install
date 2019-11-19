@@ -60,7 +60,7 @@ make pre-compile
 if [ -z "${SKIP_PACKAGES+x}" ]; then
   log "Installing packages ..."
   # SKIP_PACKAGES is not set
-  brew_pkgs=($(read-list '*.brew' "$bundles"))
+  brew_pkgs=($(read-list '*.brew' "${bundles[@]}"))
   if (( ${#brew_pkgs[@]} )); then
     bootstrap-brew
     { set +x;
@@ -70,7 +70,7 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
 
   if [ -z "${SKIP_SYSTEM_PACKAGES+x}" ]; then
     if command-exists apt-get; then
-      apt_pkgs=($(read-list '*.apt' "$bundles"))
+      apt_pkgs=($(read-list '*.apt' "${bundles[@]}"))
       if (( ${#apt_pkgs[@]} )); then
         { set +x;
           sudo apt-get update;
@@ -80,7 +80,7 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
     fi
 
     if command-exists pacman; then
-      pacman_pkgs=($(read-list "$bundles" '*.pacman'))
+      pacman_pkgs=($(read-list '*.packman' "${bundles[@]}"))
       if (( ${#pacman_pkgs[@]} )); then
         { set +x;
           sudo pacman -Syu;
@@ -88,7 +88,7 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
         }
       fi
 
-      trizen_pkgs=($(read-list '*.trizen' "$bundles"))
+      trizen_pkgs=($(read-list '*.trizen' "${bundles[@]}"))
       if (( ${#trizen_pkgs[@]} )); then
         bootstrap-trizen
         { set +x;
@@ -101,17 +101,21 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
   fi
 
   if command-exists python3; then
-    pipx_pkgs=($(read-list '*.pipx' "$bundles"))
+    pipx_pkgs=($(read-list '*.pipx' "${bundles[@]}"))
     if (( ${#pipx_pkgs[@]} )); then
       { set +x;
         bootstrap-pipx;
         printf '%s\n' "${pipx_pkgs[@]}" | xargs -n1 pipx install
       }
     fi
+    pip_pkgs=($(read-list '*.pip' "${bundles[@]}"))
+    { set +x;
+      pip install --user --update "${pipx_pkgs[@]}";
+    }
   fi
 
   if command-exists ruby; then
-    gem_pkgs=($(read-list '*.gem' "$bundles"))
+    gem_pkgs=($(read-list '*.gem' "${bundles[@]}"))
     if (( ${#gem_pkgs[@]} )); then
       export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
       { set +x;

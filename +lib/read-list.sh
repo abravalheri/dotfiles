@@ -8,4 +8,5 @@ read-list() {
   # inside $folders.
   # Lines can be commented by `#`, and symbolic links are expanded.
   find -L "${@:2}" -name "$1" -type f -exec cat {} \; | uniq | grep -v '#'
+  # Bash offers the following notation: ${name:offset} ${name:offset:length}
 }

@@ -18,7 +18,7 @@ __bootstrap() {
   local file
   local BKP_DIR=~/.local/share/dotfiles.bkp
   mkdir -p "$BKP_DIR"
-  for file in "$bkp[@]"; do
+  for file in "${bkp[@]}"; do
     if [[ -f "$file" ]] && [[ ! -L "$file" ]]; then
       echo -n "BKP $file"
       { set -v;
