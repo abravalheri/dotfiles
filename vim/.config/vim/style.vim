@@ -1,9 +1,46 @@
 " vim: set foldmethod=marker :
 scriptencoding utf8  " encoding for this file
 
+let g:gui_colorscheme = 'monokai-phoenix'
+let g:tui_colorscheme = 'ir_black'
+let g:fallback_scheme = 'delek'
+
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-function! g:SetColorScheme()
+function! g:GetColorSchemes()
+  " Returns the list of available color schemes
+
+   return uniq(sort(map(
+   \  globpath(&runtimepath, 'colors/*.vim', 0, 1),
+   \  'fnamemodify(v:val, ":t:r")'
+   \)))
+endfunction
+
+function! SetColorScheme(...)
+  " Try to set a colorscheme to work nicely
+
+  let gui_scheme = a:0 > 0 ? a:1 : g:gui_colorscheme
+  let tui_scheme = a:0 > 0 ? a:1 : g:tui_colorscheme
+  let fallback_scheme = a:0 > 1 ? a:1 : g:fallback_scheme
+
+  let support_colors = (match($TERM, '256') >= 0 || has('gui_running') || exists('g:GuiLoaded'))
+
+  if !support_colors
+    execute('colorscheme '.fallback_scheme)
+    return
+  end
+
+  let available = GetColorSchemes()
+
+  if index(available, tui_scheme) < 0
+    let tui_scheme = fallback_scheme
+  end
+
+  if index(available, gui_scheme) < 0
+    silent !echom 'Colorscheme `' . scheme . '` not installed.'
+    let gui_scheme = tui_scheme
+  end
+
   " For true color terminals (not the case for urxvt)
   try
     " if $TERM !~ "rxvt" && $TERM =~ '256' && exists('+termguicolors')
@@ -12,13 +49,13 @@ function! g:SetColorScheme()
     "   set termguicolors
     " endif
 
-    if &term =~ "xterm"
+    if &term =~? 'xterm'
       " 256 colors
       let &t_Co = 256
       " restore screen after quitting
       let &t_ti = "\<Esc>7\<Esc>[r\<Esc>[?47h"
       let &t_te = "\<Esc>[?47l\<Esc>8"
-      if has("terminfo")
+      if has('terminfo')
         let &t_Sf = "\<Esc>[3%p1%dm"
         let &t_Sb = "\<Esc>[4%p1%dm"
       else
@@ -29,30 +66,20 @@ function! g:SetColorScheme()
 
     set t_Co=256
     let g:rehash256=1
-    colorscheme railscasts
+    execute('colorscheme '.gui_scheme)
     hi CursorLine cterm=underline gui=underline
   catch
-    silent !echo 'colorscheme not found:' . g:colors_name
-    colorscheme delek
+    silent !echom 'Something went wrong defining colorscheme: `' . g:colorscheme . '`'
+    execute('colorscheme '.fallback_scheme)
   endtry
 endfunction
 
-if match($TERM, '256') >= 0 || has('gui_running') || exists('g:GuiLoaded')
-  call g:SetColorScheme()
-else
-  colorscheme delek
-endif
+call SetColorScheme()
 
 " Syntax Highlighting:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if &t_Co > 2 || has('gui_running') || exists('g:GuiLoaded')
   syntax on
-endif
-
-" GVIM Font:
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-if has('gui_running')
-  set guifont=Source\ Code\ Pro\ 11
 endif
 
 " Make Active Window Obvious:

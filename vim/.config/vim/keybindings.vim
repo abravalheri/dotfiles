@@ -93,6 +93,9 @@ endif
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " toggle auto-indenting for code paste
 set pastetoggle=<f6>
+" re-select pasted lines (would be nnoremap gp `[v`], but the following map is
+" more powerful -- https://vim.fandom.com/wiki/Selecting_your_pasted_text)
+nnoremap <expr> gp "`[" . strpart(getregtype(), 0, 1) . "`]"
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Macros: {{{
@@ -171,8 +174,10 @@ if has('nvim')
   tnoremap <M-[>      <esc>
   tnoremap <C-v><esc> <esc>
 
+  " DO NOT REMAP <C-r> otherwise the terminal search functionality is lost
+  " tnoremap <expr> <C-r>  '<C-\><C-n>"' . nr2char(getchar()) . 'pi'
   " simulate insert mode <C-r> in terminal mode
-  tnoremap <expr> <C-r>  '<C-\><C-n>"' . nr2char(getchar()) . 'pi'
+  tnoremap <expr> <M-r>  '<C-\><C-n>"' . nr2char(getchar()) . 'pi'
 
   " better navigation
   " Terminal mode:

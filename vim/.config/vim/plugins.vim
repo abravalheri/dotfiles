@@ -89,7 +89,7 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
-Plug 'python-mode/python-mode', { 'branch': 'develop' }
+" Plug 'python-mode/python-mode', { 'branch': 'develop' }
 Plug 'plytophogy/vim-virtualenv'
 Plug 'aquach/vim-http-client'
 Plug 'tpope/vim-endwise'
