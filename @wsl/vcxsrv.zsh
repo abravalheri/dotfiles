@@ -27,6 +27,8 @@ load-keyboard() {
 start-dbus() {
   if [ -f ~/.local/bin/rofi-askpass ]; then
     DISPLAY=:0 SUDO_ASKPASS=~/.local/bin/rofi-askpass sudo -A service dbus start
+  elif command -v ssh-askpass &>/dev/null; then
+    DISPLAY=:0 SUDO_ASKPASS=ssh-askpass sudo -A service dbus start
   else
     echo "Sudo required to start dbus" >>/dev/stderr
   fi
