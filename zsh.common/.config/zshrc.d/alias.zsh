@@ -20,6 +20,7 @@ alias push='git push'
 alias branch='git checkout -b'
 alias dash=zeal
 alias mmv='noglob zmv'
+alias tre="tree -I 'node_modules|.venv|__pycache__|*.py[cod]|.cache|*.swp|*~|*.egg|*.eggs|.tox|.nox|.mypy_cache|.*.swp'"
 
 alias vim='nvim'
 alias vimdiff='nvim -d'
