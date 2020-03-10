@@ -167,3 +167,51 @@ Inside a bundle:
   cd @bundle/minimal
   ln -sr ../../@minimal/pacakges.apt
   ```
+
+## WSL Notes
+
+WSL is supported via the `@wsl` bundle:
+
+```bash
+./install @wsl
+```
+
+However, to maximize user experience on WSL, a few extra manual steps are
+required:
+
+- Install [Vcxsrv](https://sourceforge.net/projects/vcxsrv/)
+  on C:\Local\Apps\VcXsrv (or change the scripts in `@wsl` accordingly) -
+  **This enables GUI apps to run**.
+- Enable "systemd-like services" in WSL:
+  - Make sure the script `~/.local/bin/start-services.sh`
+    can run `sudo` without asking for credentials.
+  - This can be done by editing the sudoers file.
+    ```bash
+    sudo visudo
+    # Add to the file the following line:
+    %sudo ALL=NOPASSWD: /home/<USERNAME>/.local/bin/start-services.sh
+    ```
+  - Create a Windows shortcut to the VBS script `@wsl/start-services.vbs` to 
+    `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Start-up` -
+    **This enables the script to run automatically when the user logs in**.
+  - Alternatively you can run the `.sh` script conditionally
+    inside `~/.bashrc` or `~/.zshrc`.
+
+You might also want to:
+- Add the location ``\\wsl$\home\<USERNAME>`` to Windows Quick Access list.
+- Add "executable links" targeting some GUI programs inside WSL to the Start Menu.
+
+  This can be done by creating Windows shortcuts to VBA scripts inside the
+  folder `%APPDATA%\Microsoft\Windows\Start Menu\Programs`.
+
+  - Drag & drop with `ALT` pressed will create Windows shortcuts.
+  - There are VBA scripts inside `@wsl` that can be used directly, or as an example.
+
+References:
+- https://github.com/QMonkey/wsl-tutorial
+- https://dev.to/ironfroggy/wsl-tips-starting-linux-background-services-on-windows-login-3o98
+- https://github.com/Microsoft/WSL/issues/637
+- https://github.com/troytse/wsl-autostart
+- https://medium.com/@dhanar.santika/installing-wsl-with-gui-using-vcxsrv-6f307e96fac0
+- https://seanthegeek.net/234/graphical-linux-applications-bash-ubuntu-windows/
+- https://superuser.com/questions/140047/how-to-run-a-batch-file-without-launching-a-command-window

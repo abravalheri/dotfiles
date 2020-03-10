@@ -33,6 +33,9 @@ start-dbus() {
     return 0
   fi
 
+  echo "DBus is not running."
+  echo "Make sure to enable services in WSL (see dotfiles/README)." >>/dev/stderr
+
   if [ -x ~/.local/bin/start-services.sh ]; then
     sudo ~/.local/bin/start-services.sh
   else
