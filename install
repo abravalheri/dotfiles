@@ -11,6 +11,8 @@ if [[ "$*" == *--help* ]]; then
   echo -e "\t    Bundles contain instructions to install more than one layer and"
   echo -e "\t    may install OS packages/programs."
   echo -e "EXAMPLE\n\t$0 @minimal @wsl ptpython\n"
+  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES and VERBOSE can be used to "
+  echo -e "control the installation.\n"
   exit 0
 fi
 
@@ -50,8 +52,10 @@ done
 log "Installing layers ..."
 layers=($(read-list '*.stow' "${bundles[@]}"))
 layers=("${layers[@]}" "${extra_layers[@]}")
+stow_cmd="${VERBOSE+"stow -v -R"}"
+stow_cmd="${stow_cmd:-"stow -R"}"
 { set +x;
-  stow -R "${layers[@]}";
+  $stow_cmd "${layers[@]}";
 }
 
 log "Compile zsh files ..."

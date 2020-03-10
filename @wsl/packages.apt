@@ -2,3 +2,7 @@ rofi
 ssh-askpass
 xcape
 xkeycaps
+fonts-noto
+fonts-noto-hinted
+fonts-noto-mono
+fonts-noto-unhinted
