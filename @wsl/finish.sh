@@ -29,6 +29,7 @@ __finish_wsl() {
   echo -e "       [Right Click] > Send to > Desktop (create shortcut)"
   echo -n         "$(tput sgr0)"
   echo -e "       on the *.vbs files you find important."
+  echo -e "       Alternatively you can drag-and-drop the file with \"ALT\" pressed."
   echo -e "     - Then go to your desktop and rename/change the icon"
   echo -e "       of the new shortcuts."
   echo -e "     - Move these shortcuts to "
