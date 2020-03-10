@@ -24,13 +24,25 @@ load-keyboard() {
   done
 }
 
+dbus-is-running() {
+  service dbus status | grep -vq '\<not\>'
+}
+
 start-dbus() {
-  if [ -f ~/.local/bin/rofi-askpass ]; then
-    DISPLAY=:0 SUDO_ASKPASS=~/.local/bin/rofi-askpass sudo -A service dbus start
-  elif command -v ssh-askpass &>/dev/null; then
-    DISPLAY=:0 SUDO_ASKPASS=ssh-askpass sudo -A service dbus start
+  if dbus-is-running; then
+    return 0
+  fi
+
+  if [ -x ~/.local/bin/start-services.sh ]; then
+    sudo ~/.local/bin/start-services.sh
   else
-    echo "Sudo required to start dbus" >>/dev/stderr
+    if command -v ssh-askpass &>/dev/null; then
+      DISPLAY=:0 SUDO_ASKPASS=/usr/bin/ssh-askpass sudo -A service dbus start
+    elif [ -x ~/.local/bin/rofi-askpass ]; then
+      DISPLAY=:0 SUDO_ASKPASS=~/.local/bin/rofi-askpass sudo -A service dbus start
+    else
+      echo "Sudo required to start dbus" >>/dev/stderr
+    fi
   fi
 }
 
