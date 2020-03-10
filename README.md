@@ -19,7 +19,7 @@ cd ~
 mkdir -p .config
 git clone --recursive https://github.com/abravalheri/dotfiles .dotfiles
 cd .dotfiles
-./install
+./install --help
 ```
 
 ## How it works?
