@@ -2,11 +2,15 @@ autojump
 build-essential
 ctags
 curl
+# fdfind
 fonts-firacode
+fzy
 git
 hwinfo
 jq
+neovim
 nmap
+ripgrep
 silversearcher-ag
 stow
 tmux
