@@ -110,7 +110,7 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
     fi
     pip_pkgs=($(read-list '*.pip' "${bundles[@]}"))
     { set +x;
-      pip install --user --update "${pipx_pkgs[@]}";
+      pip3 install --user --update "${pipx_pkgs[@]}";
     }
   fi
 
