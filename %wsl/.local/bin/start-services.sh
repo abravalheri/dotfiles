@@ -4,11 +4,13 @@ sudo service dbus start
 sudo service cron start
 
 __start_circus() {
+  local RUNTIME_DIR="${XDG_RUNTIME_DIR:-/tmp/run/$(id -u)}"
   local here="$(cd "$(dirname "${BASH_SOURCE[0]:-$(dirname "$0")}")" && pwd)"
   local config_file="$here/../../.config/circus/circus.ini"
+  local pid_file="$RUNTIME_DIR/circusd.pid"
   if [ -f "$config_file" ]; then
     if [ -f "$here/circusd" ]; then
-      "$here/circusd" --daemon "$config_file"
+      "$here/circusd" --daemon "$config_file" --pidfile "$pid_file"
     else
       echo -n "$(tput bold)$(tput setaf 3)"
       echo -n "\nCircus configuration file detected ($config_file) "
