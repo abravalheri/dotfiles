@@ -32,13 +32,21 @@ For example, if a layer `git` wants to specify a `~/.config/git/config` file,
 a file `$dotfiles/git/.config/git/config` should be present in the
 repository.
 
-Layers can be classified as **default** or **alternative**. Default layers are
-implemented as folders starting with a `/a-z/i` char, while alternative layers
-are folders starting with an `%` char. Default folders are meant to be used
-regularly, while alternative folders are created for special cases.  For
-example, the `doom-emacs` layer provides the preferable configurations for the
-standard dev environment, while `%emacs.minimal` is created as an experiment,
-to be installed in secondary machines, or with less powerful hardware.
+Layers can be classified as *regular* layers or *shadow* layers.
+*Regular* layers are implemented as folders starting with a `/a-z/i` char, while
+shadow layers are folders starting with an `%` char.  *Regular* layers are meant
+to be used by default, while *shadow* layers are created with special purposes
+(e.g. being an **alternative** installation, providing **complementary/extra**
+functionality, creating **companion** configuration/scripts for a specific
+bundle, …).
+For example, the `doom-emacs` layer provides the preferable configurations for
+the standard dev environment, while `%emacs.minimal` is created as an
+experiment, to be installed in secondary machines, or with less powerful
+hardware.
+Similarly, the `%wsl` layer provide required functionality to the `@wsl` bundle
+and is not meant to be used standalone.
+The `@full` bundle will automatically discover and install all *regular*
+layers found in the repository.
 
 Layers are installed using [GNU Stow](https://www.gnu.org/software/stow/)
 ([tutorial](https://alexpearce.me/2016/02/managing-dotfiles-with-stow/)),
@@ -48,6 +56,12 @@ which makes per-layer installation easy:
 stow -R layer1 layer2 …
 # -R is optional in this case, it will update a layer in the case it is already installed
 ```
+
+- *Note*: the ZSH configuration in this repository pre-compile files to speed-up
+  starting times. Therefore every time a new layer that relies on ZSH is
+  installed it is recommend to run `make clean pre-compile`.
+  If you are unsure if the new layer uses ZSH, run the command **just in
+  case**.
 
 A *bundle* encapsulates one of more layers, being able to additionally install
 packages or run arbitrary scripts during installation time.
@@ -115,8 +129,8 @@ stow -R $(< find -L $bundle -name '*.stow' -exec cat {} \; | uniq | grep -v '#')
 
 With the layers installed, the ZSH files are compiled (`make pre-compile`)
 and the packages are installed using the correct package managers (if
-available). Package installation is similar to layer installation, as showed
-bellow:
+available).
+Package installation is similar to layer installation, as showed bellow:
 
 ```bash
 sudo apt-get install $(< find -L $bundle -name '*.apt' -exec cat {} \; | uniq | grep -v '#')
@@ -136,9 +150,9 @@ the following strings:
 - `@local`
 - `%local`
 
-These files/folders are not commited to the repository thanks to a rule in
-.gitignore, but are considered during runtime. So, for example, the following
-files can be created for customization purposes:
+These files/folders are not committed to the repository thanks to a rule in
+.gitignore, but are considered during runtime.
+So, for example, the following files can be created for customization purposes:
 
 - `~/.config/vim/+local.vim`
 - `~/.config/zsh/+local.zsh`
@@ -182,7 +196,7 @@ required:
 - Install [Vcxsrv](https://sourceforge.net/projects/vcxsrv/)
   on C:\Local\Apps\VcXsrv (or change the scripts in `@wsl` accordingly) -
   **This enables GUI apps to run**.
-- Enable "systemd-like services" in WSL:
+- Enable "systemd/upstart/init-like services" in WSL:
   - Make sure the script `~/.local/bin/start-services.sh`
     can run `sudo` without asking for credentials.
   - This can be done by editing the sudoers file.
