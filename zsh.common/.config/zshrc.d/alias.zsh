@@ -24,3 +24,6 @@ alias tre="tree -I 'node_modules|.venv|__pycache__|*.py[cod]|.cache|*.swp|*~|*.e
 
 alias vim='nvim'
 alias vimdiff='nvim -d'
+
+# References:
+# - https://blog.sebastian-daschner.com/entries/zsh-aliases
