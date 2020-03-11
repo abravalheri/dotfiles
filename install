@@ -11,8 +11,8 @@ print-usage() {
   echo -e "\t    Bundles contain instructions to install more than one layer and"
   echo -e "\t    may install OS packages/programs."
   echo -e "EXAMPLE\n\t$0 @minimal @wsl ptpython\n"
-  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES and VERBOSE can be used to "
-  echo -e "control the installation.\n"
+  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES, SKIP_UPDATE and VERBOSE "
+  echo -e  "can be used to control the installation.\n"
 }
 
 if [[ "$*" == *--help* ]]; then
@@ -48,10 +48,12 @@ for lib in $BASE_DIR/+lib/*.sh; do
   source "$lib"
 done
 
-log "Updating submodules ..."
-{ set +x;
-  git submodule update --init --recursive;
-}
+if [ -z "${SKIP_UPDATE+x}" ]; then
+  log "Updating submodules ..."
+  { set +x;
+    git submodule update --init --recursive;
+  }
+fi
 
 log "Bootstraping installation of bundles ..."
 bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))

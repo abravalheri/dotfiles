@@ -13,6 +13,7 @@ __bootstrap() {
     ~/.git/config
     ~/.vimrc
     ~/.vim/vimrc
+    ~/.config/zsh/.zcompdump
   )
 
   local file
@@ -20,12 +21,18 @@ __bootstrap() {
   mkdir -p "$BKP_DIR"
   for file in "${bkp[@]}"; do
     if [[ -f "$file" ]] && [[ ! -L "$file" ]]; then
-      echo -e "  ** $(tput bold)$(tput setaf 3)BKP$(tput sgr0) $file -> $BKP_DIR"
+      echo -n "  ** $(tput bold)$(tput setaf 3)BKP$(tput sgr0) $file -> "
       { set -v;
-        cp "$file" "$BKP_DIR";
-        test -f "$BKP_DIR/$(basename "$file")";
+        bkp_file="${file/~/"$BKP_DIR"}";
+        echo "$bkp_file";
+        cp "$file" "$bkp_file";
+        test -f "$bkp_file";
         rm "$file";
-        ln -s "$BKP_DIR/$(basename "$file")" ~;
+      }
+    elif [[ -L "$file" ]]; then
+      { set -v;
+        echo "  ** $(tput bold)$(tput setaf 3)UNLINK$(tput sgr0) $file ($(readlink -f "$file"))";
+        unlink "$file";
       }
     fi
   done
