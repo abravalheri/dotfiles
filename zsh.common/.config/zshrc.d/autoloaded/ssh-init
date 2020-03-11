@@ -4,8 +4,17 @@
 local SSH_ENV="$HOME/.ssh/environment"
 
 ssh-agent-running() {
-  (( ${+SSH_AUTH_SOCK} )) && [[ -f $SSH_AUTH_SOCK ]]
+  (pgrep ssh-agent &>/dev/null) && (( ${+SSH_AUTH_SOCK} )) && [[ -e $SSH_AUTH_SOCK ]]
 }
+
+# Really check if it is running:
+# __any_agent_running() {
+#   ssh-add -l &>/dev/null
+#   if [[ "$?" == 2 ]]; then  # No Agent running
+#     return 1
+#   fi
+#   return 0
+# }
 
 if ! ssh-agent-running; then
   if [[ -r "$SSH_ENV" ]]; then
@@ -18,4 +27,4 @@ if ! ssh-agent-running; then
     eval "$(< "$SSH_ENV")" >/dev/null
   fi
 fi
-echo -e "* ssh-agent is running\n"
+echo -e "* $(tput setaf 6)ssh-agent$(tput sgr0) is running\n"
