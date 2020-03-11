@@ -1,3 +1,3 @@
 #!/usr/bin/env zsh
 
-task $@ rc._forcecolor=on rc.defaultwidth=`tput cols` | less -r -X -F
+task ${@:-"ls"} rc._forcecolor=on rc.defaultwidth=`tput cols` | less -r -X -F
