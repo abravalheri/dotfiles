@@ -1,12 +1,23 @@
+# fdfind
+# ripgrep
 autojump
 build-essential
-ctags
 curl
+exuberant-ctags
 fonts-firacode
+fzy
 git
 hwinfo
 jq
+libzmq3-dev
+libevent-dev
+neovim
 nmap
+python3
+python3-lxml
+python3-pip
+python3-venv
+python3-dev
 silversearcher-ag
 stow
 tmux

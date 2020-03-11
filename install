@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Setup vars
-if [[ "$*" == *--help* ]]; then
+# Validation/Usage
+print-usage() {
   echo -e "NAME\n\t$0 - install dotfiles"
-  echo -e "SYNOPSIS\n\t$0 [--help] [<bundle>...] [layer...]\n"
+  echo -e "SYNOPSIS\n\t$0 [--help] (<bundle> | <layer>) [<bundle>...] [<layer>...]\n"
   echo -e "OPTIONS\n"
   echo -e "\t<layer>..."
   echo -e "\t    Folders to be stowed to ~ (not starting with '@')."
@@ -11,12 +11,26 @@ if [[ "$*" == *--help* ]]; then
   echo -e "\t    Bundles contain instructions to install more than one layer and"
   echo -e "\t    may install OS packages/programs."
   echo -e "EXAMPLE\n\t$0 @minimal @wsl ptpython\n"
+  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES and VERBOSE can be used to "
+  echo -e "control the installation.\n"
+}
+
+if [[ "$*" == *--help* ]]; then
+  print-usage
   exit 0
 fi
 
+if [ "$#" -lt 1 ]; then
+  echo -e "************************ MISSING ARGUMENTS ************************"
+  echo -e "*    Please provide at least one argument (e.g. \"@default\")       *"
+  echo -e "*******************************************************************\n\n"
+  print-usage
+  exit 1
+fi
+
+# Setup vars
 DIR=$(pwd)
 args=($@)
-[ "$#" -ge 1 ] || args=("@default")
 bundles=($({ IFS=$'\n'; echo "${args[*]}"; } | grep '@'))
 extra_layers=($({ IFS=$'\n'; echo "${args[*]}"; } | grep -v '@'))
 
@@ -50,8 +64,10 @@ done
 log "Installing layers ..."
 layers=($(read-list '*.stow' "${bundles[@]}"))
 layers=("${layers[@]}" "${extra_layers[@]}")
+stow_cmd="${VERBOSE+"stow -v -R"}"
+stow_cmd="${stow_cmd:-"stow -R"}"
 { set +x;
-  stow -R "${layers[@]}";
+  $stow_cmd "${layers[@]}";
 }
 
 log "Compile zsh files ..."
@@ -110,7 +126,7 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
     fi
     pip_pkgs=($(read-list '*.pip' "${bundles[@]}"))
     { set +x;
-      pip install --user --update "${pipx_pkgs[@]}";
+      pip3 install --user --update "${pipx_pkgs[@]}";
     }
   fi
 

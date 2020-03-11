@@ -1,3 +1,10 @@
 rofi
+ssh-askpass
 xcape
 xkeycaps
+x11-xserver-utils
+fonts-noto
+fonts-noto-hinted
+fonts-noto-mono
+fonts-noto-unhinted
+tmpreaper

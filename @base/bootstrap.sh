@@ -20,11 +20,23 @@ __bootstrap() {
   mkdir -p "$BKP_DIR"
   for file in "${bkp[@]}"; do
     if [[ -f "$file" ]] && [[ ! -L "$file" ]]; then
-      echo -n "BKP $file"
+      echo -e "  ** $(tput bold)$(tput setaf 3)BKP$(tput sgr0) $file -> $BKP_DIR"
       { set -v;
         cp "$file" "$BKP_DIR";
+        test -f "$BKP_DIR/$(basename "$file")";
+        rm "$file";
+        ln -s "$BKP_DIR/$(basename "$file")" ~;
       }
     fi
+  done
+
+  echo "Prepare ~/.local FHS (XDG base dirs) ..."
+  local base_dirs=(~/.local ~/.local/bin ~/.config/ ~/.config/zsh ~/.config/zshrc.d ~/.config/zshrc.d/autoloaded)
+  for dir in "${base_dirs[@]}"; do
+    { set +x;
+      mkdir -p "$dir"
+      chmod 755 "$dir"
+    }
   done
 }
 

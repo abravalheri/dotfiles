@@ -31,6 +31,9 @@ nmap
 openssh
 otf-font-awesome
 p7zip
+pandoc
+pandoc-citeproc
+pandoc-crossref
 pkgfile
 ponymix
 pulseaudio
