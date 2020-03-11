@@ -174,7 +174,10 @@ augroup END
 
 " Projectionist: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-autocmd User ProjectionistActivate call CustomProjectionistConfig()
+augroup custom_projections
+  autocmd!
+  autocmd User ProjectionistActivate call CustomProjectionistConfig()
+augroup END
 
 function! CustomProjectionistConfig() abort
   for [root, value] in projectionist#query('textwidth')
