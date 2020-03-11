@@ -23,7 +23,7 @@ __finish_wsl() {
   echo -en "\n  ** $(tput bold)$(tput setaf 3)"
   echo -e       "You might also want to:"
   echo -n       "$(tput sgr0)"
-  echo -n "     - Add the location '${wsl_home}' to Windows Quick Access list."
+  echo -e "     - Add the location '${wsl_home}' to Windows Quick Access list."
   echo -e "     - Go inside '${wsl_home}\\.dotfiles\\@wsl' and"
   echo -n         "$(tput bold)"
   echo -e "       [Right Click] > Send to > Desktop (create shortcut)"
