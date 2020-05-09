@@ -182,6 +182,9 @@ set wildignore+=**/coverage/**
 set wildignore+=**/.bundle/**
 set wildignore+=**/.sass-cache/**
 set wildignore+=**/*.egg-info/**
+if has('nvim')
+  set wildoptions+=pum
+endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Autocomplete: {{{

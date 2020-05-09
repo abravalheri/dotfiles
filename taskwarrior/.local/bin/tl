@@ -1,3 +1,4 @@
 #!/usr/bin/env zsh
 
+sleep 0.1
 task ${@:-"ls"} rc._forcecolor=on rc.defaultwidth=`tput cols` | less -r -X -F

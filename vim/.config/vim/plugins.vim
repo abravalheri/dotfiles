@@ -152,7 +152,8 @@ if !empty($NVIM_QT_RUNTIME_PATH)
 endif
 
 if has('nvim') || has('terminal')
-  Plug 'abravalheri/vim-picker', { 'branch': 'expose-direct-functions' }
+  Plug 'srstevenson/vim-picker'
+  " Plug 'abravalheri/vim-picker', { 'branch': 'expose-direct-functions' }
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 

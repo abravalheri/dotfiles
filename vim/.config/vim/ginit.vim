@@ -5,6 +5,8 @@ function! GetGuiDistribution()
     return 'nvim-gtk'
   elseif exists('g:GuiLoaded')
     return 'nvim-qt'
+  elseif exists('g:fvim_loaded')
+    return 'fvim'
   end
 
   return get(g:, 'default_gui_distribution', 'gvim')
@@ -57,6 +59,18 @@ function! s:nvim_qt_set_font(name, size)
   execute('GuiFont! '.a:name.':h'.a:size)
 endfunction
 
+" FVIM:
+function! s:fvim_get_font()
+  let font = split(&guifont, ':h')
+  let name = font[0]
+  let size = s:Trim(font[1], ':hsb')
+  return [name, size]
+endfunction
+
+function! s:fvim_set_font(name, size)
+  let &guifont = a:name.':h'.a:size
+endfunction
+
 " GVIM:
 function! s:gvim_get_font()
   let font = split(&guifont, ' ')
@@ -76,10 +90,15 @@ function! GetFont()
   return l:Getter()
 endfunction
 
-function! SetFont(name, size)
+function! SetFont(name, ...)
   let distribution = s:ensure_know_distribution()
   let l:Setter = get(g:font_manipulation, distribution)[1]
-  return l:Setter(a:name, a:size)
+  if a:0 > 0
+    let size = a:1
+  else
+    let size = GetFont()[1]
+  endif
+  return l:Setter(a:name, size)
 endfunction
 
 function! IncreaseFont(...)
@@ -116,15 +135,21 @@ endfunction
 
 " Meta Configuration:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:fallback_font = ['Source Code Pro', 12]
+let s:source_pro = 'Source Code Pro'
+let s:fira = 'Fira Code'
+let s:cascadia = 'CaskaydiaCove NF' 
+
+let g:fallback_font = [s:source_pro, 12]
 let g:default_font = {
-  \'nvim-qt':  ['Fira Code', 9],
-  \'nvim-gtk': ['Source Code Pro', 12],
-  \'gvim':     ['Fira Code', 14],
+  \'nvim-qt':  [s:cascadia, 11],
+  \'nvim-gtk': [s:source_pro, 12],
+  \'fvim':     [s:cascadia, 15],
+  \'gvim':     [s:cascadia, 12],
 \ }
 let g:font_manipulation = {
   \'nvim-qt':  [function('s:nvim_qt_get_font'), function('s:nvim_qt_set_font')],
   \'nvim-gtk': [function('s:nvim_gtk_get_font'), function('s:nvim_gtk_set_font')],
+  \'fvim':     [function('s:fvim_get_font'), function('s:fvim_set_font')],
   \'gvim':     [function('s:gvim_get_font'), function('s:gvim_set_font')],
 \ }
 let g:font_increment = 1
@@ -145,6 +170,10 @@ if g:gui_distribution ==? 'gvim'
   set guioptions-=L  "remove left-hand scroll bar
 end
 
+if g:gui_distribution ==? 'fvim'
+    FVimFontNoBuiltinSymbols v:true
+endif
+
 call DefaultFont()
 
 
@@ -157,3 +186,6 @@ exec 'nnoremap <silent> <leader>vR :<C-u>source '._config_base.'/ginit.vim<cr>'
 nnoremap <silent> <leader>+ :<c-u>call IncreaseFont()<cr>
 nnoremap <silent> <leader>- :<c-u>call DecreaseFont()<cr>
 nnoremap <silent> <leader>= :<c-u>call DefaultFont()<cr>
+
+command! Fira call SetFont(s:fira)
+command! Cascadia call SetFont(s:cascadia)
