@@ -138,13 +138,14 @@ endfunction
 let s:source_pro = 'Source Code Pro'
 let s:fira = 'Fira Code'
 let s:cascadia = 'CaskaydiaCove NF' 
+let s:iosevka = 'Iosevka Term'
 
 let g:fallback_font = [s:source_pro, 12]
 let g:default_font = {
   \'nvim-qt':  [s:cascadia, 11],
   \'nvim-gtk': [s:source_pro, 12],
-  \'fvim':     [s:cascadia, 15],
-  \'gvim':     [s:cascadia, 12],
+  \'fvim':     [s:fira, 15],
+  \'gvim':     [s:fira, 12],
 \ }
 let g:font_manipulation = {
   \'nvim-qt':  [function('s:nvim_qt_get_font'), function('s:nvim_qt_set_font')],
@@ -189,3 +190,4 @@ nnoremap <silent> <leader>= :<c-u>call DefaultFont()<cr>
 
 command! Fira call SetFont(s:fira)
 command! Cascadia call SetFont(s:cascadia)
+command! Iosevka call SetFont(s:iosevka)

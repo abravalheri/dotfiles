@@ -77,7 +77,7 @@ endfunction
 
 " Fzy Support: {{{
 if executable('fzy')
-if has('nvim') || has('terminal')
+  if has('nvim') || has('terminal')
     " nvim doesn't allow system to run interactive programs
     function! FzyCommand(choice_command, vim_command)
       call picker#File(a:choice_command, a:vim_command)
@@ -161,14 +161,25 @@ function! FormatByFileType()
   call ExternalFormat(l:command)
 endfunction
 
-" augroup tasks_on_save
-"   autocmd!
-"   autocmd BufWritePost *.exs,*.ex call s:external_format('!mix format %')
-" augroup END
+function! AutoformatElixir()
+  let l:use_plugin = get(b:, 'loaded_mix_format', get(g:, 'loaded_mix_format', 0))
+  let l:autoformat_on_save = get(b:, 'autoformat_on_save', g:autoformat_on_save)
+
+  if !l:autoformat_on_save
+    return
+  endif
+
+  if l:use_plugin
+    :MixFormat
+  else
+    call FormatByFileType()
+  endif
+endfunction
 
 augroup tasks_on_save
   autocmd!
   autocmd BufWritePost *.py call FormatByFileType()
+  autocmd BufWritePost *.exs,*.ex call AutoformatElixir()
 augroup END
 
 
