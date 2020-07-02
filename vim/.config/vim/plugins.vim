@@ -36,6 +36,7 @@ Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of st
 Plug 'beloglazov/vim-online-thesaurus' | " search for replacing words
 
 Plug 'tpope/vim-commentary'            | " easily add/remove/toogle comments on lines
+Plug 'tpope/vim-dispatch'              | " dispatch commands in tmux panels
 Plug 'tpope/vim-eunuch'                | " unix helpers, such as SudoWrite
 Plug 'tpope/vim-projectionist'         | " easily change between files
 Plug 'tpope/vim-repeat'                | " make the . command do more
@@ -95,6 +96,7 @@ Plug 'nathanalderson/yang.vim'
 Plug 'plytophogy/vim-virtualenv'
 Plug 'aquach/vim-http-client'
 Plug 'tpope/vim-endwise'
+Plug 'tpope/vim-rails'
 Plug 'sheerun/vim-polyglot'
 Plug 'slashmili/alchemist.vim'
 Plug 'mhinz/vim-mix-format'  " {{{
@@ -105,6 +107,8 @@ Plug 'mhinz/vim-mix-format'  " {{{
 " Editor Features: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'tpope/vim-obsession'  | " Record vim sessions with the command :Obsess
+
+" Plug 'mipmip/vim-scimark'   | " Allow editing markdown tables using sc-im
 
 if exists('g:use_syntastic') || v:version < 703
   Plug 'scrooloose/syntastic'
@@ -125,7 +129,6 @@ else
 endif
 
 if has('nvim') || v:version >= 800
-  Plug 'prabirshrestha/async.vim'
   Plug 'prabirshrestha/vim-lsp' | " {{{
     if executable('pyls')
       " make sure to run ``pip3 install python-language-server``
@@ -146,6 +149,7 @@ endif
 " UI: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'flazz/vim-colorschemes'
+" Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 if !empty($NVIM_QT_RUNTIME_PATH)
   Plug 'equalsraf/neovim-gui-shim'

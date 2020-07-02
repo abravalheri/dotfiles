@@ -1,9 +1,14 @@
 " vim: set foldmethod=marker :
 scriptencoding utf8  " encoding for this file
 
-let g:gui_colorscheme = 'monokai-phoenix'
+let g:gui_colorscheme = 'tender'
 let g:tui_colorscheme = 'ir_black'
 let g:fallback_scheme = 'delek'
+
+" Good themes:
+" tender
+" lucius
+" paper-color => very colorful
 
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -29,6 +34,8 @@ function! SetColorScheme(...)
     execute('colorscheme '.fallback_scheme)
     return
   end
+
+  let base16colorspace=256
 
   let available = GetColorSchemes()
 
