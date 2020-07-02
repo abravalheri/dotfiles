@@ -12,8 +12,11 @@ boot-asdf() {
     echo -e "\`asdf\` not found. Downloading ...\n"
     mkdir -p "$(dirname "$ASDF_DIR")"
     mkdir -p "$(dirname "$ASDF_DATA_DIR")"
-    git clone $asdf_url $ASDF_DIR
+    ( umask -S g=r,o=r;
+      git clone $asdf_url $ASDF_DIR
+    )
     ( cd $ASDF_DIR;
+      umask -S g=r,o=r;
       git checkout "$(git describe --abbrev=0 --tags)";
       chmod -R go-w .
     )
@@ -22,7 +25,9 @@ boot-asdf() {
     ( cd $ASDF_DIR;
       echo "\`asdf\` is too old. Fetching newest changes ...";
       git fetch --tags;
+      umask -S g=r,o=r;
       git checkout "$(git describe --abbrev=0 --tags)"
+      chmod -R go-w .
       touch .  # Make sure to change ctime of the repo, so it waits 30 days
     )
   fi
