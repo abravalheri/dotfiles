@@ -1,7 +1,7 @@
 " vim: set foldmethod=marker :
 scriptencoding utf8  " encoding for this file
 
-let g:gui_colorscheme = 'tender'
+let g:gui_colorscheme = 'gruvbox'
 let g:tui_colorscheme = 'ir_black'
 let g:fallback_scheme = 'delek'
 
@@ -9,6 +9,7 @@ let g:fallback_scheme = 'delek'
 " tender
 " lucius
 " paper-color => very colorful
+" gruvbox
 
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""

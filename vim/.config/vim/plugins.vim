@@ -36,7 +36,7 @@ Plug 'editorconfig/editorconfig-vim'   | " allow per project configuration of st
 Plug 'beloglazov/vim-online-thesaurus' | " search for replacing words
 
 Plug 'tpope/vim-commentary'            | " easily add/remove/toogle comments on lines
-Plug 'tpope/vim-dispatch'              | " dispatch commands in tmux panels
+" Plug 'tpope/vim-dispatch'              | " dispatch commands in tmux panels
 Plug 'tpope/vim-eunuch'                | " unix helpers, such as SudoWrite
 Plug 'tpope/vim-projectionist'         | " easily change between files
 Plug 'tpope/vim-repeat'                | " make the . command do more
@@ -96,7 +96,7 @@ Plug 'nathanalderson/yang.vim'
 Plug 'plytophogy/vim-virtualenv'
 Plug 'aquach/vim-http-client'
 Plug 'tpope/vim-endwise'
-Plug 'tpope/vim-rails'
+" Plug 'tpope/vim-rails'
 Plug 'sheerun/vim-polyglot'
 Plug 'slashmili/alchemist.vim'
 Plug 'mhinz/vim-mix-format'  " {{{
@@ -128,18 +128,19 @@ else
   " }}}
 endif
 
-if has('nvim') || v:version >= 800
-  Plug 'prabirshrestha/vim-lsp' | " {{{
-    if executable('pyls')
-      " make sure to run ``pip3 install python-language-server``
-      au User lsp_setup call lsp#register_server({
-          \ 'name': 'pyls',
-          \ 'cmd': {server_info->['pyls']},
-          \ 'whitelist': ['python'],
-          \ })
-    endif
-  " }}}
-end
+" Unfortunately LSP makes things slow
+" if has('nvim') || v:version >= 800
+"   Plug 'prabirshrestha/vim-lsp' | " {{{
+"     if executable('pyls')
+"       " make sure to run ``pip3 install python-language-server``
+"       au User lsp_setup call lsp#register_server({
+"           \ 'name': 'pyls',
+"           \ 'cmd': {server_info->['pyls']},
+"           \ 'whitelist': ['python'],
+"           \ })
+"     endif
+"   " }}}
+" end
 
 if has('nvim') && (executable('node') || executable('nodejs'))
   Plug 'neoclide/coc.nvim', {'branch': 'release'}

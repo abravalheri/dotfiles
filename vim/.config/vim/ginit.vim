@@ -137,7 +137,7 @@ endfunction
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 let s:source_pro = 'Source Code Pro'
 let s:fira = 'Fira Code'
-let s:cascadia = 'CaskaydiaCove NF' 
+let s:cascadia = 'CaskaydiaCove NF'
 let s:iosevka = 'Iosevka Term'
 
 let g:fallback_font = [s:source_pro, 12]
