@@ -139,6 +139,7 @@ let s:source_pro = 'Source Code Pro'
 let s:fira = 'Fira Code'
 let s:cascadia = 'CaskaydiaCove NF'
 let s:iosevka = 'Iosevka Term'
+let s:fantasque = 'Fantasque Sans Mono'
 
 let g:fallback_font = [s:source_pro, 12]
 let g:default_font = {
@@ -191,3 +192,4 @@ nnoremap <silent> <leader>= :<c-u>call DefaultFont()<cr>
 command! Fira call SetFont(s:fira)
 command! Cascadia call SetFont(s:cascadia)
 command! Iosevka call SetFont(s:iosevka)
+command! Fantasque call SetFont(s:fantasque)

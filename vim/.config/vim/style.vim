@@ -11,6 +11,14 @@ let g:fallback_scheme = 'delek'
 " paper-color => very colorful
 " gruvbox
 
+" Gruvbox specifics
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if g:gui_colorscheme == 'gruvbox'
+  " let g:gruvbox_improved_strings = 1
+  let g:gruvbox_invert_selection = 0
+  let g:gruvbox_contrast_darl = 'hard'
+end
+
 " Theme:
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 function! g:GetColorSchemes()
