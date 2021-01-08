@@ -1,0 +1,16 @@
+#!/usr/bin/env zsh
+# vim: set foldmethod=marker filetype=zsh :
+
+function() {
+  source "$(conda info --root)/etc/profile.d/conda.sh"
+  local project_root=$(pwd -P 2>/dev/null || command pwd)
+  while [ ! -d "${project_root}/.conda" ]; do
+    project_root=${project_root%/*}
+    if [ "${project_root}" = "" ]; then
+      echo "Conda env not found enywhere in the current path" >&2
+      return 1
+    fi
+  done
+  conda activate "${project_root}/.conda"
+  echo "${project_root}/.conda activated"
+}
