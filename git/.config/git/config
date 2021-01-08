@@ -5,6 +5,7 @@
   safecrlf = warn
   whitespace = trailing-space,space-before-tab
   excludesfile = ~/.config/git/gitignore
+  pager = delta
 [color]
   ui = true
 [color "diff-highlight"]
@@ -28,6 +29,7 @@
   mnemonicprefix = true
   renames = copies
   algorithm = patience
+  colorMoved = default
 [branch]
   autosetupmerge = true
 [rerere]
