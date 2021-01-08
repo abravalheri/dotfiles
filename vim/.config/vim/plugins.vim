@@ -82,7 +82,8 @@ Plug 'airblade/vim-gitgutter'             | " displays change markers on lines
 Plug 'jreybert/vimagit'                   | " another git porcelain (experimental) {{{
 augroup magit_hooks
   autocmd!
-  autocmd User VimagitBufferInit call fugitive#detect(@%)
+  autocmd User VimagitEnterCommit startinsert \| setlocal textwidth=72
+  autocmd User VimagitLeaveCommit setlocal textwidth=0
 augroup END
 " }}}
 Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
@@ -128,7 +129,7 @@ else
   " }}}
 endif
 
-" Unfortunately LSP makes things slow
+" " Unfortunately LSP makes things slow
 " if has('nvim') || v:version >= 800
 "   Plug 'prabirshrestha/vim-lsp' | " {{{
 "     if executable('pyls')

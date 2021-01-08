@@ -1,6 +1,7 @@
 " vim: set foldmethod=marker :
 scriptencoding utf8  " encoding for this file
 
+set background=dark
 let g:gui_colorscheme = 'gruvbox'
 let g:tui_colorscheme = 'ir_black'
 let g:fallback_scheme = 'delek'
