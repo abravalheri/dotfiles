@@ -16,5 +16,6 @@ tldr
 tmuxp
 vim-vint
 vint
+virtualenv
 yamllint
 pyls
