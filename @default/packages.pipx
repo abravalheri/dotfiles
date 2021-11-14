@@ -14,6 +14,7 @@ sphinx
 thefuck
 tldr
 tmuxp
+tox
 vim-vint
 vint
 virtualenv
