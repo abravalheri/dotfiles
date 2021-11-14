@@ -84,3 +84,5 @@
 	conflicts = diff --check
 	conflict = diff --name-only --diff-filter=U
 	cat = "!git show \"$1:$2\" #"
+[diff-so-fancy]
+	stripLeadingSymbols = false

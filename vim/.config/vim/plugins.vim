@@ -52,6 +52,7 @@ Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/brac
 Plug 'tpope/vim-vinegar'               | " improve netrw
 Plug 'tpope/vim-unimpaired'            | " better navigation
 
+Plug 'andrewradev/linediff.vim'        | " allow diff of 2 selections
 Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
 Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
@@ -91,6 +92,10 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 
 " Extra Syntax: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+if has('nvim')
+  Plug 'alerque/vim-commonmark', {'do': 'make'}
+endif
+
 Plug 'aklt/plantuml-syntax'
 Plug 'nathanalderson/yang.vim'
 " Plug 'python-mode/python-mode', { 'branch': 'develop' }
@@ -103,13 +108,15 @@ Plug 'slashmili/alchemist.vim'
 Plug 'mhinz/vim-mix-format'  " {{{
   let g:mix_format_on_save = 0
 " }}}
+Plug 'goerz/jupytext.vim'
+Plug 'manicmaniac/coconut.vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Editor Features: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 Plug 'tpope/vim-obsession'  | " Record vim sessions with the command :Obsess
 
-" Plug 'mipmip/vim-scimark'   | " Allow editing markdown tables using sc-im
+Plug 'mipmip/vim-scimark'   | " Allow editing markdown tables using sc-im
 
 if exists('g:use_syntastic') || v:version < 703
   Plug 'scrooloose/syntastic'

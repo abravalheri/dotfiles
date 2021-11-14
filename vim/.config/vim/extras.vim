@@ -196,6 +196,10 @@ function! CustomProjectionistConfig() abort
     let b:autoformat_line_length = value
     break
   endfor
+  for [root, value] in projectionist#query('colorcolumn')
+    let &l:colorcolumn = value
+    break
+  endfor
   for [root, value] in projectionist#query('autoformat')
     let b:autoformat_on_save = value
     break
