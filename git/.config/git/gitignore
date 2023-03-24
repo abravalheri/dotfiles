@@ -96,6 +96,9 @@ Temporary Items
 .apdisk
 
 ### Vim ###
+
+.projections.json
+
 # Swap
 [._]*.s[a-v][a-z]
 [._]*.sw[a-p]

@@ -15,5 +15,7 @@ if [ -t 1 ]; then
     export _start_home=$(pwd)
   fi
   # Replace bash process with zsh
-  exec zsh
+  if [[ "${SKIP_ZSH:-default_value}" != "true" ]]; then
+    exec zsh
+  fi
 fi

@@ -145,7 +145,7 @@ let g:fallback_font = [s:source_pro, 12]
 let g:default_font = {
   \'nvim-qt':  [s:cascadia, 11],
   \'nvim-gtk': [s:source_pro, 12],
-  \'fvim':     [s:fira, 15],
+  \'fvim':     [s:fira, 16],
   \'gvim':     [s:fira, 12],
 \ }
 let g:font_manipulation = {
