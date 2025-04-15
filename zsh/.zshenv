@@ -20,6 +20,7 @@ export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_CONFIG_DIRS XDG_DATA_DIR
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export DOTFILES=$HOME/.dotfiles
 export GNUPGHOME="${XDG_CONFIG_HOME}/gnupg"
+export ERL_AFLAGS="-kernel shell_history enabled"
 
 # Locale
 export LANG=en_US.UTF-8
@@ -29,3 +30,4 @@ source "${ZDOTDIR}/.pathrc"  # @inject $ZDOTDIR/.pathrc
 
 # Remove '/' from wordchars to allow word deletion on files
 export WORDCHARS=$(sed 's|/||' <<< $WORDCHARS)
+. "$HOME/.cargo/env"
