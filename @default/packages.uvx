@@ -1,23 +1,14 @@
-black
-flake8
-gitlint
+gitlint-core --with gitlint
 howdoi
 httpie
-isort
 pre-commit
 proselint
-ptpython
-pylint
-pyscaffold
 rstcheck
-sphinx
+ruff
 thefuck
 tldr
 tmuxp
-tox
 vim-vint
-vint
-virtualenv
 yamllint
 pyls
 pynvim
