@@ -5,6 +5,7 @@
 
 # Don't load default /etc/zsh files
 setopt no_global_rcs
+setopt HIST_IGNORE_ALL_DUPS
 
 # Set XDG global variables to their defaults if not set {{{
 : ${XDG_CONFIG_HOME:=$HOME/.config}
@@ -30,4 +31,3 @@ source "${ZDOTDIR}/.pathrc"  # @inject $ZDOTDIR/.pathrc
 
 # Remove '/' from wordchars to allow word deletion on files
 export WORDCHARS=$(sed 's|/||' <<< $WORDCHARS)
-. "$HOME/.cargo/env"
