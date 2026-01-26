@@ -21,6 +21,8 @@ __pycache__
 .tox
 .nox
 .coverage*
+.mypy_cache
+.ruff_cache
 *.cover
 docs/_build
 build

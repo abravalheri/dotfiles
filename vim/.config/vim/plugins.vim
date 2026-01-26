@@ -75,6 +75,7 @@ Plug 'tommcdo/vim-lion'                | " easy alignment with gl<char> {{{
 Plug 'junegunn/vim-easy-align'
 Plug 'vim-scripts/BufOnly.vim'         | " `only` but for buffers
 Plug 'wellle/targets.vim'              | " extra text objects, e.g. ci_ va| da,
+Plug 'whonore/Coqtail'                 | " Coq Theorem prover support
 
 " Git: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -151,7 +152,7 @@ endif
 " end
 
 if has('nvim') && (executable('node') || executable('nodejs'))
-  Plug 'neoclide/coc.nvim', {'branch': 'release'}
+  Plug 'neoclide/coc.nvim', {'tag': 'v0.0.82'}  | " {'branch': 'release'} -> not supported in the current version of neovim
 endif
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
