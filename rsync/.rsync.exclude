@@ -14,6 +14,8 @@ downloads
 .Python
 .ipynb_checkpoints
 *.venv
+*.mamba
+*.conda
 *.env
 *.py[cod]
 *.egg*
