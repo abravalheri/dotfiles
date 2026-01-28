@@ -56,6 +56,7 @@ if [ -z "${SKIP_UPDATE+x}" ]; then
 fi
 
 log "Bootstraping installation of bundles ..."
+log "   - ${bundles[@]}"
 bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
 for script in "${bootstrap_scripts[@]}"; do
   log "Running $script ..."

@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
 
-if command-exists cargo; then
+if [[ -f "$HOME/.cargo/env" ]]; then
   source "$HOME/.cargo/env"
 fi
