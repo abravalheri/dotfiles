@@ -48,6 +48,9 @@ for lib in $BASE_DIR/+lib/*.sh; do
   source "$lib"
 done
 
+log "Cleaning zsh cache"
+source "$BASE_DIR/clear-zsh-cache"
+
 if [ -z "${SKIP_UPDATE+x}" ]; then
   log "Updating submodules ..."
   { set +x;
