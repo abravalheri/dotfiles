@@ -1,13 +1,3 @@
 #!/usr/bin/env zsh
 
-function __zshrc_clear_cache() {
-  local cache_dir="${XDG_CACHE_HOME:-$HOME/.cache}/zsh"
-  local extras_cache="$cache_dir/extras-cache.zsh"
-  local autoload_cache="$cache_dir/autoload-cache.zsh"
-  rm -rf "$extras_cache"
-  rm -rf "$extras_cache.zwc"
-  rm -rf "$autoload_cache"
-  rm -rf "$autoload_cache.zwc"
-}
-__zshrc_clear_cache
-unset -f __zshrc_clear_cache
+make clean
