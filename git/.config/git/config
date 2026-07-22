@@ -84,6 +84,7 @@
 	conflicts = diff --check
 	conflict = diff --name-only --diff-filter=U
 	cat = "!git show \"$1:$2\" #"
+	diff-untracked = !git ls-files -o --exclude-standard -z | xargs -0 -n1 git diff --no-index /dev/null
 [diff-so-fancy]
 	stripLeadingSymbols = false
 [init]
