@@ -104,9 +104,9 @@ if executable('fzy')
       if empty(l:project_root)
         let l:flags = ''
       else
-        let l:flags = "--exclude '**/.git' --search-path ".l:project_root
+        let l:flags = "--exclude '**/.git' --search-path " . shellescape(l:project_root)
       endif
-      call FzyCommand("fd -H --type f ".l:flags, l:vim_command)
+      call FzyCommand('fd -H --type f '.l:flags, l:vim_command)
     endfunction
   endif
 endif
