@@ -38,7 +38,10 @@ Plug 'beloglazov/vim-online-thesaurus' | " search for replacing words
 Plug 'tpope/vim-commentary'            | " easily add/remove/toogle comments on lines
 " Plug 'tpope/vim-dispatch'              | " dispatch commands in tmux panels
 Plug 'tpope/vim-eunuch'                | " unix helpers, such as SudoWrite
-Plug 'tpope/vim-projectionist'         | " easily change between files
+Plug 'tpope/vim-projectionist'         | " easily change between files {{{
+  Plug 'andyl/vim-projectionist-elixir'
+  Plug 'c-brenn/fuzzy-projectionist.vim'
+"}}}
 Plug 'tpope/vim-repeat'                | " make the . command do more
 Plug 'tpope/vim-surround'              | " easily change quotes/parenthesis/braces/tags/etc ... {{{
   if has('autocmd')
@@ -111,6 +114,7 @@ Plug 'mhinz/vim-mix-format'  " {{{
 " }}}
 Plug 'goerz/jupytext.vim'
 Plug 'manicmaniac/coconut.vim'
+Plug 'terrastruct/d2-vim'
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""}}}
 
 " Editor Features: {{{
@@ -150,6 +154,22 @@ endif
 "     endif
 "   " }}}
 " end
+"
+
+if has('nvim') || v:version >= 800
+  Plug 'prabirshrestha/vim-lsp' | " {{{
+    if executable('expert')
+      augroup lsp_expert_elixir
+        autocmd User lsp_setup call lsp#register_server({
+          \ 'name': 'expert',
+          \ 'cmd': {server_info->['expert']},
+          \ 'allowlist': ['elixir'],
+          \ })
+      augroup END
+    endif
+  " }}}
+  Plug 'mattn/vim-lsp-settings'
+end
 
 if has('nvim') && (executable('node') || executable('nodejs'))
   Plug 'neoclide/coc.nvim', {'tag': 'v0.0.82'}  | " {'branch': 'release'} -> not supported in the current version of neovim
