@@ -10,6 +10,9 @@ tags.temp
 *.zdirs
 *.zcompdump
 
+!*/.local/
+!*/.config/
+
 # Created by https://www.gitignore.io
 
 ### Linux ###
@@ -169,7 +172,7 @@ target/
 ### Ruby ###
 *.gem
 *.rbc
-/.config
+# /.config
 /coverage/
 /InstalledFiles
 /pkg/
