@@ -1,0 +1,428 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+MAX_SIZE_MB="${MAX_SIZE_MB:-2}"
+MODE="auto"
+INCLUDE_ALL=0
+NAMES_ONLY=0
+ONLY_PATTERNS=()
+INCLUDE_PATTERNS=()
+EXCLUDE_PATTERNS=()
+
+usage() {
+    cat <<'EOF'
+Usage:
+  repo-dump [options]
+
+Options:
+  --git         Force git ls-files mode
+  --fd          Force fd mode
+  --names-only  Only list names of files, no content
+
+  --all         Include ignored/untracked files
+
+  --only PATTERN
+                Only include files matching PATTERN.
+                May be specified multiple times.
+
+  --include PATTERN
+                Force inclusion of files matching PATTERN.
+                May be specified multiple times.
+
+  --exclude PATTERN
+                Exclude files matching PATTERN.
+                May be specified multiple times.
+
+  --max-size-mb N
+                Maximum file size to include (default: 2)
+  -h, --help    Show this help
+
+Environment:
+  MAX_SIZE_MB  Maximum file size to include (default: 2)
+EOF
+}
+
+while (($#)); do
+    case "$1" in
+        --git)
+            MODE=git
+            ;;
+        --fd)
+            MODE=fd
+            ;;
+        --all)
+            INCLUDE_ALL=1
+            ;;
+        --max-size-mb)
+            shift
+            MAX_SIZE_MB="$1"
+            ;;
+        --names-only|--name-only|--list)
+            NAMES_ONLY=1
+            ;;
+        --only)
+            shift
+            ONLY_PATTERNS+=("$1")
+            ;;
+        --include)
+            shift
+            INCLUDE_PATTERNS+=("$1")
+            ;;
+        --exclude)
+            shift
+            EXCLUDE_PATTERNS+=("$1")
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            printf 'Unknown option: %s\n' "$1" >&2
+            exit 1
+            ;;
+    esac
+    shift
+done
+
+lang_for_file() {
+    local file
+    file="$(basename -- "$1")"
+
+    case "$file" in
+        Dockerfile)                      echo dockerfile; return ;;
+        Makefile)                        echo makefile; return ;;
+        Gemfile)                         echo ruby; return ;;
+        .bashrc|.bash_profile|.profile)  echo bash; return ;;
+        .zshrc|.zprofile|.zlogin)        echo zsh; return ;;
+    esac
+
+    local ext="${file##*.}"
+
+    case "${ext,,}" in
+        sh|bash)                    echo bash ;;
+        zsh)                        echo zsh ;;
+        fish)                       echo fish ;;
+
+        py|pyi|pyw)                 echo python ;;
+
+        ex|exs)                     echo elixir ;;
+        erl|hrl)                    echo erlang ;;
+
+        js|mjs|cjs)                 echo javascript ;;
+        ts|mts|cts)                 echo typescript ;;
+        jsx)                        echo jsx ;;
+        tsx)                        echo tsx ;;
+
+        rs)                         echo rust ;;
+
+        rb)                         echo ruby ;;
+
+        c)                          echo c ;;
+        h)                          echo c ;;
+        cc|cp|cpp|cxx|c++|hpp|hxx|hh)
+                                    echo cpp ;;
+
+        go)                         echo go ;;
+
+        java)                       echo java ;;
+        kt|kts)                     echo kotlin ;;
+        scala|sc)                   echo scala ;;
+
+        lua)                        echo lua ;;
+
+        hs|lhs)                     echo haskell ;;
+
+        ml|mli)                     echo ocaml ;;
+
+        vim)                        echo vim ;;
+
+        md|markdown)                echo markdown ;;
+        rst)                        echo rst ;;
+        adoc|asciidoc)              echo asciidoc ;;
+
+        json|jsonc)                 echo json ;;
+        yaml|yml)                   echo yaml ;;
+        toml)                       echo toml ;;
+        ini|cfg|conf)               echo ini ;;
+
+        xml)                        echo xml ;;
+        xsd|xsl|xslt)               echo xml ;;
+
+        html|htm)                   echo html ;;
+        svg)                        echo svg ;;
+        css)                        echo css ;;
+        scss)                       echo scss ;;
+        sass)                       echo sass ;;
+        less)                       echo less ;;
+
+        sql)                        echo sql ;;
+
+        proto)                      echo protobuf ;;
+
+        dockerfile)                 echo dockerfile ;;
+
+        tex)                        echo latex ;;
+
+        make)                       echo makefile ;;
+        cmake)                      echo cmake ;;
+
+        php)                        echo php ;;
+        swift)                      echo swift ;;
+        cs)                         echo csharp ;;
+        fs|fsi|fsx)                 echo fsharp ;;
+        clj|cljs|cljc)              echo clojure ;;
+        r)                          echo r ;;
+        jl)                         echo julia ;;
+        nim)                        echo nim ;;
+        zig)                        echo zig ;;
+        *)
+            ;;
+    esac
+}
+
+is_excluded() {
+    local file="/${1,,}"
+
+    case "$file" in
+        # Media
+        *.png|*.jpg|*.jpeg|*.gif|*.bmp|*.tif|*.tiff|*.webp|*.ico|*.exr|*.psd|*.kra)
+            return 0 ;;
+        *.mp3|*.wav|*.ogg|*.flac|*.aac|*.m4a)
+            return 0 ;;
+        *.mp4|*.avi|*.mov|*.mkv|*.webm|*.wmv|*.m4v)
+            return 0 ;;
+        # Archives
+        *.zip|*.tar|*.gz|*.tgz|*.bz2|*.xz|*.zst|*.lz4|*.7z|*.rar)
+            return 0 ;;
+        *.iso|*.img|*.qcow2|*.vmdk|*.vdi)
+            return 0 ;;
+        *.whl|*.conda|*.deb|*.rpm|*.apk|*.dmg)
+            return 0 ;;
+        # Documents
+        *.pdf)
+            return 0 ;;
+        # Databases
+        *.db|*.db3|*.sqlite|*.sqlite3|*.mdb)
+            return 0 ;;
+        # Native binaries and libraries
+        *.dll|*.exe|*.so|*.dylib|*.a|*.o|*.obj)
+            return 0 ;;
+        # JVM binaries
+        *.jar|*.war|*.ear|*.class)
+            return 0 ;;
+        # Fonts
+        *.ttf|*.otf|*.woff|*.woff2)
+            return 0 ;;
+        # Generic binary formats
+        *.bin|*.bc|*.bundle|*.raw)
+            return 0 ;;
+        # Game-dev assets
+        *.fbx|*.blend)
+            return 0 ;;
+        *.uasset|*.umap|*.pak|*.ubulk|*.uexp|*.utoc|*.ucas)
+            return 0 ;;
+        *.asset|*.prefab|*.unity|*.meta|*.import)
+            return 0 ;;
+        *.bank|*.fsbank|*.fspro)
+            return 0 ;;
+        # ML / AI artefacts
+        *.pt|*.pth|*.ckpt|*.safetensors|*.onnx|*.pb|*.tfrecord)
+            return 0 ;;
+        # Data-science artefacts
+        *.parquet|*.feather|*.arrow)
+            return 0 ;;
+        *.h5|*.hdf5)
+            return 0 ;;
+        *.npy|*.npz)
+            return 0 ;;
+        *.pickle|*.pkl)
+            return 0 ;;
+        *.ipynb) # can be very big and contain data
+            return 0 ;;
+        # Generated/build directories
+        */.git/*)
+            return 0 ;;
+        */.local/*|*/.stash/*|*/.*_cache/*)
+            return 0 ;;
+        */.terraform/*)
+            return 0 ;;
+        */.aws/*)
+            return 0 ;;
+        *.kubeconfig|*/.kube/*)
+            return 0 ;;
+        */.ssh/*)
+            return 0 ;;
+        */node_modules/*|*/.npm/*|*/.pnpm-store/*|*/.yarn/*)
+            return 0 ;;
+        */.venv/*|*/.conda/*|*/.tox/*|*/.nox/*)
+            return 0 ;;
+        */__pycache__/*)
+            return 0 ;;
+        */_build/*)
+            return 0 ;;
+        */vendor/bundle/*|*/.bundle/*)
+            return 0 ;;
+    esac
+
+    return 1
+}
+
+is_secret_file() {
+    local file="$1"
+    local base
+
+    base="$(basename -- "$file")"
+
+    case "${base,,}" in
+        # Environment files
+        .env|.env.*)
+            return 0 ;;
+        # SSH
+        id_dsa|id_dsa.pub|id_rsa|id_rsa.pub|id_ed25519|id_ed25519.pub|id_ecdsa|id_ecdsa.pub|authorized_keys|known_hosts)
+            return 0 ;;
+        # Credentials
+        .netrc|.git-credentials)
+            return 0 ;;
+    esac
+
+    case "/${file,,}" in
+        # Certificates / key stores
+        *.pem|*.key|*.crt|*.cer|*.csr|*.p12|*.pfx|*.jks)
+            return 0 ;;
+        # Terraform
+        *.tfvars|*.tfvars.json)
+            return 0 ;;
+        */terraform.tfstate|*/terraform.tfstate.backup|*/terraform.tfstate.*)
+            return 0 ;;
+        # Rails
+        */config/master.key|*/config/credentials/*.key)
+            return 0 ;;
+        */config/credentials.yml.enc)
+            return 0 ;;
+    esac
+
+    return 1
+}
+
+is_too_large() {
+    local file="$1"
+
+    local size
+    size=$(stat -c %s "$file" 2>/dev/null || echo 0)
+
+    (( size > MAX_SIZE_MB * 1024 * 1024 ))
+}
+
+matches_include_pattern() {
+    local file="$1"
+    local pattern
+
+    for pattern in "${INCLUDE_PATTERNS[@]}"; do
+        [[ "$file" == $pattern ]] && return 0
+    done
+
+    return 1
+}
+
+matches_user_filters() {
+    local file="$1"
+    local pattern
+
+    for pattern in "${EXCLUDE_PATTERNS[@]}"; do
+        [[ "$file" == $pattern ]] && return 1
+    done
+
+    if ((${#ONLY_PATTERNS[@]})); then
+        for pattern in "${ONLY_PATTERNS[@]}"; do
+            [[ "$file" == $pattern ]] && return 0
+        done
+
+        return 1
+    fi
+
+    return 0
+}
+
+dump_one_file() {
+    local file="$1"
+    local lang
+
+    lang="$(lang_for_file "$file")"
+
+    printf '## %s\n\n' "$file"
+
+    if [[ -n "$lang" ]]; then
+        printf '```%s\n' "$lang"
+    else
+        printf '```\n'
+    fi
+
+    bat \
+        --paging=never \
+        --style=plain \
+        --color=never \
+        -- "$file"
+
+    printf '\n```\n\n'
+}
+
+emit_files_git() {
+    if (( INCLUDE_ALL )); then
+        git ls-files --cached --others --exclude-standard -z
+    else
+        git ls-files -z
+    fi
+}
+
+emit_files_fd() {
+    local args=(-t f -0)
+
+    if (( INCLUDE_ALL )); then
+        args+=(--no-ignore)
+    fi
+
+    fd "${args[@]}"
+}
+
+should_skip_file() {
+    local file="$1"
+
+    # Explicit includes override everything.
+    matches_include_pattern "$file" && return 1
+
+    is_excluded "$file" && return 0
+    is_secret_file "$file" && return 0
+    matches_user_filters "$file" || return 0
+    is_too_large "$file" && return 0
+
+    grep -Iq . "$file" || return 0
+
+    return 1
+}
+
+if [[ "$MODE" == auto ]]; then
+    if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+        MODE=git
+    else
+        MODE=fd
+    fi
+fi
+
+if [[ "$MODE" == git ]]; then
+    FILE_SOURCE=emit_files_git
+else
+    FILE_SOURCE=emit_files_fd
+fi
+
+while IFS= read -r -d '' file; do
+    [[ -f "$file" ]] || continue
+
+    should_skip_file "$file" && continue
+
+    if (( NAMES_ONLY )); then
+        printf '%s\n' "$file"
+        continue
+    fi
+
+    dump_one_file "$file"
+done < <("$FILE_SOURCE")
