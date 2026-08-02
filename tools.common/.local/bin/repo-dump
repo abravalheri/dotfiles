@@ -304,6 +304,29 @@ is_secret_file() {
     return 1
 }
 
+is_lock_file() {
+    local file
+    file="$(basename -- "$1")"
+
+    case "$file" in
+        Cargo.lock|\
+        mix.lock|\
+        Gemfile.lock|\
+        poetry.lock|\
+        uv.lock|\
+        Pipfile.lock|\
+        package-lock.json|\
+        npm-shrinkwrap.json|\
+        pnpm-lock.yaml|\
+        yarn.lock|\
+        composer.lock)
+            return 0
+            ;;
+    esac
+
+    return 1
+}
+
 is_too_large() {
     local file="$1"
 
@@ -385,6 +408,14 @@ emit_files_fd() {
 }
 
 should_skip_file() {
+    # Shell convention:
+    #   return 0 => "success" ≈ so skip this file
+    #   return 1 => "failure" ≈ keep this file
+    # so:
+    #   should_skip_file "$file" && continue
+    # reads as:
+    #   "if this file should be skipped, continue"
+
     local file="$1"
 
     # Explicit includes override everything.
@@ -392,6 +423,7 @@ should_skip_file() {
 
     is_excluded "$file" && return 0
     is_secret_file "$file" && return 0
+    is_lock_file "$file" && return 0
     matches_user_filters "$file" || return 0
     is_too_large "$file" && return 0
 
