@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# vim: set foldmethod=marker filetype=bash :
+
+curl -4 wttr.in/"$@"

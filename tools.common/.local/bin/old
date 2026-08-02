@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+# vim: set foldmethod=marker filetype=bash :
+
+last-modified "${1:-"$(cat)"}" | to-age

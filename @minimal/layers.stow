@@ -5,3 +5,4 @@ tmux
 zsh
 zsh.common
 %zsh.bootstrap
+tools.common

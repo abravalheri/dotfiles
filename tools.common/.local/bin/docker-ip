@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
-# vim: set foldmethod=marker filetype=zsh :
+#!/usr/bin/env bash
+# vim: set foldmethod=marker filetype=bash :
 
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $1
