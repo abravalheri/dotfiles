@@ -9,6 +9,12 @@ ONLY_PATTERNS=()
 INCLUDE_PATTERNS=()
 EXCLUDE_PATTERNS=()
 
+CODE_BEGIN='```{lang}'
+CODE_END='```'
+HEADER_FORMAT_H2='## {filename}'
+HEADER_FORMAT_COMMENT='<!--======================== FILE: {filename} ========================-->'
+HEADER_FORMAT="$HEADER_FORMAT_H2"
+
 usage() {
     cat <<'EOF'
 Usage:
@@ -17,6 +23,8 @@ Usage:
 Options:
   --git         Force git ls-files mode
   --fd          Force fd mode
+
+  --list
   --names-only  Only list names of files, no content
 
   --all         Include ignored/untracked files
@@ -35,6 +43,32 @@ Options:
 
   --max-size-mb N
                 Maximum file size to include (default: 2)
+
+  --h2-header
+                Use Markdown H2 file headers (default)
+
+  -C
+  --comment-header
+                Use comment-style file headers
+
+  --header-format TEMPLATE
+                Custom header template.
+                Supported placeholders:
+                  {filename}
+                  {basename}
+                  {lang}
+
+  --no-fences   Do not wrap files in Markdown
+                triple-backtick code blocks
+
+  --code-begin TEMPLATE
+                Custom opening wrapper.
+                Supported placeholders: {lang}
+
+  --code-end TEMPLATE
+                Custom closing wrapper.
+                Supported placeholders: {lang}
+
   -h, --help    Show this help
 
 Environment:
@@ -57,7 +91,7 @@ while (($#)); do
             shift
             MAX_SIZE_MB="$1"
             ;;
-        --names-only|--name-only|--list)
+        --list|--names-only|--name-only)
             NAMES_ONLY=1
             ;;
         --only)
@@ -71,6 +105,28 @@ while (($#)); do
         --exclude)
             shift
             EXCLUDE_PATTERNS+=("$1")
+            ;;
+        --h2-header)
+            HEADER_FORMAT="$HEADER_FORMAT_H2"
+            ;;
+        -C|--comment-header)
+            HEADER_FORMAT="$HEADER_FORMAT_COMMENT"
+            ;;
+        --header-format)
+            shift
+            HEADER_FORMAT="$1"
+            ;;
+        --no-fences)
+            CODE_BEGIN=''
+            CODE_END=''
+            ;;
+        --code-begin)
+            shift
+            CODE_BEGIN="$1"
+            ;;
+        --code-end)
+            shift
+            CODE_END="$1"
             ;;
         -h|--help)
             usage
@@ -372,13 +428,8 @@ dump_one_file() {
 
     lang="$(lang_for_file "$file")"
 
-    printf '## %s\n\n' "$file"
-
-    if [[ -n "$lang" ]]; then
-        printf '```%s\n' "$lang"
-    else
-        printf '```\n'
-    fi
+    emit_file_header "$file" "$lang"
+    emit_code_begin "$lang"
 
     bat \
         --paging=never \
@@ -386,7 +437,41 @@ dump_one_file() {
         --color=never \
         -- "$file"
 
-    printf '\n```\n\n'
+    emit_code_end "$lang"
+
+    printf '\n\n\n'
+}
+
+emit_file_header() {
+    local file="$1"
+    local lang="$2"
+    local base
+
+    base="$(basename -- "$file")"
+
+    local header="$HEADER_FORMAT"
+
+    header="${header//\{filename\}/$file}"
+    header="${header//\{basename\}/$base}"
+    header="${header//\{lang\}/$lang}"
+
+    printf '%s\n\n' "$header"
+}
+
+emit_code_begin() {
+    local lang="$1"
+    local begin="$CODE_BEGIN"
+    begin="${begin//\{lang\}/$lang}"
+    [[ -n "$begin" ]] && printf '%s\n' "$begin"
+    return 0
+}
+
+emit_code_end() {
+    local lang="$1"
+    local end="$CODE_END"
+    end="${end//\{lang\}/$lang}"
+    [[ -n "$end" ]] && printf '%s\n' "$end"
+    return 0
 }
 
 emit_files_git() {
