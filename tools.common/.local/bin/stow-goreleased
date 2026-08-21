@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+die() {
+    printf 'stow-goreleased: error: %s\n' "$*" >&2
+    exit 1
+}
+
+trap '
+rc=$?
+printf "stow-goreleased: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
+printf "command: %s\n" "$BASH_COMMAND" >&2
+exit "$rc"
+' ERR
+
+archive=${1:-}
+
+[ -n "$archive" ] || die "missing archive argument"
+[ -f "$archive" ] || die "archive not found: $archive"
+
+command -v tar  >/dev/null 2>&1 || die "tar not found"
+command -v stow >/dev/null 2>&1 || die "stow not found"
+command -v ln   >/dev/null 2>&1 || die "ln not found"
+
+opt="${HOME}/.local/opt"
+
+pkg_dir=$(
+    python3 - <<'PY' "$archive"
+import sys, tarfile
+with tarfile.open(sys.argv[1]) as t:
+    print(t.getnames()[0].split('/')[0])
+PY
+)
+
+[ -n "$pkg_dir" ] || die "unable to determine package directory"
+
+IFS=_ read -r name version os arch _ <<<"$pkg_dir"
+
+[ -n "${name:-}" ]    || die "unable to determine package name"
+[ -n "${version:-}" ] || die "unable to determine package version"
+[ -n "${os:-}" ]      || die "archive does not look like a GoReleaser package"
+
+versioned="${opt}/${name}-${version}"
+stowpkg="${opt}/${name}"
+
+mkdir -p "$opt"
+
+if [ -e "$versioned" ]; then
+    die "target already exists: $versioned"
+fi
+
+tar -xzf "$archive" -C "$opt"
+
+src="${opt}/${pkg_dir}"
+
+[ -d "$src" ] ||
+    die "expected extracted directory not found: $src"
+
+mv "$src" "$versioned"
+
+mkdir -p \
+    "${stowpkg}/bin" \
+    "${stowpkg}/share/man/man1" \
+    "${stowpkg}/share/bash-completion/completions" \
+    "${stowpkg}/share/zsh/site-functions" \
+    "${stowpkg}/share/fish/vendor_completions.d"
+
+find "$versioned" -maxdepth 1 -type f -executable -print0 |
+while IFS= read -r -d '' exe; do
+    ln -snrf "$exe" \
+        "${stowpkg}/bin/$(basename "$exe")"
+done
+
+if [ -d "$versioned/manpages" ]; then
+    find "$versioned/manpages" -type f -name '*.1.gz' -print0 |
+    while IFS= read -r -d '' man; do
+        ln -snrf "$man" \
+            "${stowpkg}/share/man/man1/$(basename "$man")"
+    done
+fi
+
+if [ -d "$versioned/completions" ]; then
+    find "$versioned/completions" -type f -name '*.bash' -print0 |
+    while IFS= read -r -d '' f; do
+        base=$(basename "$f" .bash)
+        ln -snrf "$f" \
+            "${stowpkg}/share/bash-completion/completions/$base"
+    done
+
+    find "$versioned/completions" -type f -name '*.zsh' -print0 |
+    while IFS= read -r -d '' f; do
+        base=$(basename "$f" .zsh)
+        ln -snrf "$f" \
+            "${stowpkg}/share/zsh/site-functions/_$base"
+    done
+
+    find "$versioned/completions" -type f -name '*.fish' -print0 |
+    while IFS= read -r -d '' f; do
+        ln -snrf "$f" \
+            "${stowpkg}/share/fish/vendor_completions.d/$(basename "$f")"
+    done
+fi
+
+(
+    cd "$opt"
+    stow -R "$name"
+)
+
+printf 'installed %s %s\n' "$name" "$version"
