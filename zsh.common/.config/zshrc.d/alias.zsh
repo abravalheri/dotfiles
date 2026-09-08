@@ -19,7 +19,9 @@ elif command -v xsel &>/dev/null; then
   alias xpaste='xsel --clipboard --output'
 fi
 
-alias aj='autojump'
+if command -v autojump &>/dev/null; then
+  alias aj='autojump'
+fi
 alias mx='emacsclient -na ""'
 alias em='emacsclient -cna ""'
 alias e='emacsclient -ta emacs'
