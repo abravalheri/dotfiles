@@ -76,7 +76,16 @@ Plug 'tpope/vim-unimpaired'            | " better navigation
 Plug 'andrewradev/linediff.vim'        | " allow diff of 2 selections
 Plug 'Chiel92/vim-autoformat'          | " code autoformat ftw!
 Plug 'chrisbra/recover.vim'            | " show a diff, whenever recovering a buffer
-Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files
+Plug 'ludovicchabant/vim-gutentags'    | " automatically manages tag files {{{
+  " gutentags needs a modern, recursive ctags (Universal/Exuberant Ctags).
+  " Probe the implementation rather than mere presence: macOS's BSD ctags is
+  " executable but not compatible. Disable instead of spawning failing jobs.
+  if !executable('ctags')
+    let g:gutentags_enabled = 0
+  elseif system('ctags --version') !~# 'Universal Ctags\|Exuberant Ctags'
+    let g:gutentags_enabled = 0
+  endif
+" }}}
 Plug 'michaeljsmith/vim-indent-object' | " extra text object: vii, vaI
 Plug 'nelstrom/vim-visual-star-search'
 Plug 'padde/jump.vim'                  | " integrate autojump to vim {{{

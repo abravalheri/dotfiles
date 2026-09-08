@@ -1,9 +1,9 @@
 # fdfind
 # ripgrep
-autojump
+zoxide
 build-essential
 curl
-exuberant-ctags
+universal-ctags
 fonts-firacode
 fzy
 git

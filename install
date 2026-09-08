@@ -6,7 +6,7 @@ print-usage() {
   echo -e "OPTIONS\n"
   echo -e "\t--packages"
   echo -e "\t    Install the bundles' user-level packages (*.uvx, *.pipx,"
-  echo -e "\t    *.pip, *.gem)."
+  echo -e "\t    *.pip, *.gem, *.pixi)."
   echo -e "\t--system-packages"
   echo -e "\t    Install the bundles' system-level packages (*.brew, *.apt,"
   echo -e "\t    *.pacman, *.trizen). May use sudo. Pass both flags for a"
@@ -25,7 +25,7 @@ print-usage() {
   echo -e "\t    An existing package-list file whose entries are installed"
   echo -e "\t    directly (see ARGUMENTS below)."
   echo -e "ARGUMENTS\n\t<package-file>"
-  echo -e "\t    One of *.uvx, *.pipx, *.pip, *.gem, *.brew, *.apt, *.pacman,"
+  echo -e "\t    One of *.uvx, *.pipx, *.pip, *.gem, *.pixi, *.brew, *.apt, *.pacman,"
   echo -e "\t    *.trizen. The tier is inferred from the extension: *.brew,"
   echo -e "\t    *.apt, *.pacman and *.trizen are system-level; the rest are"
   echo -e "\t    user-level."
@@ -65,7 +65,7 @@ for arg in "${args[@]}"; do
     @*) bundles+=("$arg") ;;
     *)
       case "$arg" in
-        *.uvx|*.pipx|*.pip|*.gem|*.brew|*.apt|*.pacman|*.trizen)
+        *.uvx|*.pipx|*.pip|*.gem|*.pixi|*.brew|*.apt|*.pacman|*.trizen)
           if [ -f "$arg" ]; then
             pkg_files+=("$arg")
           else
@@ -212,6 +212,18 @@ install-packages() {
       export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
       { set +x;
         gem install --user-install "${pkgs[@]}";
+      }
+    fi
+  fi
+
+  # pixi (conda-forge): user-local installs, no system mutation.
+  if command-exists pixi; then
+    pkgs=()
+    (( PKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.pixi' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.pixi' "${files[@]}"))
+    if (( ${#pkgs[@]} )); then
+      { set +x;
+        pixi global install "${pkgs[@]}";
       }
     fi
   fi

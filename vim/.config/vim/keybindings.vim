@@ -92,7 +92,11 @@ endif
 " Pasting: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " toggle auto-indenting for code paste
-set pastetoggle=<f6>
+if !has('nvim')
+  " 'pastetoggle' was removed in Neovim, where paste mode is handled
+  " automatically via bracketed paste. Keep it for plain Vim.
+  set pastetoggle=<F6>
+endif
 " re-select pasted lines (would be nnoremap gp `[v`], but the following map is
 " more powerful -- https://vim.fandom.com/wiki/Selecting_your_pasted_text)
 nnoremap <expr> gp "`[" . strpart(getregtype(), 0, 1) . "`]"
