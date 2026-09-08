@@ -98,6 +98,7 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('nvim')
   Plug 'alerque/vim-commonmark', {'do': 'make'}
+  Plug 'kaarmu/typst.vim'
 endif
 
 Plug 'aklt/plantuml-syntax'
