@@ -10,11 +10,11 @@ endif
 ZSHRCD := ${XDG_CONFIG_HOME}/zshrc.d
 AUTOLOAD := ${ZSHRCD}/autoloaded
 
-ZDOT_FLAGS := -maxdepth 1 \( -not -type d \) -and \( -iname ".pathrc" -or -iname "*.zsh" -or -iname ".zsh*" \)
+ZDOT_FLAGS := -maxdepth 1 \( ! -type d \) -a \( -name ".pathrc" -o -name "*.zsh" -o -name ".zsh*" \)
 
-AUTOLOAD_FILES := $(shell find -L ${AUTOLOAD} -not -iname ".*" -not -iname "*.zwc" -not -type d)
-ZDOT_FILES := $(shell find -L ${ZDOTDIR} -maxdepth 1 \( -not -type d \) -and \( -iname ".pathrc" -or -iname ".zsh*" \) -not -iname ".zsh_history" -not -iname ".*.zwc")
-ZSH_FILES := $(shell find -L ${ZSHRCD} ${ZDOTDIR} -maxdepth 1 -iname "*.zsh" -not -type d)
+AUTOLOAD_FILES := $(shell find -L ${AUTOLOAD} ! -name ".*" ! -name "*.zwc" ! -type d)
+ZDOT_FILES := $(shell find -L ${ZDOTDIR} -maxdepth 1 \( ! -type d \) -a \( -name ".pathrc" -o -name ".zsh*" \) ! -name ".zsh_history" ! -name ".*.zwc")
+ZSH_FILES := $(shell find -L ${ZSHRCD} ${ZDOTDIR} -maxdepth 1 -name "*.zsh" ! -type d)
 SRC_FILES:= ${AUTOLOAD_FILES} ${ZDOT_FILES} ${ZSH_FILES}
 TARGET := $(addsuffix .zwc,${SRC_FILES})
 
@@ -33,11 +33,11 @@ ${TARGET}: %.zwc: %
 
 clean:
 	rm -rf ${TARGET} "${XDG_CACHE_HOME}/zsh/"
-	find -L . -iname "*.zwc" -delete
+	find -L . -name "*.zwc" -delete
 ifdef ZSH_USES_XDG
-	find -L ${ZDOTDIR} -iname "*.zwc" -delete
+	find -L ${ZDOTDIR} -name "*.zwc" -delete
 endif
-	find -L ${ZSHRCD} -iname "*.zwc" -delete
+	find -L ${ZSHRCD} -name "*.zwc" -delete
 
 watch:
-	find ~/.dotfiles -iname "*.zsh" -or -iname ".*rc" | entr -d ${MAKE} -C ~/.dotfiles
+	find ~/.dotfiles -name "*.zsh" -o -name ".*rc" | entr -d ${MAKE} -C ~/.dotfiles
