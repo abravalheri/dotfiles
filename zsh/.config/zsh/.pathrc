@@ -1,8 +1,26 @@
 # vim: set ft=zsh foldmethod=marker :
 
-typeset -U path fpath  # Array of unique elements
-path=($HOME/.local/bin $path)
-fpath=($XDG_CONFIG_HOME/zshrc.d/autoloaded $fpath)
-# $(f)path and $(F)PATH are different (but bound/linked) in ZSH
-export -U PATH FPATH
-# -U avoids repetition
+# On macOS, merge the system PATH (/etc/paths and /etc/paths.d/*) via
+# path_helper so directories registered by Homebrew and other installers are
+# found even though the global rcs are disabled by no_global_rcs.
+if [ -x /usr/libexec/path_helper ]; then
+  eval "$(/usr/libexec/path_helper -s)"
+fi
+
+# Give $HOME/.local/bin top priority, adding it exactly once so repeated
+# sourcing never accumulates duplicate copies.
+case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
+if [ -n "${ZSH_VERSION:-}" ]; then
+  # zsh: hoist to the front, keep the bound path/fpath arrays unique, and add
+  # the autoload dir to FPATH.
+  typeset -U path fpath
+  PATH="$HOME/.local/bin:$PATH"
+  FPATH="$XDG_CONFIG_HOME/zshrc.d/autoloaded:$FPATH"
+  export -U PATH FPATH
+else
+  export PATH
+fi
