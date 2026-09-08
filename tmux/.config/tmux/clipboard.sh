@@ -26,32 +26,38 @@ set-clipboard-bindings () {
     line="send -X $line"
   fi
 
-  local copy_script="xclip -i -sel p -f | xclip -i -sel c "
-  local paste_script="xclip -o | tmux load-buffer - ; tmux paste-buffer"
-
-  if uname | grep -qi Linux && command-exists xclip; then
-    # Select
-    eval "tmux unbind $copy_mode v"
-    eval "tmux unbind $copy_mode V"
-    eval "tmux unbind $copy_mode C-v"
-    eval "tmux bind   $copy_mode v   $sel"
-    eval "tmux bind   $copy_mode V   $line"
-    eval "tmux bind   $copy_mode C-v $rect"
-
-    # Copy "default tmux"
-    eval "tmux unbind $copy_mode Enter"
-    eval "tmux bind   $copy_mode Enter $copy '$copy_script'"
-    # Copy vim-like
-    eval "tmux unbind $copy_mode y"
-    eval "tmux bind   $copy_mode y     $copy '$copy_script'"
-
-    # Paste "default tmux"
-    eval "tmux unbind ]"
-    eval "tmux bind   ] run '$paste_script'"
-    # Paste vim-like
-    eval "tmux unbind p"
-    eval "tmux bind   p run '$paste_script'"
+  local copy_script paste_script
+  if uname | grep -qi Darwin && command-exists pbcopy; then
+    copy_script="pbcopy"
+    paste_script="pbpaste | tmux load-buffer - ; tmux paste-buffer"
+  elif uname | grep -qi Linux && command-exists xclip; then
+    copy_script="xclip -i -sel p -f | xclip -i -sel c "
+    paste_script="xclip -o | tmux load-buffer - ; tmux paste-buffer"
+  else
+    return 0  # No clipboard integration available on this system
   fi
+
+  # Select
+  eval "tmux unbind $copy_mode v"
+  eval "tmux unbind $copy_mode V"
+  eval "tmux unbind $copy_mode C-v"
+  eval "tmux bind   $copy_mode v   $sel"
+  eval "tmux bind   $copy_mode V   $line"
+  eval "tmux bind   $copy_mode C-v $rect"
+
+  # Copy "default tmux"
+  eval "tmux unbind $copy_mode Enter"
+  eval "tmux bind   $copy_mode Enter $copy '$copy_script'"
+  # Copy vim-like
+  eval "tmux unbind $copy_mode y"
+  eval "tmux bind   $copy_mode y     $copy '$copy_script'"
+
+  # Paste "default tmux"
+  eval "tmux unbind ]"
+  eval "tmux bind   ] run '$paste_script'"
+  # Paste vim-like
+  eval "tmux unbind p"
+  eval "tmux bind   p run '$paste_script'"
 }
 
 set-clipboard-bindings

@@ -1,7 +1,18 @@
 #!/usr/bin/env zsh
 # vim: set foldmethod=marker :
 
-alias clipboard='xclip -sel clip'
+# Cross-platform clipboard: pbcopy/pbpaste on macOS, xclip/xsel on Linux.
+if [[ "$OSTYPE" == darwin* ]] && command -v pbcopy &>/dev/null; then
+  alias clipboard='pbcopy'
+  alias pasteboard='pbpaste'
+elif command -v xclip &>/dev/null; then
+  alias clipboard='xclip -selection clipboard'
+  alias pasteboard='xclip -o -selection clipboard'
+elif command -v xsel &>/dev/null; then
+  alias clipboard='xsel --clipboard --input'
+  alias pasteboard='xsel --clipboard --output'
+fi
+
 alias aj='autojump'
 alias mx='emacsclient -na ""'
 alias em='emacsclient -cna ""'
