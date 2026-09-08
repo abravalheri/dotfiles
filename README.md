@@ -27,11 +27,16 @@ The `@default` bundle installs only the editor-serving tools (`vim-vint`,
 `@python-dev` bundle (`ruff`, which supersedes `black`, `flake8` and `isort`;
 `mypy`; plus `pylint`, `tox`). The generic, mostly
 language-agnostic tools (for example `gitlint`, `pre-commit`, `proselint`,
-`thefuck`, `tmuxp`) are kept in `@extras`. Both bundles are opt-in:
+`thefuck`, `tmuxp`) are kept in `@extras`. Both bundles are opt-in. Install the
+bundles' layers and their user-level packages together with:
 
 ```bash
-./install @python-dev @extras
+./install --packages @python-dev @extras
 ```
+
+Only dotfiles are installed by default: a bundle's package lists are not
+installed unless a package flag or an explicit package-list file is given
+(see *Installing packages* below).
 
 ## How it works?
 The dotfiles in this repository are organized using a layered approach.
@@ -95,6 +100,44 @@ An example of how a bundle can be organized can be found bellow:
 └── finish.sh
 ```
 
+## Installing packages (opt-in)
+
+Package installation is opt-in so that `./install <bundle>` only stows
+dotfiles by default. There are two ways to enable it.
+
+Flags enable the bundles' own package lists:
+
+- `--packages` installs the user-level tier (`*.uvx`, `*.pipx`, `*.pip`,
+  `*.gem`).
+- `--system-packages` installs the system tier (`*.brew`, `*.apt`, `*.pacman`,
+  `*.trizen`), which may use `sudo` for apt/pacman.
+- `--packages-only` runs only the package section, skipping submodules,
+  `bootstrap.sh`, layer stow, `make pre-compile` and `finish.sh`. It implies
+  `--packages`.
+
+```bash
+./install --packages @minimal @python-dev @extras
+./install --packages --system-packages @default @full
+./install --packages-only @python-dev
+```
+
+Passing one or more package-list files installs exactly those entries,
+regardless of the flags. The tier is inferred from the extension: `*.uvx`,
+`*.pipx`, `*.pip` and `*.gem` are user-level; `*.brew`, `*.apt`, `*.pacman`
+and `*.trizen` are system-level. A file argument enables only itself, not the
+bundles' own package lists.
+
+```bash
+./install @minimal @python-dev/packages.uvx
+./install --packages @minimal @extras/packages.pipx
+./install --packages-only @extras/packages.pipx
+```
+
+`SKIP_PACKAGES=1` skips the whole package section (explicit files included);
+`SKIP_SYSTEM_PACKAGES=1` skips only the system tier, including system-tier
+files. `--system-packages` without `--packages` installs the system tier alone;
+the two tiers are independent.
+
 ## Bundle-based installation
 The process of installing a bundle can be summarized in 5 steps:
 
@@ -103,6 +146,10 @@ The process of installing a bundle can be summarized in 5 steps:
 3. Pre-compile ZSH scripts (`make pre-compile`)
 4. Install packages (order: `*.brew`, `*.apt` or `*.pacman` + `*.trizen*`, `*.pipx`, `*.uvx`, `*.pip`, `*.gem`)
 5. Run `finish.sh` scripts
+
+Step 4 (packages) only runs when a package flag (`--packages`,
+`--system-packages`) or an explicit package-list file is given, as described
+in *Installing packages* above.
 
 For all the steps, the installation script looks recursively for files and
 expands symbolic links.

@@ -2,16 +2,35 @@
 # Validation/Usage
 print-usage() {
   echo -e "NAME\n\t$0 - install dotfiles"
-  echo -e "SYNOPSIS\n\t$0 [--help] (<bundle> | <layer>) [<bundle>...] [<layer>...]\n"
+  echo -e "SYNOPSIS\n\t$0 [OPTIONS] (<bundle> | <layer> | <package-file>) [<bundle>...] [<layer>...] [<package-file>...]\n"
   echo -e "OPTIONS\n"
+  echo -e "\t--packages"
+  echo -e "\t    Install the bundles' user-level packages (*.uvx, *.pipx,"
+  echo -e "\t    *.pip, *.gem)."
+  echo -e "\t--system-packages"
+  echo -e "\t    Install the bundles' system-level packages (*.brew, *.apt,"
+  echo -e "\t    *.pacman, *.trizen). May use sudo. Pass both flags for a"
+  echo -e "\t    full install."
+  echo -e "\t--packages-only"
+  echo -e "\t    Run only the package section (skips submodules, bootstrap.sh,"
+  echo -e "\t    layer stow, make pre-compile and finish.sh). Implies"
+  echo -e "\t    --packages."
   echo -e "\t<layer>..."
   echo -e "\t    Folders to be stowed to ~ (not starting with '@')."
   echo -e "\t<bundle>..."
   echo -e "\t    Bundles to be installed (starting with '@')."
   echo -e "\t    Bundles contain instructions to install more than one layer and"
   echo -e "\t    may install OS packages/programs."
-  echo -e "EXAMPLE\n\t$0 @minimal @wsl ptpython\n"
-  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES, SKIP_UPDATE and VERBOSE "
+  echo -e "\t<package-file>..."
+  echo -e "\t    An existing package-list file whose entries are installed"
+  echo -e "\t    directly (see ARGUMENTS below)."
+  echo -e "ARGUMENTS\n\t<package-file>"
+  echo -e "\t    One of *.uvx, *.pipx, *.pip, *.gem, *.brew, *.apt, *.pacman,"
+  echo -e "\t    *.trizen. The tier is inferred from the extension: *.brew,"
+  echo -e "\t    *.apt, *.pacman and *.trizen are system-level; the rest are"
+  echo -e "\t    user-level."
+  echo -e "EXAMPLES\n\t$0 @minimal @wsl ptpython\n\t$0 --packages @minimal @python-dev\n\t$0 --packages-only @extras/packages.pipx\n"
+  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES, SKIP_SYSTEM_PACKAGES, SKIP_UPDATE "
   echo -e  "can be used to control the installation.\n"
 }
 
@@ -31,8 +50,33 @@ fi
 # Setup vars
 DIR=$(pwd)
 args=($@)
-bundles=($({ IFS=$'\n'; echo "${args[*]}"; } | grep '@'))
-extra_layers=($({ IFS=$'\n'; echo "${args[*]}"; } | grep -v '@'))
+PKG=0
+SYSPKG=0
+PACKAGES_ONLY=0
+bundles=()
+extra_layers=()
+pkg_files=()
+
+for arg in "${args[@]}"; do
+  case "$arg" in
+    --packages) PKG=1 ;;
+    --system-packages) SYSPKG=1 ;;
+    --packages-only) PACKAGES_ONLY=1; PKG=1 ;;
+    @*) bundles+=("$arg") ;;
+    *)
+      case "$arg" in
+        *.uvx|*.pipx|*.pip|*.gem|*.brew|*.apt|*.pacman|*.trizen)
+          if [ -f "$arg" ]; then
+            pkg_files+=("$arg")
+          else
+            extra_layers+=("$arg")
+          fi
+          ;;
+        *) extra_layers+=("$arg") ;;
+      esac
+      ;;
+  esac
+done
 
 cd "$(dirname "${BASH_SOURCE[0]}")" || {
   echo "Unable to switch to ${BASH_SOURCE[0]}"
@@ -48,73 +92,63 @@ for lib in $BASE_DIR/+lib/*.sh; do
   source "$lib"
 done
 
-log "Cleaning zsh cache"
-make clean
+install-packages() {
+  # Sources are bundle dirs (whose package lists are gated by the flags) and/or
+  # explicit package-list files (installed regardless of the flags). The tier
+  # is inferred from the extension: system for *.brew/*.apt/*.pacman/*.trizen,
+  # user otherwise. SKIP_PACKAGES is handled by the caller.
+  local -a bundles files pkgs
+  bundles=()
+  files=()
+  local arg
+  for arg in "$@"; do
+    if [ -d "$arg" ]; then bundles+=("$arg"); else files+=("$arg"); fi
+  done
 
-if [ -z "${SKIP_UPDATE+x}" ]; then
-  log "Updating submodules ..."
-  { set +x;
-    git submodule update --init --recursive;
-  }
-fi
-
-log "Bootstraping installation of bundles ..."
-log "   - ${bundles[@]}"
-bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
-for script in "${bootstrap_scripts[@]}"; do
-  log "Running $script ..."
-  # shellcheck source=/dev/null
-  bash "$script"
-done
-
-log "Installing layers ..."
-layers=($(read-list '*.stow' "${bundles[@]}"))
-layers=("${layers[@]}" "${extra_layers[@]}")
-stow_cmd="${VERBOSE+"stow -v -R"}"
-stow_cmd="${stow_cmd:-"stow -R"}"
-{ set +x;
-  $stow_cmd "${layers[@]}";
-}
-
-log "Compile zsh files ..."
-make pre-compile
-
-if [ -z "${SKIP_PACKAGES+x}" ]; then
   log "Installing packages ..."
-  # SKIP_PACKAGES is not set
-  brew_pkgs=($(read-list '*.brew' "${bundles[@]}"))
-  if (( ${#brew_pkgs[@]} )); then
-    bootstrap-brew
-    { set +x;
-      brew install "${brew_pkgs[@]}";
-    }
-  fi
 
+  # ---- system tier ----
   if [ -z "${SKIP_SYSTEM_PACKAGES+x}" ]; then
+    pkgs=()
+    (( SYSPKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.brew' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.brew' "${files[@]}"))
+    if (( ${#pkgs[@]} )); then
+      bootstrap-brew
+      { set +x;
+        brew install "${pkgs[@]}";
+      }
+    fi
+
     if command-exists apt-get; then
-      apt_pkgs=($(read-list '*.apt' "${bundles[@]}"))
-      if (( ${#apt_pkgs[@]} )); then
+      pkgs=()
+      (( SYSPKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.apt' "${bundles[@]}"))
+      (( ${#files[@]} )) && pkgs+=($(read-list '*.apt' "${files[@]}"))
+      if (( ${#pkgs[@]} )); then
         { set +x;
           sudo apt-get update;
-          sudo apt-get install "${apt_pkgs[@]}";
+          sudo apt-get install "${pkgs[@]}";
         }
       fi
     fi
 
     if command-exists pacman; then
-      pacman_pkgs=($(read-list '*.packman' "${bundles[@]}"))
-      if (( ${#pacman_pkgs[@]} )); then
+      pkgs=()
+      (( SYSPKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.pacman' "${bundles[@]}"))
+      (( ${#files[@]} )) && pkgs+=($(read-list '*.pacman' "${files[@]}"))
+      if (( ${#pkgs[@]} )); then
         { set +x;
           sudo pacman -Syu;
-          sudo pacman -S "${pacman_pkgs[@]}";
+          sudo pacman -S "${pkgs[@]}";
         }
       fi
 
-      trizen_pkgs=($(read-list '*.trizen' "${bundles[@]}"))
-      if (( ${#trizen_pkgs[@]} )); then
+      pkgs=()
+      (( SYSPKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.trizen' "${bundles[@]}"))
+      (( ${#files[@]} )) && pkgs+=($(read-list '*.trizen' "${files[@]}"))
+      if (( ${#pkgs[@]} )); then
         bootstrap-trizen
         { set +x;
-          trizen -S "${trizen_pkgs[@]}";
+          trizen -S "${pkgs[@]}";
         }
       fi
     fi
@@ -122,17 +156,30 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
     log "Skipping installation of packages at system level ..."
   fi
 
+  # ---- user tier ----
   if command-exists python3; then
-    pip_pkgs=($(read-list '*.pip' "${bundles[@]}"))
-    if (( ${#pip_pkgs[@]} )); then
+    pkgs=()
+    (( PKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.pip' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.pip' "${files[@]}"))
+    if (( ${#pkgs[@]} )); then
       { set +x;
-        echo "python3 -m pip install --user -U ${pip_pkgs[@]}";
-        python3 -m pip install --user -U "${pip_pkgs[@]}";
+        echo "python3 -m pip install --user -U ${pkgs[@]}";
+        python3 -m pip install --user -U "${pkgs[@]}";
       }
     fi
-    uvx_pkgs=($(read-list '*.uvx' "${bundles[@]}"))
-    pipx_pkgs=($(read-list '*.pipx' "${bundles[@]}"))
-    pipx_fallback=0
+
+    local -a uvx_pkgs pipx_pkgs
+    pkgs=()
+    (( PKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.uvx' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.uvx' "${files[@]}"))
+    uvx_pkgs=("${pkgs[@]}")
+
+    pkgs=()
+    (( PKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.pipx' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.pipx' "${files[@]}"))
+    pipx_pkgs=("${pkgs[@]}")
+
+    local pipx_fallback=0
     if (( ${#uvx_pkgs[@]} )); then
       bootstrap-uv
       if command-exists uv; then
@@ -158,25 +205,66 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
   fi
 
   if command-exists ruby; then
-    gem_pkgs=($(read-list '*.gem' "${bundles[@]}"))
-    if (( ${#gem_pkgs[@]} )); then
+    pkgs=()
+    (( PKG )) && (( ${#bundles[@]} )) && pkgs+=($(read-list '*.gem' "${bundles[@]}"))
+    (( ${#files[@]} )) && pkgs+=($(read-list '*.gem' "${files[@]}"))
+    if (( ${#pkgs[@]} )); then
       export PATH="$(ruby -r rubygems -e 'puts Gem.user_dir')/bin:$PATH"
       { set +x;
-        gem install --user-install "${gem_pkgs[@]}";
+        gem install --user-install "${pkgs[@]}";
       }
     fi
   fi
+}
+
+if (( ! PACKAGES_ONLY )); then
+  log "Cleaning zsh cache"
+  make clean
+
+  if [ -z "${SKIP_UPDATE+x}" ]; then
+    log "Updating submodules ..."
+    { set +x;
+      git submodule update --init --recursive;
+    }
+  fi
+
+  log "Bootstraping installation of bundles ..."
+  log "   - ${bundles[@]}"
+  bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
+  for script in "${bootstrap_scripts[@]}"; do
+    log "Running $script ..."
+    # shellcheck source=/dev/null
+    bash "$script"
+  done
+
+  log "Installing layers ..."
+  layers=($(read-list '*.stow' "${bundles[@]}"))
+  layers=("${layers[@]}" "${extra_layers[@]}")
+  stow_cmd="${VERBOSE+"stow -v -R"}"
+  stow_cmd="${stow_cmd:-"stow -R"}"
+  { set +x;
+    $stow_cmd "${layers[@]}";
+  }
+
+  log "Compile zsh files ..."
+  make pre-compile
+fi
+
+if [ -z "${SKIP_PACKAGES+x}" ]; then
+  install-packages "${bundles[@]}" "${pkg_files[@]}"
 else
   log "Skipping installation of packages ..."
 fi
 
-log "Finishing installation of bundles ..."
-finish_scripts=($(find-scripts 'finish.sh' "${bundles[@]}"))
-for script in "${finish_scripts[@]}"; do
-  log "Running $script ..."
-  # shellcheck source=/dev/null
-  bash "$script"
-done
+if (( ! PACKAGES_ONLY )); then
+  log "Finishing installation of bundles ..."
+  finish_scripts=($(find-scripts 'finish.sh' "${bundles[@]}"))
+  for script in "${finish_scripts[@]}"; do
+    log "Running $script ..."
+    # shellcheck source=/dev/null
+    bash "$script"
+  done
+fi
 
 exit 0
 
