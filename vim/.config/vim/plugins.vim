@@ -17,9 +17,27 @@ endif
 let s:vim_plug=s:autoload_dir . '/plug.vim'
 
 if empty(glob(s:vim_plug))
+  let s:plug_just_fetched = 1
   exec 'silent !mkdir -p ' . _config_base . '/+plugins'
   exec 'silent !curl -kfLo ' . s:vim_plug . ' --create-dirs ' .
     \ 'https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+endif
+
+if empty(glob(s:vim_plug))
+  " vim-plug could not be fetched (e.g. offline): write a minimal stub
+  " plug.vim so it resolves via autoload and the config below keeps loading
+  " without crashing; the stowed +plugins dir is still added to runtimepath.
+  call mkdir(fnamemodify(s:vim_plug, ':h'), 'p')
+  call writefile([
+        \ 'function! plug#begin(...) abort',
+        \ "  if a:0 && !empty(a:1) | execute 'set runtimepath+=' . fnameescape(a:1) | endif",
+        \ '  return v:true',
+        \ 'endfunction',
+        \ 'function! plug#end() abort | endfunction',
+        \ 'function! Plug(...) abort | endfunction',
+        \ ], s:vim_plug)
+elseif exists('s:plug_just_fetched') && s:plug_just_fetched
+  " First run with a freshly fetched vim-plug: finish the install on startup.
   augroup install_vim_plug
     autocmd!
     autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
@@ -97,7 +115,9 @@ Plug 'gregsexton/gitv', {'on': ['Gitv']}  | " Interactive Git Graph
 " Extra Syntax: {{{
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 if has('nvim')
-  Plug 'alerque/vim-commonmark', {'do': 'make'}
+  " The Rust build needs a Haskell-independent toolchain; skip the compiled
+  " step on hosts without cargo so `:PlugUpdate` does not fail on the hook.
+  Plug 'alerque/vim-commonmark', {'do': 'command -v cargo >/dev/null 2>&1 && make'}
   Plug 'kaarmu/typst.vim'
 endif
 
