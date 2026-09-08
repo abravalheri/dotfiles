@@ -31,7 +31,7 @@ __bootstrap() {
       }
     elif [[ -L "$file" ]]; then
       { set -v;
-        echo "  ** $(tput bold)$(tput setaf 3)UNLINK$(tput sgr0) $file ($(readlink -f "$file"))";
+        echo "  ** $(tput bold)$(tput setaf 3)UNLINK$(tput sgr0) $file ($(realpath "$file"))";
         unlink "$file";
       }
     fi

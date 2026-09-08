@@ -387,7 +387,8 @@ is_too_large() {
     local file="$1"
 
     local size
-    size=$(stat -c %s "$file" 2>/dev/null || echo 0)
+    # GNU uses -c %s, macOS BSD uses -f %z.
+    size=$(stat -c %s "$file" 2>/dev/null || stat -f %z "$file" 2>/dev/null || echo 0)
 
     (( size > MAX_SIZE_MB * 1024 * 1024 ))
 }
