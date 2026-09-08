@@ -3,19 +3,16 @@
 # Consider https://www.funtoo.org/Keychain in the future
 
 local SSH_ENV="$HOME/.ssh/environment"
+local AGENT_LIFETIME=3600
 
+# Probe the agent for real: ssh-add -l exits 2 only when there is no agent,
+# so a running-but-empty agent is not mistaken for a dead one.
 ssh-agent-running() {
-  (pgrep ssh-agent &>/dev/null) && (( ${+SSH_AUTH_SOCK} )) && [[ -e $SSH_AUTH_SOCK ]]
+  (( ${+SSH_AUTH_SOCK} )) || return 1
+  [[ -e $SSH_AUTH_SOCK ]] || return 1
+  ssh-add -l &>/dev/null
+  (( $? != 2 ))
 }
-
-# Really check if it is running:
-# __any_agent_running() {
-#   ssh-add -l &>/dev/null
-#   if [[ "$?" == 2 ]]; then  # No Agent running
-#     return 1
-#   fi
-#   return 0
-# }
 
 if ! ssh-agent-running; then
   if [[ -r "$SSH_ENV" ]]; then
@@ -23,9 +20,10 @@ if ! ssh-agent-running; then
   fi
 
   if ! ssh-agent-running; then  # Still cannot connect to agent
-    rm -rf "$SSH_ENV"
-    (umask 066; ssh-agent -s -t 3600 > "$SSH_ENV")
+    rm -f "$SSH_ENV"
+    (umask 066; ssh-agent -s -t "$AGENT_LIFETIME" > "$SSH_ENV")
     eval "$(< "$SSH_ENV")" >/dev/null
   fi
 fi
+
 echo -e "* $(tput setaf 6)ssh-agent$(tput sgr0) is running\n"
