@@ -5,12 +5,18 @@
 if [[ "$OSTYPE" == darwin* ]] && command -v pbcopy &>/dev/null; then
   alias clipboard='pbcopy'
   alias pasteboard='pbpaste'
+  alias xcopy='pbcopy'
+  alias xpaste='pbpaste'
 elif command -v xclip &>/dev/null; then
   alias clipboard='xclip -selection clipboard'
   alias pasteboard='xclip -o -selection clipboard'
+  alias xcopy='xclip -selection clipboard'
+  alias xpaste='xclip -o -selection clipboard'
 elif command -v xsel &>/dev/null; then
   alias clipboard='xsel --clipboard --input'
   alias pasteboard='xsel --clipboard --output'
+  alias xcopy='xsel --clipboard --input'
+  alias xpaste='xsel --clipboard --output'
 fi
 
 alias aj='autojump'
