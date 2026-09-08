@@ -1,0 +1,11 @@
+gitlint-core --with gitlint
+howdoi
+httpie
+pre-commit
+proselint
+rstcheck
+thefuck
+tldr
+tmuxp
+vint
+yamllint

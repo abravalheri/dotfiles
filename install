@@ -123,18 +123,36 @@ if [ -z "${SKIP_PACKAGES+x}" ]; then
   fi
 
   if command-exists python3; then
-    pipx_pkgs=($(read-list '*.pipx' "${bundles[@]}"))
-    if (( ${#pipx_pkgs[@]} )); then
-      { set +x;
-        bootstrap-pipx;
-        printf '%s\n' "${pipx_pkgs[@]}" | xargs -n1 pipx install
-      }
-    fi
     pip_pkgs=($(read-list '*.pip' "${bundles[@]}"))
     if (( ${#pip_pkgs[@]} )); then
       { set +x;
         echo "python3 -m pip install --user -U ${pip_pkgs[@]}";
         python3 -m pip install --user -U "${pip_pkgs[@]}";
+      }
+    fi
+    uvx_pkgs=($(read-list '*.uvx' "${bundles[@]}"))
+    pipx_pkgs=($(read-list '*.pipx' "${bundles[@]}"))
+    pipx_fallback=0
+    if (( ${#uvx_pkgs[@]} )); then
+      bootstrap-uv
+      if command-exists uv; then
+        { set +x;
+          while IFS= read -r pkg; do
+            uv tool install $pkg
+          done <<< "$(printf '%s\n' "${uvx_pkgs[@]}")"
+        }
+      else
+        log "uv not available; falling back to pipx ..."
+        pipx_fallback=1
+      fi
+    elif (( ${#pipx_pkgs[@]} )); then
+      log "No uvx packages; using pipx ..."
+      pipx_fallback=1
+    fi
+    if (( pipx_fallback )) && (( ${#pipx_pkgs[@]} )); then
+      { set +x;
+        bootstrap-pipx;
+        printf '%s\n' "${pipx_pkgs[@]}" | xargs -n1 pipx install
       }
     fi
   fi

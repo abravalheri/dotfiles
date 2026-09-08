@@ -1,14 +1,3 @@
-gitlint-core --with gitlint
-howdoi
-httpie
-pre-commit
-proselint
-rstcheck
-ruff
-thefuck
-tldr
-tmuxp
 vim-vint
-yamllint
 pyls
 pynvim

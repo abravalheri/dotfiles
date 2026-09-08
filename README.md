@@ -22,6 +22,17 @@ cd .dotfiles
 ./install --help
 ```
 
+The `@default` bundle installs only the editor-serving tools (`vim-vint`,
+`pyls`, `pynvim`) via uv. Python development tooling lives in the
+`@python-dev` bundle (`ruff`, which supersedes `black`, `flake8` and `isort`;
+`mypy`; plus `pylint`, `tox`). The generic, mostly
+language-agnostic tools (for example `gitlint`, `pre-commit`, `proselint`,
+`thefuck`, `tmuxp`) are kept in `@extras`. Both bundles are opt-in:
+
+```bash
+./install @python-dev @extras
+```
+
 ## How it works?
 The dotfiles in this repository are organized using a layered approach.
 Groups of configuration files (and sometimes scripts/functions) with the same
@@ -90,7 +101,7 @@ The process of installing a bundle can be summarized in 5 steps:
 1. Run `bootstrap.sh` scripts
 2. Stow listed layers (`*.stow`)
 3. Pre-compile ZSH scripts (`make pre-compile`)
-4. Install packages (order: `*.brew`, `*.apt` or `*.pacman` + `*.trizen*`, `*.pipx`, `*.gem`)
+4. Install packages (order: `*.brew`, `*.apt` or `*.pacman` + `*.trizen*`, `*.pipx`, `*.uvx`, `*.pip`, `*.gem`)
 5. Run `finish.sh` scripts
 
 For all the steps, the installation script looks recursively for files and
@@ -115,9 +126,15 @@ generate the list of layers to be installed.
 generated file `+local-layers.stow` and avoiding them to be commited in the
 repository).
 
-All the layer and package files (`*.stow`, `*``*.brew`, `*.apt` or `*.pacman` +
-`*.trizen*`, `*.pipx`, `*.gem`) are plain text files with one package name per
-line. Commented lines are allowed, by starting with a `#` char.
+All the layer and package files (`*.stow`, `*.brew`, `*.apt` or `*.pacman` +
+`*.trizen*`, `*.pipx`, `*.uvx`, `*.pip`, `*.gem`) are plain text files with one
+package name per line. Commented lines are allowed, by starting with a `#` char.
+Entries in `*.uvx` are installed with `uv tool install`; a leading `--with`
+clause is honoured (for example `gitlint-core --with gitlint`). `uv` is never
+installed automatically: if it is missing the installer prints the exact
+install command and asks for confirmation before running it. `*.pipx` is a
+fallback: uv is preferred when available, and the `*.pipx` list is used only if
+uv is not present or no `*.uvx` list exists.
 
 After the bootstrap script executes, the layers are stowed.
 Indeed, installing all the layers in a bundle can be done manually with
