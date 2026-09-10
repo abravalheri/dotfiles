@@ -24,3 +24,12 @@ if [ -n "${ZSH_VERSION:-}" ]; then
 else
   export PATH
 fi
+
+# Keep Go tooling state inside the ~/.local XDG scheme instead of ~/go.
+export GOPATH="$HOME/.local/go"
+
+# Make Go-installed binaries reachable; keeps them inside ~/.local/go.
+case ":$PATH:" in
+  *":$GOPATH/bin:"*) ;;
+  *) PATH="$GOPATH/bin:$PATH" ;;
+esac
