@@ -29,9 +29,11 @@ __bootstrap() {
         test -f "$bkp_file";
         rm "$file";
       }
-    elif [[ -L "$file" ]]; then
+    elif [[ -L "$file" ]] && [[ "$(readlink "$file")" != *".dotfiles"* ]]; then
+      # Real file (backed up above) or a foreign symlink: clear it so stow can
+      # take over. Symlinks managed by this repo are left for `stow -R`.
       { set -v;
-        echo "  ** $(tput bold)$(tput setaf 3)UNLINK$(tput sgr0) $file ($(realpath "$file"))";
+        echo "  ** $(tput bold)$(tput setaf 3)UNLINK$(tput sgr0) $file -> $(readlink "$file")";
         unlink "$file";
       }
     fi
