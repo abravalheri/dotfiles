@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 # vim: set foldmethod=marker :
 
-# scp but using rsync
-rsync --progress --exclude-from ~/.rsync.exclude -v -rc -e ssh "$@"
+# scp replacement using rsync, verifying every file by checksum
+rsync -avhPc --exclude-from ~/.rsync.exclude -e ssh "$@"

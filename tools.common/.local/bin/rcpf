@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# vim: set foldmethod=marker :
+
+# Fast rcp variant: rsync size+mtime quick check (no whole-file checksum).
+rsync -avhP --exclude-from ~/.rsync.exclude -e ssh "$@"
