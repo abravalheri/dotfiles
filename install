@@ -15,6 +15,8 @@ print-usage() {
   echo -e "\t    Run only the package section (skips submodules, bootstrap.sh,"
   echo -e "\t    layer stow, make pre-compile and finish.sh). Implies"
   echo -e "\t    --packages."
+  echo -e "\t--update-submodules"
+  echo -e "\t    Run 'git submodule update --init --recursive'. Off by default."
   echo -e "\t<layer>..."
   echo -e "\t    Folders to be stowed to ~ (not starting with '@')."
   echo -e "\t<bundle>..."
@@ -30,8 +32,10 @@ print-usage() {
   echo -e "\t    *.apt, *.pacman and *.trizen are system-level; the rest are"
   echo -e "\t    user-level."
   echo -e "EXAMPLES\n\t$0 @minimal @wsl ptpython\n\t$0 --packages @minimal @python-dev\n\t$0 --packages-only @extras/packages.pipx\n"
-  echo -en "NOTES\n\tEnv vars SKIP_PACKAGES, SKIP_SYSTEM_PACKAGES, SKIP_UPDATE "
-  echo -e  "can be used to control the installation.\n"
+  echo -en "NOTES\n\tPackages and submodules are opt-in (--packages,"
+  echo -e  " --system-packages, --update-submodules)."
+  echo -en "\tEnv vars SKIP_PACKAGES, SKIP_SYSTEM_PACKAGES, SKIP_UPDATE, "
+  echo -e  "UPDATE_SUBMODULES can be used to control the installation.\n"
 }
 
 if [[ "$*" == *--help* ]]; then
@@ -53,15 +57,18 @@ args=($@)
 PKG=0
 SYSPKG=0
 PACKAGES_ONLY=0
+SUBMOD=0
 bundles=()
 extra_layers=()
 pkg_files=()
+[ -n "${UPDATE_SUBMODULES+x}" ] && SUBMOD=1
 
 for arg in "${args[@]}"; do
   case "$arg" in
     --packages) PKG=1 ;;
     --system-packages) SYSPKG=1 ;;
     --packages-only) PACKAGES_ONLY=1; PKG=1 ;;
+    --update-submodules) SUBMOD=1 ;;
     @*) bundles+=("$arg") ;;
     *)
       case "$arg" in
@@ -104,6 +111,13 @@ install-packages() {
   for arg in "$@"; do
     if [ -d "$arg" ]; then bundles+=("$arg"); else files+=("$arg"); fi
   done
+
+  local attempt=0
+  (( ${#files[@]} )) && attempt=1
+  { (( ${#bundles[@]} )) && (( PKG || SYSPKG )); } && attempt=1
+  if (( ! attempt )); then
+    return 0
+  fi
 
   log "Installing packages ..."
 
@@ -233,25 +247,30 @@ if (( ! PACKAGES_ONLY )); then
   log "Cleaning zsh cache"
   make clean
 
-  if [ -z "${SKIP_UPDATE+x}" ]; then
+  if (( SUBMOD )) && [ -z "${SKIP_UPDATE+x}" ]; then
     log "Updating submodules ..."
     { set +x;
       git submodule update --init --recursive;
     }
   fi
 
-  log "Bootstraping installation of bundles ..."
-  log "   - ${bundles[@]}"
-  bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
-  for script in "${bootstrap_scripts[@]}"; do
-    log "Running $script ..."
-    # shellcheck source=/dev/null
-    bash "$script"
-  done
+  if (( ${#bundles[@]} )); then
+    log "Bootstraping installation of bundles ..."
+    log "   - ${bundles[@]}"
+    bootstrap_scripts=($(find-scripts 'bootstrap.sh' "${bundles[@]}"))
+    for script in "${bootstrap_scripts[@]}"; do
+      log "Running $script ..."
+      # shellcheck source=/dev/null
+      bash "$script"
+    done
+    layers=($(read-list '*.stow' "${bundles[@]}"))
+  else
+    log "No bundles; installing only the requested layers: ${extra_layers[@]}"
+    layers=()
+  fi
+  layers=("${layers[@]}" "${extra_layers[@]}")
 
   log "Installing layers ..."
-  layers=($(read-list '*.stow' "${bundles[@]}"))
-  layers=("${layers[@]}" "${extra_layers[@]}")
   stow_cmd="${VERBOSE+"stow -v -R"}"
   stow_cmd="${stow_cmd:-"stow -R"}"
   { set +x;
@@ -269,13 +288,15 @@ else
 fi
 
 if (( ! PACKAGES_ONLY )); then
-  log "Finishing installation of bundles ..."
-  finish_scripts=($(find-scripts 'finish.sh' "${bundles[@]}"))
-  for script in "${finish_scripts[@]}"; do
-    log "Running $script ..."
-    # shellcheck source=/dev/null
-    bash "$script"
-  done
+  if (( ${#bundles[@]} )); then
+    log "Finishing installation of bundles ..."
+    finish_scripts=($(find-scripts 'finish.sh' "${bundles[@]}"))
+    for script in "${finish_scripts[@]}"; do
+      log "Running $script ..."
+      # shellcheck source=/dev/null
+      bash "$script"
+    done
+  fi
 fi
 
 exit 0

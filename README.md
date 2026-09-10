@@ -138,6 +138,11 @@ bundles' own package lists.
 files. `--system-packages` without `--packages` installs the system tier alone;
 the two tiers are independent.
 
+Submodules are also opt-in: `git submodule update --init --recursive` runs
+only with `--update-submodules` (or `UPDATE_SUBMODULES=1`), and can be forced
+off with `SKIP_UPDATE=1`. A bare `./install` therefore neither updates
+submodules nor installs packages.
+
 ## Bundle-based installation
 The process of installing a bundle can be summarized in 5 steps:
 
