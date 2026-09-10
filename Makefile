@@ -33,11 +33,11 @@ ${TARGET}: %.zwc: %
 
 clean:
 	rm -rf ${TARGET} "${XDG_CACHE_HOME}/zsh/"
-	find -L . -name "*.zwc" -delete
+	find -L . -name "*.zwc" -exec rm -f {} +
 ifdef ZSH_USES_XDG
-	find -L ${ZDOTDIR} -name "*.zwc" -delete
+	find -L ${ZDOTDIR} -name "*.zwc" -exec rm -f {} +
 endif
-	find -L ${ZSHRCD} -name "*.zwc" -delete
+	find -L ${ZSHRCD} -name "*.zwc" -exec rm -f {} +
 
 watch:
 	find ~/.dotfiles -name "*.zsh" -o -name ".*rc" | entr -d ${MAKE} -C ~/.dotfiles
