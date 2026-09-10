@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+die() {
+    printf 'stow-uninstall: error: %s\n' "$*" >&2
+    exit 1
+}
+
+trap '
+rc=$?
+printf "stow-uninstall: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
+exit "$rc"
+' ERR
+
+opt="${HOME}/.local/opt"
+name=
+dry_run=0
+
+while (($#)); do
+    case "$1" in
+        --dry-run) dry_run=1; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) [ -z "$name" ] && name=$1 || die "unexpected extra argument: $1"; shift ;;
+    esac
+done
+[ -n "$name" ] || die "missing package name"
+command -v stow >/dev/null 2>&1 || die "stow not found"
+
+pkg="${opt}/${name}"
+
+# Config links (FHS etc/** -> ~/.config/**) are made directly, not via stow,
+# so they must be collected here. Target is <opt>/<name>-<ver>/etc/...
+config_links=()
+if [ -d "$HOME/.config" ]; then
+    while IFS= read -r -d '' l; do
+        tgt=$(readlink "$l")
+        [[ "$tgt" == "$opt/${name}-"[0-9]* ]] && config_links+=("$l")
+    done < <(find "$HOME/.config" -maxdepth 1 -type l -print0 2>/dev/null)
+fi
+
+# Stow package dir plus versioned dirs (only those starting with a digit after
+# the hyphen, so a sibling package like <name>-tools is never matched).
+versioned=()
+shopt -s nullglob
+for d in "$opt/${name}-"[0-9]*; do versioned+=("$d"); done
+shopt -u nullglob
+
+if [ ! -d "$pkg" ] && [ "${#versioned[@]}" -eq 0 ] && [ "${#config_links[@]}" -eq 0 ]; then
+    printf 'stow-uninstall: nothing installed for %s\n' "$name"
+    exit 0
+fi
+
+printf 'uninstalling %s\n' "$name"
+if [ -d "$pkg" ]; then
+    if (( dry_run )); then printf '  would run: stow -D %s\n' "$name"
+    else (cd "$opt" && stow -D "$name"); fi
+fi
+for l in "${config_links[@]}"; do
+    if (( dry_run )); then printf '  would remove config link: %s\n' "$l"
+    else rm "$l"; fi
+done
+for d in "$pkg" "${versioned[@]}"; do
+    if (( dry_run )); then printf '  would remove: %s\n' "$d"
+    else rm -rf "$d"; fi
+done
+(( dry_run )) || rmdir "$opt" 2>/dev/null || true
+
+printf 'done\n'

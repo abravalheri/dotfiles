@@ -1,0 +1,164 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+die() {
+    printf 'stow-install: error: %s\n' "$*" >&2
+    exit 1
+}
+
+inform() {  # heading, then detail lines
+    printf 'stow-install: error: %s\n' "$1" >&2
+    shift
+    for line in "$@"; do printf '  %s\n' "$line" >&2; done
+    exit 1
+}
+
+verify_checksum() {  # "$hash" "$file" -> 0 ok, 1 mismatch
+    local want=$1 file=$2
+    if command -v sha256sum >/dev/null 2>&1; then
+        printf '%s  %s\n' "$want" "$file" | sha256sum -c - >/dev/null 2>&1
+    elif command -v shasum >/dev/null 2>&1; then
+        printf '%s  %s\n' "$want" "$file" | shasum -a 256 -c - >/dev/null 2>&1
+    else
+        die "sha256sum or shasum required for checksum verification"
+    fi
+}
+
+# Best-effort discovery of a release checksum for a URL asset. Prints the hash
+# (for that exact basename) when a matching line is found in one of the common
+# locations, otherwise nothing. Uses the same origin, so it guards against a
+# tampered asset rather than a fully compromised release.
+auto_checksum() {  # "$url" "$basename" -> hash (or empty)
+    local url=$1 base=$2 dir hash c
+    local -a candidates
+    dir=${url%/*}
+    candidates=(
+        "$url.sha256"
+        "$url.sha256sum"
+        "$dir/checksums.txt"
+        "$dir/checksums.sha256"
+    )
+    for c in "${candidates[@]}"; do
+        out=$(curl -fsSL "$c" 2>/dev/null) || continue
+        hash=$(printf '%s' "$out" | awk -v b="$base" '
+            { for (i=2;i<=NF;i++){ f=$i; sub(/^\*/,"",f); if (f==b){ print $1; exit } } }')
+        if [ -n "$hash" ]; then printf '%s\n' "$hash"; return 0; fi
+    done
+    return 1
+}
+
+trap '
+rc=$?
+printf "stow-install: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
+exit "$rc"
+' ERR
+
+checksum=
+dry_run=0
+name=
+version=
+archive=
+
+while (($#)); do
+    case "$1" in
+        --dry-run)   dry_run=1; shift ;;
+        --name)      [ $# -ge 2 ] || die "--name requires a value"; name=$2; shift 2 ;;
+        --name=*)    name=${1#--name=}; shift ;;
+        --version)   [ $# -ge 2 ] || die "--version requires a value"; version=$2; shift 2 ;;
+        --version=*) version=${1#--version=}; shift ;;
+        --checksum)  [ $# -ge 2 ] || die "--checksum requires a value"; checksum=$2; shift 2 ;;
+        --checksum=*) checksum=${1#--checksum=}; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) archive=$1; shift ;;
+    esac
+done
+
+[ -n "$archive" ] || die "missing archive argument"
+command -v tar  >/dev/null 2>&1 || die "tar not found"
+command -v stow-goreleased >/dev/null 2>&1 || die "stow-goreleased not found on PATH"
+command -v stow-single-bin >/dev/null 2>&1 || die "stow-single-bin not found on PATH"
+command -v stow-fhs >/dev/null 2>&1 || die "stow-fhs not found on PATH"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+prepare_tar() {  # "$archive" -> tar path readable by tar (fails if undecodable)
+    case "$1" in
+        *.tar.zst|*.tzst)
+            if command -v zstd >/dev/null 2>&1; then
+                zstd -q -d -c "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            elif command -v python3 >/dev/null 2>&1 && python3 -c 'import zstandard' >/dev/null 2>&1; then
+                python3 -c 'import sys,zstandard
+sys.stdout.buffer.write(zstandard.ZstdDecompressor().stream_reader(open(sys.argv[1],"rb")).read())' "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            else
+                return 1
+            fi
+            printf '%s\n' "$work/prepared.tar"
+            ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+
+# Resolve the archive locally (URL or path); checksum verified before routing.
+if [[ "$archive" =~ ^https?:// ]]; then
+    command -v curl >/dev/null 2>&1 || die "a URL archive requires curl"
+    basename_archive=$(basename "$archive")
+    local_archive="$work/$basename_archive"
+    curl -fsSL "$archive" -o "$local_archive" || die "download failed: $archive"
+    if [ -n "$checksum" ]; then
+        verify_checksum "$checksum" "$local_archive" || die "checksum mismatch for $archive"
+        printf 'stow-install: checksum verified\n'
+    elif auto=$(auto_checksum "$archive" "$basename_archive"); then
+        verify_checksum "$auto" "$local_archive" || die "checksum mismatch for $archive (release checksum)"
+        printf 'stow-install: checksum verified from release\n'
+    fi
+else
+    [ -f "$archive" ] || die "archive not found: $archive"
+    local_archive="$archive"
+fi
+
+# --- Layout detection ---
+readable=$(prepare_tar "$local_archive") || die "cannot decode '$archive': need zstd or Python zstandard"
+if ! tar -tf "$readable" >/dev/null 2>&1; then
+    die "cannot read '$archive' as a tar archive"
+fi
+
+tops=()
+while IFS= read -r top; do
+    [ -n "$top" ] && tops+=("$top")
+done < <(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -F/ '{print $1}' | sort -u)
+first=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | sed -n '1p')
+
+# A single top-level directory named name_version_os_arch is GoReleaser; a
+# tar holding a usr/ tree is FHS; a tar holding an executable is single-bin.
+nfiles=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk '/\/$/ {next} {n++} END{print n+0}')
+has_exec=$(tar -tvf "$readable" 2>/dev/null | awk 'substr($1,1,1)=="-" && $1 ~ /x/ {found=1} END{print found+0}')
+has_usr=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -v single="${#tops[@]}" '
+    { p=$0
+      if (single==1 && index(p,"/")) { sub(/^[^/]*\//,"",p) }
+      if (p ~ /^usr\//) { f=1 } }
+    END{ print f+0 }')
+
+installer=stow-single-bin
+top=${first%%/*}
+if [ "${#tops[@]}" -eq 1 ] && [[ "$first" == */ && "$top" =~ ^[^_]+_[0-9]+\.[0-9]+\.[0-9]+_[^_]+_[^_]+$ ]]; then
+    installer=stow-goreleased
+elif [ "$has_usr" -eq 1 ]; then
+    installer=stow-fhs
+elif [ "$nfiles" -eq 0 ] || [ "$has_exec" -eq 0 ]; then
+    inform "unrecognised archive layout" \
+        "archive: $archive" \
+        "top-level entries: ${tops[*]:-none}" \
+        "regular files: $nfiles, executables: $has_exec" \
+        "expected a GoReleaser archive, an FHS usr/ tree, or a single-executable tarball"
+fi
+
+cmd=("$installer")
+(( dry_run )) && cmd+=(--dry-run)
+if [ "$installer" = stow-single-bin ] || [ "$installer" = stow-fhs ]; then
+    [ -n "$name" ]    && cmd+=(--name "$name")
+    [ -n "$version" ] && cmd+=(--version "$version")
+fi
+cmd+=("$local_archive")
+
+"${cmd[@]}"

@@ -9,96 +9,137 @@ die() {
 trap '
 rc=$?
 printf "stow-goreleased: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
-printf "command: %s\n" "$BASH_COMMAND" >&2
 exit "$rc"
 ' ERR
 
-archive=${1:-}
+opt="${HOME}/.local/opt"
+
+# Portable helpers: no GNU ln -r, no find -printf/-quit.
+rel_symlink() {
+    local src=$1 link=$2 dir up="" i
+    local src_rel=${src#"$opt"/}
+    local link_rel
+    link_rel=$(dirname "$link"); link_rel=${link_rel#"$opt"/}
+    local -a parts
+    IFS=/ read -r -a parts <<< "$link_rel"
+    for ((i=0; i<${#parts[@]}; i++)); do up+=../; done
+    ln -snf "${up}${src_rel}" "$link"
+}
+
+has_match() {  # "$dir" "pattern"
+    local dir=$1 pattern=$2
+    [ -d "$dir" ] && find "$dir" -maxdepth 1 -type f -name "$pattern" -print 2>/dev/null | grep -q .
+}
+
+dry_run=0
+archive=
+
+while (($#)); do
+    case "$1" in
+        --dry-run) dry_run=1; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) archive=$1; shift ;;
+    esac
+done
 
 [ -n "$archive" ] || die "missing archive argument"
+if [[ "$archive" =~ ^https?:// ]]; then
+    die "URLs are handled by 'stow-install' (which verifies checksums); pass a local archive path"
+fi
 [ -f "$archive" ] || die "archive not found: $archive"
 
 command -v tar  >/dev/null 2>&1 || die "tar not found"
 command -v stow >/dev/null 2>&1 || die "stow not found"
 command -v ln   >/dev/null 2>&1 || die "ln not found"
 
-opt="${HOME}/.local/opt"
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
 
-pkg_dir=$(
-    python3 - <<'PY' "$archive"
-import sys, tarfile
-with tarfile.open(sys.argv[1]) as t:
-    print(t.getnames()[0].split('/')[0])
-PY
-)
+prepare_tar() {  # "$archive" -> tar path readable by tar (fails if undecodable)
+    case "$1" in
+        *.tar.zst|*.tzst)
+            if command -v zstd >/dev/null 2>&1; then
+                zstd -q -d -c "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            elif command -v python3 >/dev/null 2>&1 && python3 -c 'import zstandard' >/dev/null 2>&1; then
+                python3 -c 'import sys,zstandard
+sys.stdout.buffer.write(zstandard.ZstdDecompressor().stream_reader(open(sys.argv[1],"rb")).read())' "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            else
+                return 1
+            fi
+            printf '%s\n' "$work/prepared.tar"
+            ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+readable=$(prepare_tar "$archive") || die "cannot decode '$archive': need zstd or Python zstandard"
 
-[ -n "$pkg_dir" ] || die "unable to determine package directory"
+# GoReleaser layout: a top dir named name_version_os_arch.
+first=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | sed -n '1p')
+pkg_dir=${first%%/*}
 
 IFS=_ read -r name version os arch _ <<<"$pkg_dir"
-
 [ -n "${name:-}" ]    || die "unable to determine package name"
-[ -n "${version:-}" ] || die "unable to determine package version"
+[ -n "${version:-}" ] || die "archive does not look like a GoReleaser package"
 [ -n "${os:-}" ]      || die "archive does not look like a GoReleaser package"
 
 versioned="${opt}/${name}-${version}"
-stowpkg="${opt}/${name}"
 
-mkdir -p "$opt"
+mkdir -p "$work/stage"
+tar -xf "$readable" -C "$work/stage"
+srcdir="$work/stage/$pkg_dir"
+[ -d "$srcdir" ] || die "expected extracted directory not found: $srcdir"
 
-if [ -e "$versioned" ]; then
-    die "target already exists: $versioned"
+if (( dry_run )); then
+    printf 'would install %s %s\n' "$name" "$version"
+    printf '  target: %s\n' "$versioned"
+    if [ -e "$versioned" ]; then printf '  target already exists\n'; else printf '  target free\n'; fi
+    printf '  link: %s\n' "$name"
+    if has_match "$srcdir/manpages" '*.1.gz'; then printf '  manpage: yes\n'; else printf '  manpage: no\n'; fi
+    if has_match "$srcdir/completions" '*.bash'; then printf '  bash completion: yes\n'; else printf '  bash completion: no\n'; fi
+    if { has_match "$srcdir/completions" '_*' || has_match "$srcdir/completions" '*.zsh'; }; then printf '  zsh completion: yes\n'; else printf '  zsh completion: no\n'; fi
+    if has_match "$srcdir/completions" '*.fish'; then printf '  fish completion: yes\n'; else printf '  fish completion: no\n'; fi
+    exit 0
 fi
 
-tar -xzf "$archive" -C "$opt"
+[ -e "$versioned" ] && die "target already exists: $versioned"
 
-src="${opt}/${pkg_dir}"
+stowpkg="${opt}/${name}"
+mkdir -p "$opt"
+mv "$srcdir" "$versioned"
 
-[ -d "$src" ] ||
-    die "expected extracted directory not found: $src"
-
-mv "$src" "$versioned"
-
-mkdir -p \
-    "${stowpkg}/bin" \
-    "${stowpkg}/share/man/man1" \
-    "${stowpkg}/share/bash-completion/completions" \
-    "${stowpkg}/share/zsh/site-functions" \
-    "${stowpkg}/share/fish/vendor_completions.d"
-
-find "$versioned" -maxdepth 1 -type f -executable -print0 |
+mkdir -p "${stowpkg}/bin"
+find "$versioned" -maxdepth 1 -type f -perm -u+x -print0 |
 while IFS= read -r -d '' exe; do
-    ln -snrf "$exe" \
-        "${stowpkg}/bin/$(basename "$exe")"
+    rel_symlink "$exe" "${stowpkg}/bin/$(basename "$exe")"
 done
 
-if [ -d "$versioned/manpages" ]; then
-    find "$versioned/manpages" -type f -name '*.1.gz' -print0 |
-    while IFS= read -r -d '' man; do
-        ln -snrf "$man" \
-            "${stowpkg}/share/man/man1/$(basename "$man")"
-    done
+# share dirs are created only when matching files exist.
+if has_match "$versioned/manpages" '*.1.gz'; then
+    mkdir -p "${stowpkg}/share/man/man1"
+    find "$versioned/manpages" -maxdepth 1 -type f -name '*.1.gz' -print0 |
+    while IFS= read -r -d '' man; do rel_symlink "$man" "${stowpkg}/share/man/man1/$(basename "$man")"; done
+fi
+
+if has_match "$versioned/completions" '*.bash'; then
+    mkdir -p "${stowpkg}/share/bash-completion/completions"
+    find "$versioned/completions" -maxdepth 1 -type f -name '*.bash' -print0 |
+    while IFS= read -r -d '' f; do rel_symlink "$f" "${stowpkg}/share/bash-completion/completions/$(basename "$f" .bash)"; done
 fi
 
 if [ -d "$versioned/completions" ]; then
-    find "$versioned/completions" -type f -name '*.bash' -print0 |
+    mkdir -p "${stowpkg}/share/zsh/site-functions"
+    find "$versioned/completions" -maxdepth 1 -type f \( -name '_*' -o -name '*.zsh' \) -print0 2>/dev/null |
     while IFS= read -r -d '' f; do
-        base=$(basename "$f" .bash)
-        ln -snrf "$f" \
-            "${stowpkg}/share/bash-completion/completions/$base"
+        base=$(basename "$f")
+        case "$base" in *.zsh) base=_${base%.zsh} ;; esac
+        rel_symlink "$f" "${stowpkg}/share/zsh/site-functions/$base"
     done
+fi
 
-    find "$versioned/completions" -type f -name '*.zsh' -print0 |
-    while IFS= read -r -d '' f; do
-        base=$(basename "$f" .zsh)
-        ln -snrf "$f" \
-            "${stowpkg}/share/zsh/site-functions/_$base"
-    done
-
-    find "$versioned/completions" -type f -name '*.fish' -print0 |
-    while IFS= read -r -d '' f; do
-        ln -snrf "$f" \
-            "${stowpkg}/share/fish/vendor_completions.d/$(basename "$f")"
-    done
+if has_match "$versioned/completions" '*.fish'; then
+    mkdir -p "${stowpkg}/share/fish/vendor_completions.d"
+    find "$versioned/completions" -maxdepth 1 -type f -name '*.fish' -print0 |
+    while IFS= read -r -d '' f; do rel_symlink "$f" "${stowpkg}/share/fish/vendor_completions.d/$(basename "$f")"; done
 fi
 
 (

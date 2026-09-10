@@ -1,0 +1,180 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+die() {
+    printf 'stow-fhs: error: %s\n' "$*" >&2
+    exit 1
+}
+
+trap '
+rc=$?
+printf "stow-fhs: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
+exit "$rc"
+' ERR
+
+opt="${HOME}/.local/opt"
+
+# Portable: no GNU ln -r, no find -printf/-quit.
+rel_symlink() {
+    local src=$1 link=$2 dir up="" i
+    local src_rel=${src#"$opt"/}
+    local link_rel
+    link_rel=$(dirname "$link"); link_rel=${link_rel#"$opt"/}
+    local -a parts
+    IFS=/ read -r -a parts <<< "$link_rel"
+    for ((i=0; i<${#parts[@]}; i++)); do up+=../; done
+    ln -snf "${up}${src_rel}" "$link"
+}
+
+# Mirror the FHS usr/ tree into the stow package, preserving structure/names.
+# Real dirs become real dirs; files are symlinked. A dir is created only when a
+# file is about to be placed in it, so empty subtrees leave nothing behind.
+mirror() {  # "$src" "$dest"
+    local src=$1 dest=$2 e base
+    [ -d "$src" ] || return 0
+    find "$src" -mindepth 1 -maxdepth 1 -print0 2>/dev/null |
+    while IFS= read -r -d '' e; do
+        base=${e##*/}
+        if [ -d "$e" ]; then
+            mirror "$e" "$dest/$base"
+        else
+            mkdir -p "$dest"
+            rel_symlink "$e" "$dest/$base"
+        fi
+    done
+}
+
+# FHS etc/** -> ~/.config/**: only linked when absent, so user config is kept.
+link_config() {
+    local src=$versioned/etc
+    if [ -d "$src" ] && find "$src" -mindepth 1 -maxdepth 1 -print 2>/dev/null | grep -q .; then
+        mkdir -p "$HOME/.config"
+        find "$src" -mindepth 1 -maxdepth 1 -print0 2>/dev/null |
+        while IFS= read -r -d '' e; do
+            target="$HOME/.config/$(basename "$e")"
+            [ -e "$target" ] || ln -s "$e" "$target"
+        done
+    fi
+}
+
+parse_version() {  # print the first version-like token in a name, else nothing
+    local s=$1 tok v
+    IFS='-_' read -ra toks <<< "$s"
+    for tok in "${toks[@]}"; do
+        v=${tok#[vV]}
+        if [[ "$v" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?([._-][0-9A-Za-z]+)*$ ]]; then
+            printf '%s\n' "$v"; return 0
+        fi
+    done
+    return 1
+}
+
+name=
+version=
+dry_run=0
+archive=
+
+while (($#)); do
+    case "$1" in
+        --dry-run)   dry_run=1; shift ;;
+        --name)      [ $# -ge 2 ] || die "--name requires a value"; name=$2; shift 2 ;;
+        --name=*)    name=${1#--name=}; shift ;;
+        --version)   [ $# -ge 2 ] || die "--version requires a value"; version=$2; shift 2 ;;
+        --version=*) version=${1#--version=}; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) archive=$1; shift ;;
+    esac
+done
+
+[ -n "$archive" ] || die "missing archive argument"
+if [[ "$archive" =~ ^https?:// ]]; then
+    die "URLs are handled by 'stow-install' (which verifies checksums); pass a local archive path"
+fi
+[ -f "$archive" ] || die "archive not found: $archive"
+
+command -v tar  >/dev/null 2>&1 || die "tar not found"
+command -v stow >/dev/null 2>&1 || die "stow not found"
+command -v ln   >/dev/null 2>&1 || die "ln not found"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+# Decompress .zst/.tzst when tar lacks zstd support.
+prepare_tar() {  # "$archive" -> tar path readable by tar (fails if undecodable)
+    case "$1" in
+        *.tar.zst|*.tzst)
+            if command -v zstd >/dev/null 2>&1; then
+                zstd -q -d -c "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            elif command -v python3 >/dev/null 2>&1 && python3 -c 'import zstandard' >/dev/null 2>&1; then
+                python3 -c 'import sys,zstandard
+sys.stdout.buffer.write(zstandard.ZstdDecompressor().stream_reader(open(sys.argv[1],"rb")).read())' "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            else
+                return 1
+            fi
+            printf '%s\n' "$work/prepared.tar"
+            ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+readable=$(prepare_tar "$archive") || die "cannot decode '$archive': need zstd or Python zstandard"
+
+tops=()
+while IFS= read -r top; do
+    [ -n "$top" ] && tops+=("$top")
+done < <(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -F/ '{print $1}' | sort -u)
+pkg_root=.
+if [ "${#tops[@]}" -eq 1 ]; then
+    first=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | sed -n '1p')
+    [[ "$first" == */ ]] && pkg_root=${first%%/*}
+fi
+
+mkdir -p "$work/stage"
+tar -xf "$readable" -C "$work/stage"
+srcdir="$work/stage"
+[ "$pkg_root" != "." ] && srcdir="$work/stage/$pkg_root"
+[ -d "$srcdir/usr" ] || die "not an FHS archive (no usr/ tree)"
+
+executables=()
+while IFS= read -r e; do executables+=("$e"); done < <(find "$srcdir" -type f -perm -u+x -print)
+[ "${#executables[@]}" -ge 1 ] || die "no executable found in archive"
+
+stem=$(basename "$archive")
+for suf in .tar.gz .tar.zst .tar.xz .tar.bz2 .tar .tgz .gz .zst .xz .bz2 .zip; do
+    stem=${stem%"$suf"}
+done
+[ -z "$name" ] && name=${stem%%[-_]*}
+[ -n "$name" ] || die "unable to determine package name"
+
+if [ -z "$version" ]; then version=$(parse_version "$stem" || true); fi
+if [ -z "$version" ]; then
+    probe="$("${executables[0]}" --version 2>/dev/null || true)"
+    version=$(printf '%s' "$probe" | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true)
+fi
+[ -n "$version" ] || die "unable to determine version (pass --version)"
+
+versioned="${opt}/${name}-${version}"
+
+if (( dry_run )); then
+    printf 'would install %s %s\n' "$name" "$version"
+    printf '  target: %s\n' "$versioned"
+    if [ -e "$versioned" ]; then printf '  target already exists\n'; else printf '  target free\n'; fi
+    printf '  fhs usr/ tree: yes (mirrored into package)\n'
+    if find "$srcdir/etc" -mindepth 1 -maxdepth 1 -print 2>/dev/null | grep -q .; then
+        printf '  config (-> ~/.config): yes\n'; else printf '  config: no\n'; fi
+    exit 0
+fi
+
+[ -e "$versioned" ] && die "target already exists: $versioned"
+
+stowpkg="${opt}/${name}"
+mkdir -p "$opt"
+mv "$srcdir" "$versioned"
+mirror "$versioned/usr" "$stowpkg"
+link_config
+
+(
+    cd "$opt"
+    stow -R "$name"
+)
+
+printf 'installed %s %s\n' "$name" "$version"

@@ -1,0 +1,231 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+
+die() {
+    printf 'stow-single-bin: error: %s\n' "$*" >&2
+    exit 1
+}
+
+trap '
+rc=$?
+printf "stow-single-bin: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
+exit "$rc"
+' ERR
+
+opt="${HOME}/.local/opt"
+
+# Portable helpers: no GNU ln -r, no find -printf/-quit.
+rel_symlink() {
+    local src=$1 link=$2 dir up="" i
+    local src_rel=${src#"$opt"/}
+    local link_rel
+    link_rel=$(dirname "$link"); link_rel=${link_rel#"$opt"/}
+    local -a parts
+    IFS=/ read -r -a parts <<< "$link_rel"
+    for ((i=0; i<${#parts[@]}; i++)); do up+=../; done
+    ln -snf "${up}${src_rel}" "$link"
+}
+
+has_match() {  # "$dir" "pattern"
+    local dir=$1 pattern=$2
+    [ -d "$dir" ] && find "$dir" -maxdepth 1 -type f -name "$pattern" -print 2>/dev/null | grep -q .
+}
+
+any_match() {  # "$pattern" "$dir"...
+    local pattern=$1 d
+    shift
+    for d in "$@"; do has_match "$d" "$pattern" && return 0; done
+    return 1
+}
+
+parse_version() {  # print the first version-like token in a name, else nothing
+    local s=$1 tok v
+    IFS='-_' read -ra toks <<< "$s"
+    for tok in "${toks[@]}"; do
+        v=${tok#[vV]}
+        if [[ "$v" =~ ^[0-9]+\.[0-9]+(\.[0-9]+)?([._-][0-9A-Za-z]+)*$ ]]; then
+            printf '%s\n' "$v"; return 0
+        fi
+    done
+    return 1
+}
+
+# Share linking (both GoReleaser-style top-level dirs and FHS usr/share tree).
+link_man() {   # "$src" -> share/man/man1 (basename)
+    local src=$1 dest="${stowpkg}/share/man/man1"
+    if has_match "$src" '*.1.gz'; then
+        mkdir -p "$dest"
+        find "$src" -maxdepth 1 -type f -name '*.1.gz' -print0 |
+        while IFS= read -r -d '' f; do rel_symlink "$f" "$dest/$(basename "$f")"; done
+    fi
+}
+
+link_bash() {  # "$src" -> share/bash-completion/completions (name without .bash)
+    local src=$1 dest="${stowpkg}/share/bash-completion/completions"
+    if has_match "$src" '*.bash'; then
+        mkdir -p "$dest"
+        find "$src" -maxdepth 1 -type f -name '*.bash' -print0 |
+        while IFS= read -r -d '' f; do rel_symlink "$f" "$dest/$(basename "$f" .bash)"; done
+    fi
+}
+
+link_zsh() {   # "$src" -> share/zsh/site-functions (_name; GoReleaser/FHS style)
+    local src=$1 dest="${stowpkg}/share/zsh/site-functions" f base
+    [ -d "$src" ] || return 0
+    find "$src" -maxdepth 1 -type f \( -name '_*' -o -name '*.zsh' \) -print0 2>/dev/null |
+    while IFS= read -r -d '' f; do
+        base=$(basename "$f")
+        case "$base" in *.zsh) base=_${base%.zsh} ;; esac
+        mkdir -p "$dest"
+        rel_symlink "$f" "$dest/$base"
+    done
+}
+
+link_fish() {  # "$src" -> share/fish/vendor_completions.d (basename)
+    local src=$1 dest="${stowpkg}/share/fish/vendor_completions.d"
+    if has_match "$src" '*.fish'; then
+        mkdir -p "$dest"
+        find "$src" -maxdepth 1 -type f -name '*.fish' -print0 |
+        while IFS= read -r -d '' f; do rel_symlink "$f" "$dest/$(basename "$f")"; done
+    fi
+}
+
+name=
+version=
+dry_run=0
+archive=
+
+while (($#)); do
+    case "$1" in
+        --dry-run)   dry_run=1; shift ;;
+        --name)      [ $# -ge 2 ] || die "--name requires a value"; name=$2; shift 2 ;;
+        --name=*)    name=${1#--name=}; shift ;;
+        --version)   [ $# -ge 2 ] || die "--version requires a value"; version=$2; shift 2 ;;
+        --version=*) version=${1#--version=}; shift ;;
+        -*) die "unknown option: $1" ;;
+        *) archive=$1; shift ;;
+    esac
+done
+
+[ -n "$archive" ] || die "missing archive argument"
+if [[ "$archive" =~ ^https?:// ]]; then
+    die "URLs are handled by 'stow-install' (which verifies checksums); pass a local archive path"
+fi
+[ -f "$archive" ] || die "archive not found: $archive"
+
+command -v tar  >/dev/null 2>&1 || die "tar not found"
+command -v stow >/dev/null 2>&1 || die "stow not found"
+command -v ln   >/dev/null 2>&1 || die "ln not found"
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+# Decompress a .zst/.tzst archive into a plain tar when tar lacks zstd support.
+prepare_tar() {  # "$archive" -> tar path readable by tar (fails if undecodable)
+    case "$1" in
+        *.tar.zst|*.tzst)
+            if command -v zstd >/dev/null 2>&1; then
+                zstd -q -d -c "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            elif command -v python3 >/dev/null 2>&1 && python3 -c 'import zstandard' >/dev/null 2>&1; then
+                python3 -c 'import sys,zstandard
+sys.stdout.buffer.write(zstandard.ZstdDecompressor().stream_reader(open(sys.argv[1],"rb")).read())' "$1" > "$work/prepared.tar" 2>/dev/null || return 1
+            else
+                return 1
+            fi
+            printf '%s\n' "$work/prepared.tar"
+            ;;
+        *) printf '%s\n' "$1" ;;
+    esac
+}
+readable=$(prepare_tar "$archive") || die "cannot decode '$archive': need zstd or Python zstandard"
+
+# Single wrapper directory when there is exactly one top-level entry and it is
+# a directory; otherwise "." keeps the whole archive (bare file or bin/ bundle).
+tops=()
+while IFS= read -r top; do
+    [ -n "$top" ] && tops+=("$top")
+done < <(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -F/ '{print $1}' | sort -u)
+pkg_root=.
+if [ "${#tops[@]}" -eq 1 ]; then
+    first=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | sed -n '1p')
+    [[ "$first" == */ ]] && pkg_root=${first%%/*}
+fi
+
+mkdir -p "$work/stage"
+tar -xf "$readable" -C "$work/stage"
+srcdir="$work/stage"
+[ "$pkg_root" != "." ] && srcdir="$work/stage/$pkg_root"
+[ -d "$srcdir" ] || die "expected extracted directory not found: $srcdir"
+[ -d "$srcdir/usr" ] && die "an FHS usr/ tree is handled by 'stow-fhs'"
+
+executables=()
+while IFS= read -r e; do executables+=("$e"); done < <(find "$srcdir" -type f -perm -u+x -print)
+[ "${#executables[@]}" -ge 1 ] || die "no executable found in archive"
+
+# Name: up to the first dash or underscore in the archive stem.
+stem=$(basename "$archive")
+for suf in .tar.gz .tar.zst .tar.xz .tar.bz2 .tar .tgz .gz .zst .xz .bz2 .zip; do
+    stem=${stem%"$suf"}
+done
+[ -z "$name" ] && name=${stem%%[-_]*}
+[ -n "$name" ] || die "unable to determine package name"
+
+# Version: explicit, else the first version-like token in the stem, else run.
+if [ -z "$version" ]; then version=$(parse_version "$stem" || true); fi
+if [ -z "$version" ]; then
+    probe="$("${executables[0]}" --version 2>/dev/null || true)"
+    version=$(printf '%s' "$probe" | grep -Eo '[0-9]+\.[0-9]+(\.[0-9]+)?' | head -n1 || true)
+fi
+[ -n "$version" ] || die "unable to determine version (pass --version)"
+
+versioned="${opt}/${name}-${version}"
+
+if (( dry_run )); then
+    printf 'would install %s %s\n' "$name" "$version"
+    printf '  target: %s\n' "$versioned"
+    if [ -e "$versioned" ]; then printf '  target already exists\n'; else printf '  target free\n'; fi
+    printf '  link: %s <- %s\n' "$name" "$(basename "${executables[0]}")"
+    if any_match '*.1.gz' "$srcdir/manpages"; then printf '  manpage: yes\n'; else printf '  manpage: no\n'; fi
+    if any_match '*.bash' "$srcdir/completions"; then printf '  bash completion: yes\n'; else printf '  bash completion: no\n'; fi
+    if { any_match '_*' "$srcdir/completions" || any_match '*.zsh' "$srcdir/completions"; }; then printf '  zsh completion: yes\n'; else printf '  zsh completion: no\n'; fi
+    if any_match '*.fish' "$srcdir/completions"; then printf '  fish completion: yes\n'; else printf '  fish completion: no\n'; fi
+    exit 0
+fi
+
+[ -e "$versioned" ] && die "target already exists: $versioned"
+
+stowpkg="${opt}/${name}"
+mkdir -p "$opt"
+mv "$srcdir" "$versioned"
+
+# Single binary or bin/+completions+manpages bundle.
+mkdir -p "${stowpkg}/bin"
+interactive=0
+[[ -t 0 ]] && interactive=1
+first=1
+while IFS= read -r -d '' exe; do
+    base=${exe##*/}
+    if (( first )); then
+        first=0
+        if [ "$base" != "$name" ]; then
+            if (( interactive )); then
+                read -r -p "Link '$base' as '$name'? [Y/n] " ans </dev/tty
+                case "$ans" in [Nn]*) : ;; *) base=$name ;; esac
+            else
+                base=$name
+            fi
+        fi
+    fi
+    rel_symlink "$exe" "${stowpkg}/bin/$base"
+done < <(find "$versioned" -type f -perm -u+x -print0)
+link_man  "$versioned/manpages"
+link_bash "$versioned/completions"
+link_zsh  "$versioned/completions"
+link_fish "$versioned/completions"
+
+(
+    cd "$opt"
+    stow -R "$name"
+)
+
+printf 'installed %s %s\n' "$name" "$version"
