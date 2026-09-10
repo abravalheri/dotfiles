@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# vim: set foldmethod=marker filetype=bash :
+# ignore-dir DIR
+# Make git ignore everything inside DIR by dropping a `*` .gitignore in it
+# (the per-project convention used for crush and similar local-data dirs).
+dir="${1:-.crush}"
+
+case "$dir" in
+  ''|'/'|'.'|'..') echo "ignore-dir: refusing unsafe target '$dir'" >&2; exit 1 ;;
+esac
+
+if [ -e "$dir" ] && [ ! -d "$dir" ]; then
+  echo "ignore-dir: not a directory: $dir" >&2
+  exit 1
+fi
+
+mkdir -p "$dir"
+gitignore="$dir/.gitignore"
+grep -qxF '*' "$gitignore" 2>/dev/null || printf '*\n' >> "$gitignore"
+echo "$gitignore"
