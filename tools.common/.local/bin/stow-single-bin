@@ -148,7 +148,7 @@ done < <(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -F/ '{print $1}'
 pkg_root=.
 if [ "${#tops[@]}" -eq 1 ]; then
     first=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | sed -n '1p')
-    [[ "$first" == */ ]] && pkg_root=${first%%/*}
+    [[ "$first" == */ && "$first" != usr/* ]] && pkg_root=${first%%/*}
 fi
 
 mkdir -p "$work/stage"

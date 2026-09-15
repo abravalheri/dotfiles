@@ -135,7 +135,7 @@ nfiles=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk '/\/$/ {next} {n
 has_exec=$(tar -tvf "$readable" 2>/dev/null | awk 'substr($1,1,1)=="-" && $1 ~ /x/ {found=1} END{print found+0}')
 has_usr=$(tar -tf "$readable" 2>/dev/null | sed 's#^\./##' | awk -v single="${#tops[@]}" '
     { p=$0
-      if (single==1 && index(p,"/")) { sub(/^[^/]*\//,"",p) }
+      if (single==1 && p !~ /^usr\// && index(p,"/")) { sub(/^[^\/]*\//,"",p) }
       if (p ~ /^usr\//) { f=1 } }
     END{ print f+0 }')
 
