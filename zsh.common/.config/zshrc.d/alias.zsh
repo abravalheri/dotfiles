@@ -22,6 +22,11 @@ fi
 if command -v autojump &>/dev/null; then
   alias aj='autojump'
 fi
+
+# glow: unwrapped (-w 0), paged via $PAGER so the pager sets the width.
+if [[ -n "${commands[glow]}" ]]; then
+  alias glow='glow -w 0 -p'
+fi
 alias mx='emacsclient -na ""'
 alias em='emacsclient -cna ""'
 alias e='emacsclient -ta emacs'
