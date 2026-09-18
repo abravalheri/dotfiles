@@ -12,6 +12,8 @@ tags.temp
 
 !*/.local/
 !*/.config/
+# Dotfile "*.d" config dirs are matched by the global "*.d" ignore; re-include dirs only
+!**/*.d/
 
 # Created by https://www.gitignore.io
 
