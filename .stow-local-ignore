@@ -7,3 +7,8 @@ COPYING.*
 .+\.swp
 .+\.swo
 \#.*\#
+^tools\.common/tests(/|$)
+(^|/)\.nox(/|$)
+(^|/)\.pytest_cache(/|$)
+(^|/)\.ruff_cache(/|$)
+(^|/)__pycache__(/|$)

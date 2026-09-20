@@ -1,0 +1,131 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+# Standard installer for FHS usr/ trees and GoReleaser-style bin trees. It
+# collapses usr/* to the top level, plans each kept top-level dir to its
+# target-relative key, and materialises the package through the shared
+# deploy_entry helper: a symlink farm by default, real files with --move.
+# Stow (via stow-run) links the target into the finished package either way.
+
+PROG=stow-standard
+SHLIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../lib/package-common.sh"
+# shellcheck source=../lib/package-common.sh
+source "$SHLIB"
+
+trap 'rc=$?; printf "%s: ERROR line=%d rc=%d\n" "$PROG" "$LINENO" "$rc" >&2; exit "$rc"' ERR
+
+# Collapse usr/* and the FHS top-level dirs into a single real tree. The folds
+# (sbin->bin, lib64->lib, man->share/man, etc->.config) are expressed later as
+# plan links, not as real copies. Non-FHS dirs are dropped (or kept with
+# --keep-extras).
+collapse_standard() {  # "$base" "$real" "$keep_extras"
+    local base=$1 real=$2 keep=$3 e name
+    mkdir -p "$real"
+    if [ -d "$base/usr" ]; then
+        for e in "$base/usr"/*; do
+            [ -e "$e" ] && cp -a "$e" "$real/$(basename "$e")"
+        done
+    fi
+    for e in bin sbin lib lib64 share man var etc; do
+        [ -d "$base/$e" ] && cp -a "$base/$e" "$real/$e"
+    done
+    for e in "$base"/*; do
+        [ -d "$e" ] || continue
+        name=${e##*/}
+        case "$name" in usr|bin|sbin|lib|lib64|share|man|var|etc) continue ;; esac
+        if [ "$keep" = 1 ]; then
+            cp -a "$e" "$real/$name"
+        else
+            printf '%s: ignoring non-FHS dir: %s\n' "$PROG" "$name" >&2
+        fi
+    done
+}
+
+# Print the (name key) plan for the collapsed tree, one pair per line.
+standard_plan() {  # "$scope" "$target" "$real"
+    local scope=$1 target=$2 real=$3 name key e
+    for name in bin sbin lib lib64 share man var etc; do
+        [ -e "$real/$name" ] || continue
+        key=$(dest_path "$scope" "$target" "$name") || continue
+        printf '%s|%s\n' "$name" "$key"
+    done
+    for e in "$real"/*; do
+        [ -d "$e" ] || continue
+        name=${e##*/}
+        case "$name" in bin|sbin|lib|lib64|share|man|var|etc) continue ;; esac
+        printf '%s|%s\n' "$name" "$name"
+    done
+}
+
+main() {
+    local name= version= archive= force_stow=0
+    local scope=user move=0 dry=0 verbose=0 no_stow=0 keep_extras=0
+    local idir_opt= target_opt= verb has_etc farm install_dir target
+    local -a pairs=()
+    local line n k versioned checksum=
+    IFS='|' read -r dry verbose move no_stow keep_extras scope idir_opt target_opt \
+        name version force_stow checksum archive <<< "$(parse_flags "$@")"
+    (( dry )) && verb=1 || verb=$verbose
+
+    if [[ "$archive" =~ ^https?:// ]]; then
+        die "URLs are handled by 'stow-install' (which verifies checksums); pass a local archive path"
+    fi
+    [ -f "$archive" ] || die "archive not found: $archive"
+    command -v tar >/dev/null 2>&1 || die "tar not found"
+    command -v stow >/dev/null 2>&1 || die "stow not found"
+
+    local work readable base pkg
+    work=$(mktemp -d)
+    readable=$(prepare_tar "$archive") || die "cannot decode '$archive': need zstd or Python zstandard"
+    mkdir -p "$work/stage"
+    tar -xf "$readable" -C "$work/stage" 2>/dev/null || die "cannot extract '$archive'"
+
+    IFS='|' read -r cls_kind base pm <<< "$(classify "$work/stage")"
+    if [ "$cls_kind" != standard ] && { [ "$cls_kind" != prefix ] || (( ! force_stow )); }; then
+        die "not a standard tree (kind=$cls_kind); stow-standard can stow standard trees or a relocatable prefix with --force-stow"
+    fi
+
+    if [ -z "$name" ]; then name=$(infer_name "$archive" "$base" || true); fi
+    [ -n "$name" ] || die "unable to determine package name (pass --name)"
+    if [ -z "$version" ]; then version=$(version_from "$archive" "$base" || true); fi
+    [ -n "$version" ] || die "unable to determine version (pass --version)"
+
+    collapse_standard "$base" "$work/real" "$keep_extras"
+    has_etc=0; [ -d "$work/real/etc" ] && has_etc=1
+    IFS='|' read -r install_dir target <<< "$(scope_resolution "$scope" "$has_etc" "$idir_opt" "$target_opt")"
+
+    while IFS='|' read -r n k; do
+        [ -n "$n" ] || continue
+        pairs+=("$n" "$k")
+    done < <(standard_plan "$scope" "$target" "$work/real")
+
+    if plan_needs_farm "${pairs[@]}"; then farm=1; else farm=0; fi
+
+    if (( dry )); then
+        printf 'would install %s %s\n' "$name" "$version"
+        printf '  target: %s\n' "$install_dir/$name-$version"
+        local i nm ky
+        for ((i=0;i<${#pairs[@]};i+=2)); do
+            nm=${pairs[$i]}; ky=${pairs[$((i+1))]}
+            [ -e "$work/real/$nm" ] || continue
+            if (( move )); then printf '  would move %s -> %s\n' "$work/real/$nm" "$install_dir/$name-$version/$ky"
+            else printf '  would link %s <- %s/%s\n' "$target/$ky" "$install_dir/$name-$version" "$ky"; fi
+        done
+        rm -rf "$work"
+        return 0
+    fi
+
+    materialise "$work/pkg" "$work/real" "$farm" "$move" "$dry" "$verb" "${pairs[@]}"
+    versioned=$(commit_pkg "$work/pkg" "$install_dir" "$name" "$version")
+    if (( !move && farm )); then write_ignore_list "$versioned"; fi
+    write_target_marker "$versioned" "$install_dir" "$target"
+
+    if (( no_stow )); then
+        printf 'built %s %s (stow skipped)\n' "$name" "$version"
+    else
+        stow_pkg "$install_dir" "${versioned##*/}"
+        printf 'installed %s %s\n' "$name" "$version"
+    fi
+    rm -rf "$work"
+}
+
+main "$@"

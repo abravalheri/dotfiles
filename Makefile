@@ -41,3 +41,6 @@ endif
 
 watch:
 	find ~/.dotfiles -name "*.zsh" -o -name ".*rc" | entr -d ${MAKE} -C ~/.dotfiles
+
+test:
+	uvx nox -f noxfile.py

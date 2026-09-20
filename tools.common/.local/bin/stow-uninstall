@@ -1,68 +1,62 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
+# Uninstall a versioned package: unstow every $opt/<name>-<ver> folder via
+# stow-run (which uses the .stow-target marker), then remove the folders.
 
-die() {
-    printf 'stow-uninstall: error: %s\n' "$*" >&2
-    exit 1
+PROG=stow-uninstall
+SHLIB="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/../lib/package-common.sh"
+# shellcheck source=../lib/package-common.sh
+source "$SHLIB"
+
+trap 'rc=$?; printf "%s: ERROR line=%d rc=%d\n" "$PROG" "$LINENO" "$rc" >&2; exit "$rc"' ERR
+
+main() {
+    local opt scope=user name= dry_run=0 verbose=0
+    local -a versioned=()
+    local d pkg shim=0
+    while (($#)); do
+        case "$1" in
+            --dry-run) dry_run=1; shift ;;
+            --verbose|-v) verbose=1; shift ;;
+            --system) scope=system; shift ;;
+            --user) scope=user; shift ;;
+            -*) die "unknown option: $1" ;;
+            *) [ -z "$name" ] && name=$1 || die "unexpected extra argument: $1"; shift ;;
+        esac
+    done
+    if [ "$scope" = system ]; then opt="${STOW_SYS_ROOT:-/usr/local}/opt"
+    else opt="${STOW_INSTALL_ROOT:-$HOME/.local/opt}"; fi
+    [ -n "$name" ] || die "missing package name"
+    command -v stow-run >/dev/null 2>&1 || die "stow-run not found on PATH"
+
+    shopt -s nullglob
+    versioned=("$opt/$name-"[0-9]*)
+    shopt -u nullglob
+    if [ "${#versioned[@]}" -eq 0 ]; then
+        printf 'stow-uninstall: nothing installed for %s\n' "$name"
+        return 0
+    fi
+
+    printf 'uninstalling %s\n' "$name"
+    for d in "${versioned[@]}"; do
+        pkg=${d##*/}
+        [ -d "$d/.config/zshrc.d" ] && shim=1
+        if (( dry_run )); then printf '  would run: stow-run -d %s -D %s\n' "$opt" "$pkg"
+        else
+            if (( verbose )); then printf '  run: stow-run -d %s -D %s\n' "$opt" "$pkg"; fi
+            stow-run -d "$opt" -D "$pkg"
+        fi
+        if (( dry_run )); then printf '  would remove: %s\n' "$d"
+        else
+            rm -rf "$d"
+            if (( verbose )); then printf '  removed: %s\n' "$d"; fi
+        fi
+    done
+    (( dry_run )) || {
+        rmdir "$opt" 2>/dev/null || true
+        if (( shim )); then refresh_zsh_cache; (( verbose )) && printf '  refreshed zsh cache\n'; fi
+    }
+    printf 'done\n'
 }
 
-trap '
-rc=$?
-printf "stow-uninstall: ERROR line=%d rc=%d\n" "$LINENO" "$rc" >&2
-exit "$rc"
-' ERR
-
-opt="${HOME}/.local/opt"
-name=
-dry_run=0
-
-while (($#)); do
-    case "$1" in
-        --dry-run) dry_run=1; shift ;;
-        -*) die "unknown option: $1" ;;
-        *) [ -z "$name" ] && name=$1 || die "unexpected extra argument: $1"; shift ;;
-    esac
-done
-[ -n "$name" ] || die "missing package name"
-command -v stow >/dev/null 2>&1 || die "stow not found"
-
-pkg="${opt}/${name}"
-
-# Config links (FHS etc/** -> ~/.config/**) are made directly, not via stow,
-# so they must be collected here. Target is <opt>/<name>-<ver>/etc/...
-config_links=()
-if [ -d "$HOME/.config" ]; then
-    while IFS= read -r -d '' l; do
-        tgt=$(readlink "$l")
-        [[ "$tgt" == "$opt/${name}-"[0-9]* ]] && config_links+=("$l")
-    done < <(find "$HOME/.config" -maxdepth 1 -type l -print0 2>/dev/null)
-fi
-
-# Stow package dir plus versioned dirs (only those starting with a digit after
-# the hyphen, so a sibling package like <name>-tools is never matched).
-versioned=()
-shopt -s nullglob
-for d in "$opt/${name}-"[0-9]*; do versioned+=("$d"); done
-shopt -u nullglob
-
-if [ ! -d "$pkg" ] && [ "${#versioned[@]}" -eq 0 ] && [ "${#config_links[@]}" -eq 0 ]; then
-    printf 'stow-uninstall: nothing installed for %s\n' "$name"
-    exit 0
-fi
-
-printf 'uninstalling %s\n' "$name"
-if [ -d "$pkg" ]; then
-    if (( dry_run )); then printf '  would run: stow -D %s\n' "$name"
-    else (cd "$opt" && stow -D "$name"); fi
-fi
-for l in "${config_links[@]}"; do
-    if (( dry_run )); then printf '  would remove config link: %s\n' "$l"
-    else rm "$l"; fi
-done
-for d in "$pkg" "${versioned[@]}"; do
-    if (( dry_run )); then printf '  would remove: %s\n' "$d"
-    else rm -rf "$d"; fi
-done
-(( dry_run )) || rmdir "$opt" 2>/dev/null || true
-
-printf 'done\n'
+main "$@"

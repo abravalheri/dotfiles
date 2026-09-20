@@ -207,3 +207,9 @@ build/
 
 # unless supporting rvm < 1.11.0 or doing something fancy, ignore this:
 .rvmrc
+
+# Python tooling (local, per-dir)
+.nox/
+.pytest_cache/
+.ruff_cache/
+__pycache__/

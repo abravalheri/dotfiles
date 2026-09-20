@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+set -Eeuo pipefail
+# Thin GNU stow wrapper. Options are forwarded to stow unchanged; packages are
+# isolated only so each can supply an optional .stow-target. Value-taking
+# options are recognised in --option=val, -ovalue, and space-separated forms,
+# so values are never mistaken for packages. Each package gets its own stow
+# run so packages with different markers target their own roots.
+#
+# An explicit -t/--target from the caller overrides any markers, in which case
+# everything is simply forwarded to stow. Otherwise scripts must call stow-run
+# with stow's own order (mode before package); this wrapper never reorders.
+# A marker is `~`-relative; stow rejects a literal ~, so it is expanded against
+# $HOME (which honours a mocked $HOME).
+
+die() { printf 'stow-run: error: %s\n' "$*" >&2; exit 1; }
+
+dir=
+declare -a rest=() pkgs=()
+i=1
+while (( i <= $# )); do
+    a=${@:$i:1}
+    case "$a" in
+        --target*|-t*)                exec stow "$@" ;;   # explicit target: forward as-is
+        -d|--dir)                     dir=${@:$((i+1)):1}; rest+=("$a" "${@:$((i+1)):1}"); i=$((i+2)) ;;
+        --dir=*)                      dir=${a#*=};   rest+=("$a"); i=$((i+1)) ;;
+        -d*)                          dir=${a#-d};   rest+=("$a"); i=$((i+1)) ;;
+        -[^-]*)                          rest+=("$a"); i=$((i+1)) ;;   # other short, no value
+        --stow|--delete|--restow|--verbose|--no|--simulate|--compat|--version|--help|--adopt|--dotfiles)
+                                      rest+=("$a"); i=$((i+1)) ;;   # well-known no-value long
+        --*=*)                        rest+=("$a"); i=$((i+1)) ;;   # other attached long
+        --*)                          rest+=("$a" "${@:$((i+1)):1}"); i=$((i+2)) ;;   # other space-valued long
+        *)                            pkgs+=("$a"); i=$((i+1)) ;;
+    esac
+done
+
+[ "${#pkgs[@]}" -ge 1 ] || die "no package given"
+for pkg in "${pkgs[@]}"; do
+    cmd=(stow)
+    if [ -f "${dir:-.}/$pkg/.stow-target" ]; then
+        target=$(<"${dir:-.}/$pkg/.stow-target"); [ -n "$target" ] || die "empty marker in ${dir:-.}/$pkg/.stow-target"
+        case "$target" in
+            "~")   target=$HOME ;;
+            "~/"*) target="$HOME${target#\~}" ;;
+        esac
+        cmd+=(-t "$target" --ignore='^\.stow-target$' --ignore='^\.orig$')
+    fi
+    if (( ${#rest[@]} )); then cmd+=("${rest[@]}"); fi
+    cmd+=("$pkg")
+    "${cmd[@]}"
+done
