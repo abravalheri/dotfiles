@@ -27,6 +27,15 @@ fi
 if [[ -n "${commands[glow]}" ]]; then
   alias glow='glow -w 0 -p'
 fi
+
+# Same-name defaults: only shadow the command when it is installed.
+if command -v rsvg-convert &>/dev/null; then
+  alias rsvg-convert='rsvg-convert -f pdf1.5'
+fi
+if command -v bat &>/dev/null; then
+  alias bat='bat -p'
+fi
+
 alias mx='emacsclient -na ""'
 alias em='emacsclient -cna ""'
 alias e='emacsclient -ta emacs'
