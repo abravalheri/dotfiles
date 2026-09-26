@@ -32,6 +32,10 @@ main() {
     shopt -s nullglob
     versioned=("$opt/$name-"[0-9]*)
     shopt -u nullglob
+    if [ "${#versioned[@]}" -eq 0 ] && [ -d "$opt/$name" ]; then
+        # Name-only dir (--no-shim, version-agnostic install).
+        versioned=("$opt/$name")
+    fi
     if [ "${#versioned[@]}" -eq 0 ]; then
         printf 'stow-uninstall: nothing installed for %s\n' "$name"
         return 0
@@ -41,10 +45,12 @@ main() {
     for d in "${versioned[@]}"; do
         pkg=${d##*/}
         [ -d "$d/.config/zshrc.d" ] && shim=1
-        if (( dry_run )); then printf '  would run: stow-run -d %s -D %s\n' "$opt" "$pkg"
-        else
-            if (( verbose )); then printf '  run: stow-run -d %s -D %s\n' "$opt" "$pkg"; fi
-            stow-run -d "$opt" -D "$pkg"
+        if [ -f "$d/.stow-target" ]; then
+            if (( dry_run )); then printf '  would run: stow-run -d %s -D %s\n' "$opt" "$pkg"
+            else
+                if (( verbose )); then printf '  run: stow-run -d %s -D %s\n' "$opt" "$pkg"; fi
+                stow-run -d "$opt" -D "$pkg"
+            fi
         fi
         if (( dry_run )); then printf '  would remove: %s\n' "$d"
         else

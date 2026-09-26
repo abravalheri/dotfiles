@@ -371,6 +371,27 @@ def test_opt_install_shim_only(tmp_path, HOME, local_opt, installer) -> None:
     assert not shim.exists()
 
 
+def test_opt_install_no_shim(tmp_path, HOME, local_opt, installer) -> None:
+    """--no-shim is OS/version agnostic: places the tree (name-only when the
+    version is unknown) but stows nothing, for tools that self-locate regardless
+    of platform or version (e.g. TeX Live resolving its own root via SelFAUTO)."""
+    root = tmp_path / "TinyTeX"  # no version token
+    layout(
+        root,
+        {"bin/tlmgr": "exec", "tlpkg/1": "dir", "texmf-dist/1": "dir"},
+    )
+    tgz = tmp_path / "tinytex.tgz"
+    archive(tgz, root)
+    installer("opt-install", "--no-shim", "--name", "TinyTeX", str(tgz))
+    pkg = local_opt / "TinyTeX"  # version-less, name-only dir
+    assert (pkg / "bin").is_dir() and (pkg / "tlpkg").is_dir()  # whole tree kept
+    assert not (HOME / ".config/zshrc.d/TinyTeX.zsh").exists()  # no PATH shim
+    assert not (pkg / ".config").exists()  # no inner shim either
+    assert not (HOME / ".local/bin").is_symlink()
+    installer("stow-uninstall", "TinyTeX")
+    assert not pkg.exists()
+
+
 def test_zsh_cache_refreshed_on_opt_install_and_uninstall(
     tmp_path, HOME, local_opt, installer
 ) -> None:
