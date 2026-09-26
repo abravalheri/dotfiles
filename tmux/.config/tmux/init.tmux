@@ -16,8 +16,11 @@ set -g status-interval 5
 # Automatically set window title
 setw -g automatic-rename
 
-# Avoid non 256 terminals
-set -g default-terminal "screen-256color"
+# Prefer tmux-256color where the terminfo exists, else fall back to
+# screen-256color so the config works on hosts without it.
+if-shell "infocmp tmux-256color >/dev/null 2>&1" \
+  "set -g default-terminal tmux-256color" \
+  "set -g default-terminal screen-256color"
 set -ga terminal-overrides ",*256col*:Tc"
 
 # Set window notifications
